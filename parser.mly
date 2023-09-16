@@ -102,6 +102,11 @@ let mkcmd ~loc cmd_desc = {
 %token UNIT
 %token UREAL
 
+(* Additonal constructs for the sub-guide type framework *)
+%token KEEP
+%token OLD_OBSERVE
+%token OLD_COND
+
 %right OR
 %right AND
 %left EQUAL LESSGREATER LESS LESSEQUAL GREATER GREATEREQUAL
