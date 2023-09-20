@@ -698,6 +698,23 @@ let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
            (channel_id, Styv_one)))
       proc.proc_body
   in
+  (* For debugging *)
+  let () =
+    match sess_left with
+    | None -> print_endline "Left session type: None"
+    | Some (channel_name, session_type) ->
+        Format.fprintf Format.std_formatter
+          "Left session type: channel name = %s, type = %a\n" channel_name
+          Ast_ops.print_sess_tyv session_type
+  in
+  let () =
+    match sess_right with
+    | None -> print_endline "Right session type: None"
+    | Some (channel_name, session_type) ->
+        Format.fprintf Format.std_formatter
+          "Left session type: channel name = %s, type = %a\n" channel_name
+          Ast_ops.print_sess_tyv session_type
+  in
   if not (is_subtype tyv psigv.psigv_ret_ty) then
     Or_error.of_exn (Type_error ("mismatched signature types", proc.proc_loc))
   else if
@@ -754,12 +771,11 @@ let rec verify_sess_ty sty_ctxt sty =
 let tycheck_prog prog =
   let%bind sty_ctxt = collect_sess_tys prog in
   (* For debugging *)
-  let () = Ast_ops.print_session_type_context sty_ctxt in
+  let () = Ast_ops.print_sess_type_context Format.std_formatter sty_ctxt in
   let%bind psig_ctxt = collect_proc_sigs prog in
   (* For debugging *)
-  Ast_ops.print_proc_signature_context psig_ctxt;
+  Ast_ops.print_proc_signature_context Format.std_formatter psig_ctxt;
   let ext_ctxt = collect_externals prog in
-  print_endline "We are in line 765";
   List.fold_result prog ~init:() ~f:(fun () top ->
       match top with
       | Top_sess (_, sty) -> (

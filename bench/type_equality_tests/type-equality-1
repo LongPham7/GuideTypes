@@ -1,0 +1,4 @@
+type T1 = real /\ real /\ &{$ | T1}
+type S1 = real /\ real /\ &{$ | T1}
+type S2 = real /\ real /\ &{$ | S2}
+type S3 = real /\ real /\ &{$ | real /\ real /\ &{$ | S3}}

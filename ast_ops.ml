@@ -49,22 +49,21 @@ let rec print_sess_tyv fmt = function
   | Styv_var (type_name, styv0) ->
       Format.fprintf fmt "%s[%a]" type_name print_sess_tyv styv0
 
-let print_session_type_context context =
+let print_sess_type_context fmt context =
   let print_type_name_definition ~key:type_name ~data:type_definition =
     match type_definition with
-    | None -> Format.printf "(Type name, definition) = (%s, None) " type_name
+    | None ->
+        Format.fprintf fmt "(Type name, definition) = (%s, None) " type_name
     | Some definition ->
-        let () = print_sess_tyv Format.str_formatter definition in
-        let definition_string = Format.flush_str_formatter () in
-        Format.printf "(Type name, definition) = (%s, %s) " type_name
-          definition_string
+        Format.fprintf fmt "(Type name, definition) = (%s, %a) " type_name
+          print_sess_tyv definition
   in
   let num_entries = Hashtbl.length context in
-  Format.printf "Typing context has %i entries: " num_entries;
+  Format.fprintf fmt "Typing context has %i entries: " num_entries;
   Hashtbl.iteri context ~f:print_type_name_definition;
-  Core.Out_channel.newline stdout
+  Format.pp_print_newline fmt ()
 
-let print_proc_sig signature =
+let print_proc_sig fmt signature =
   let {
     psigv_theta_tys;
     psigv_param_tys;
@@ -74,32 +73,29 @@ let print_proc_sig signature =
   } =
     signature
   in
-  let print_channel_type_name channel_and_type =
+  let print_channel_type_name fmt channel_and_type =
     match channel_and_type with
-    | None -> printf "None "
+    | None -> Format.fprintf fmt "None "
     | Some (channel_name, type_name) ->
-        printf "channel name = %s, type name = %s " channel_name type_name
+        Format.fprintf fmt "channel name = %s, type name = %s " channel_name
+          type_name
   in
-  print_string "Theta types: ";
-  List.iter psigv_theta_tys ~f:(fun (s, _) -> printf "type = %s " s);
-  Core.Out_channel.newline stdout;
-  print_string "Param types: ";
-  List.iter psigv_param_tys ~f:(fun (s, _) -> printf "type = %s " s);
-  Core.Out_channel.newline stdout;
-  print_string "Return type: ";
-  print_base_tyv Format.std_formatter psigv_ret_ty;
-  Core.Out_channel.newline stdout;
-  print_string "Left session types: ";
-  print_channel_type_name psigv_sess_left;
-  Core.Out_channel.newline stdout;
-  print_string "Right session types: ";
-  print_channel_type_name psigv_sess_right;
-  Core.Out_channel.newline stdout
+  Format.pp_print_string fmt "Theta types: ";
+  List.iter psigv_theta_tys ~f:(fun (s, _) -> Format.fprintf fmt "type = %s " s);
+  Format.pp_print_newline fmt ();
+  Format.pp_print_string fmt "Param types: ";
+  List.iter psigv_param_tys ~f:(fun (s, _) -> Format.fprintf fmt "type = %s " s);
+  Format.pp_print_newline fmt ();
+  Format.fprintf fmt "Return type: %a\n" print_base_tyv psigv_ret_ty;
+  Format.fprintf fmt "Left session types: %a\n" print_channel_type_name
+    psigv_sess_left;
+  Format.fprintf fmt "Right session types: %a\n" print_channel_type_name
+    psigv_sess_right
 
-let print_proc_signature_context context =
+let print_proc_signature_context fmt context =
   let print_mapping ~key ~data =
-    printf "Process name = %s\n" key;
-    print_proc_sig data
+    Format.fprintf fmt "Process name = %s\n" key;
+    print_proc_sig fmt data
   in
   String.Map.iteri context ~f:print_mapping;
-  Core.Out_channel.newline stdout
+  Format.pp_print_newline fmt ()
