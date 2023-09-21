@@ -519,15 +519,15 @@ let print_list_names_norms list_names_norms =
 
 (* Create the initial full base *)
 
-let rec get_norm_of_name_string list_names_norms definition =
-  match definition with
+let rec get_norm_of_type_name_string list_names_norms type_name_string =
+  match type_name_string with
   | Styv_one -> 0
   | Styv_var (name, continuation) ->
       let name_norm =
         List.Assoc.find_exn list_names_norms ~equal:String.equal name
       in
       let continuation_norm =
-        get_norm_of_name_string list_names_norms continuation
+        get_norm_of_type_name_string list_names_norms continuation
       in
       name_norm + continuation_norm
   | _ -> failwith "The given definition is not a string of type names"
@@ -538,12 +538,12 @@ let make_single_norm_reducing_step list_names_norms definition =
   | Styv_conj (_, s) -> s
   | Styv_imply (_, s) -> s
   | Styv_ichoice (s1, s2) ->
-      let s1_norm = get_norm_of_name_string list_names_norms s1 in
-      let s2_norm = get_norm_of_name_string list_names_norms s2 in
+      let s1_norm = get_norm_of_type_name_string list_names_norms s1 in
+      let s2_norm = get_norm_of_type_name_string list_names_norms s2 in
       if s1_norm <= s2_norm then s1 else s2
   | Styv_echoice (s1, s2) ->
-      let s1_norm = get_norm_of_name_string list_names_norms s1 in
-      let s2_norm = get_norm_of_name_string list_names_norms s2 in
+      let s1_norm = get_norm_of_type_name_string list_names_norms s1 in
+      let s2_norm = get_norm_of_type_name_string list_names_norms s2 in
       if s1_norm <= s2_norm then s1 else s2
   | Styv_var _ -> failwith "The given definition is a string of type names"
 
@@ -572,8 +572,8 @@ let rec make_norm_reducing_steps list_definitions list_names_norms definition
         make_norm_reducing_steps list_definitions list_names_norms s
           (num_steps - 1)
     | Styv_ichoice (s1, s2) ->
-        let s1_norm = get_norm_of_name_string list_names_norms s1 in
-        let s2_norm = get_norm_of_name_string list_names_norms s2 in
+        let s1_norm = get_norm_of_type_name_string list_names_norms s1 in
+        let s2_norm = get_norm_of_type_name_string list_names_norms s2 in
         if s1_norm <= s2_norm then
           make_norm_reducing_steps list_definitions list_names_norms s1
             (num_steps - 1)
@@ -581,8 +581,8 @@ let rec make_norm_reducing_steps list_definitions list_names_norms definition
           make_norm_reducing_steps list_definitions list_names_norms s2
             (num_steps - 1)
     | Styv_echoice (s1, s2) ->
-        let s1_norm = get_norm_of_name_string list_names_norms s1 in
-        let s2_norm = get_norm_of_name_string list_names_norms s2 in
+        let s1_norm = get_norm_of_type_name_string list_names_norms s1 in
+        let s2_norm = get_norm_of_type_name_string list_names_norms s2 in
         if s1_norm <= s2_norm then
           make_norm_reducing_steps list_definitions list_names_norms s1
             (num_steps - 1)
@@ -644,6 +644,145 @@ let print_base base =
   in
   List.iter base ~f:print_candidate_decomposition
 
+(* Test equality of two strings of type names according to a given base *)
+
+let head_and_tail_of_type_name_string type_name_string =
+  match type_name_string with
+  | Styv_var (name, continuation) -> (name, continuation)
+  | _ -> failwith "The given definition is not a string of type names"
+
+let rec search_for_matching_pair_of_type_names base name1 name2 =
+  match base with
+  | [] -> None
+  | (name, decomposition) :: tl ->
+      if String.equal name name1 then
+        let decomposition_head, _ =
+          head_and_tail_of_type_name_string decomposition
+        in
+        if String.equal decomposition_head name2 then Some (name, decomposition)
+        else search_for_matching_pair_of_type_names tl name1 name2
+      else search_for_matching_pair_of_type_names tl name1 name2
+
+let rec equal_by_decomposition list_names_norms base type_name_string1
+    type_name_string2 =
+  match (type_name_string1, type_name_string2) with
+  | Styv_one, Styv_one -> true
+  | Styv_one, _ -> false
+  | _, Styv_one -> false
+  | _, _ ->
+      let head_name1, continuation1 =
+        head_and_tail_of_type_name_string type_name_string1
+      in
+      let head_name2, continuation2 =
+        head_and_tail_of_type_name_string type_name_string2
+      in
+      let head_name1_norm =
+        List.Assoc.find_exn list_names_norms ~equal:String.equal head_name1
+      in
+      let head_name2_norm =
+        List.Assoc.find_exn list_names_norms ~equal:String.equal head_name2
+      in
+      let decompose (large_head, small_continuation)
+          (small_head, large_continuation) =
+        match
+          search_for_matching_pair_of_type_names base large_head small_head
+        with
+        | None -> false
+        | Some (_, decomposition) ->
+            let _, decompsotion_tail =
+              head_and_tail_of_type_name_string decomposition
+            in
+            let new_type_name_string =
+              substitute_into_type_name_string decompsotion_tail
+                small_continuation
+            in
+            equal_by_decomposition list_names_norms base new_type_name_string
+              large_continuation
+      in
+      if head_name1_norm >= head_name2_norm then
+        decompose (head_name1, continuation1) (head_name2, continuation2)
+      else decompose (head_name2, continuation2) (head_name1, continuation1)
+
+(* Refine a full base while maintaining its fullness *)
+
+let bisimulate_name_and_candiate_decomposition list_definitions list_names_norms
+    base (name, decomposition) =
+  let definition =
+    List.Assoc.find_exn list_definitions ~equal:String.equal name
+  in
+  let decomposition_hd, decomposition_tl =
+    head_and_tail_of_type_name_string decomposition
+  in
+  let decomposition_hd_definition =
+    List.Assoc.find_exn list_definitions ~equal:String.equal decomposition_hd
+  in
+  match (definition, decomposition_hd_definition) with
+  | Styv_one, Styv_one -> true
+  | Styv_conj (b1, s1), Styv_conj (b2, s2) ->
+      let decomposition_continuation =
+        substitute_into_type_name_string s2 decomposition_tl
+      in
+      let equal_base_type = equal_base_tyv b1 b2 in
+      let equal_continuation =
+        equal_by_decomposition list_names_norms base s1
+          decomposition_continuation
+      in
+      equal_base_type && equal_continuation
+  | Styv_imply (b1, s1), Styv_imply (b2, s2) ->
+      let decomposition_continuation =
+        substitute_into_type_name_string s2 decomposition_tl
+      in
+      let equal_base_type = equal_base_tyv b1 b2 in
+      let equal_continuation =
+        equal_by_decomposition list_names_norms base s1
+          decomposition_continuation
+      in
+      equal_base_type && equal_continuation
+  | Styv_ichoice (s1, s2), Styv_ichoice (t1, t2) ->
+      let decomposition_continuation1 =
+        substitute_into_type_name_string t1 decomposition_tl
+      in
+      let decomposition_continuation2 =
+        substitute_into_type_name_string t2 decomposition_tl
+      in
+      let equal_continuation1 =
+        equal_by_decomposition list_names_norms base s1
+          decomposition_continuation1
+      in
+      let equal_continuation2 =
+        equal_by_decomposition list_names_norms base s2
+          decomposition_continuation2
+      in
+      equal_continuation1 && equal_continuation2
+  | Styv_echoice (s1, s2), Styv_echoice (t1, t2) ->
+      let decomposition_continuation1 =
+        substitute_into_type_name_string t1 decomposition_tl
+      in
+      let decomposition_continuation2 =
+        substitute_into_type_name_string t2 decomposition_tl
+      in
+      let equal_continuation1 =
+        equal_by_decomposition list_names_norms base s1
+          decomposition_continuation1
+      in
+      let equal_continuation2 =
+        equal_by_decomposition list_names_norms base s2
+          decomposition_continuation2
+      in
+      equal_continuation1 && equal_continuation2
+  | _, _ -> false
+
+let rec refine_base list_definitions list_names_norms base =
+  let base_refined =
+    List.filter base
+      ~f:
+        (bisimulate_name_and_candiate_decomposition list_definitions
+           list_names_norms base)
+  in
+  let any_change = List.length base_refined < List.length base in
+  if any_change then refine_base list_definitions list_names_norms base_refined
+  else base_refined
+
 (* Main function for checking type equality *)
 
 let type_equality_check prog first_type_name second_type_name =
@@ -661,9 +800,12 @@ let type_equality_check prog first_type_name second_type_name =
   let initial_full_base =
     create_initial_full_base list_type_definitions list_names_norms
   in
+  let final_base =
+    refine_base list_type_definitions list_names_norms initial_full_base
+  in
   let () =
     print_list_names_norms list_names_norms;
-    print_base initial_full_base
+    print_base final_base
   in
   let first_type_definition =
     List.Assoc.find_exn list_type_definitions ~equal:String.equal
