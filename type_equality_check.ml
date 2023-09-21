@@ -295,21 +295,125 @@ let regular_type_equality list_type_definitions definition1 definition2 =
   in
   recursively_check_equality [] definition1 definition2
 
-(* Type-equality checking for context-free guide types *)
+(* Create fresh type names *)
 
-let counter_fresh_type_variable = ref 0
+let counter_fresh_type_name = ref 0
 
-(* let normalize_type_definition type_name definition =
-   match definition with
-   | Styv_one ->x
-   | _ -> *)
+let create_fresh_type_name type_name () =
+  let fresh_number = !counter_fresh_type_name in
+  let () = counter_fresh_type_name := fresh_number + 1 in
+  type_name ^ "_temp_" ^ Int.to_string fresh_number
+
+(* Normalize type name definitions *)
+
+let rec normalize_type_definition type_name definition =
+  match definition with
+  | Styv_one -> (Styv_one, [])
+  | Styv_conj (b, s) ->
+      let s_compact, list_new_definitions_recursive =
+        normalize_type_definition type_name s
+      in
+      let definition_transformed = Styv_conj (b, s_compact) in
+      let fresh_type_name = create_fresh_type_name type_name () in
+      let current_definition_compact = Styv_var (fresh_type_name, Styv_one) in
+      ( current_definition_compact,
+        (fresh_type_name, definition_transformed)
+        :: list_new_definitions_recursive )
+  | Styv_imply (b, s) ->
+      let s_compact, list_new_definitions_recursive =
+        normalize_type_definition type_name s
+      in
+      let definition_transformed = Styv_imply (b, s_compact) in
+      let fresh_type_name = create_fresh_type_name type_name () in
+      let current_definition_compact = Styv_var (fresh_type_name, Styv_one) in
+      ( current_definition_compact,
+        (fresh_type_name, definition_transformed)
+        :: list_new_definitions_recursive )
+  | Styv_ichoice (s1, s2) ->
+      let s1_compact, list_new_definitions_recursive1 =
+        normalize_type_definition type_name s1
+      in
+      let s2_compact, list_new_definitions_recursive2 =
+        normalize_type_definition type_name s2
+      in
+      let definition_transformed = Styv_ichoice (s1_compact, s2_compact) in
+      let fresh_type_name = create_fresh_type_name type_name () in
+      let current_definition_compact = Styv_var (fresh_type_name, Styv_one) in
+      ( current_definition_compact,
+        (fresh_type_name, definition_transformed)
+        :: list_new_definitions_recursive1
+        @ list_new_definitions_recursive2 )
+  | Styv_echoice (s1, s2) ->
+      let s1_compact, list_new_definitions_recursive1 =
+        normalize_type_definition type_name s1
+      in
+      let s2_compact, list_new_definitions_recursive2 =
+        normalize_type_definition type_name s2
+      in
+      let definition_transformed = Styv_echoice (s1_compact, s2_compact) in
+      let fresh_type_name = create_fresh_type_name type_name () in
+      let current_definition_compact = Styv_var (fresh_type_name, Styv_one) in
+      ( current_definition_compact,
+        (fresh_type_name, definition_transformed)
+        :: list_new_definitions_recursive1
+        @ list_new_definitions_recursive2 )
+  | Styv_var (name, continuation) ->
+      let continuation_compact, list_new_definitions_recursive =
+        normalize_type_definition type_name continuation
+      in
+      let current_definition_compact = Styv_var (name, continuation_compact) in
+      (current_definition_compact, list_new_definitions_recursive)
+
+let normalize_type_name_and_definition (name, definition) =
+  match definition with
+  | Styv_one -> failwith "Some type name is defined as immediate termination"
+  | Styv_conj (b, s) ->
+      let s_compact, list_new_definitions = normalize_type_definition name s in
+      let name_and_definition_transformed = (name, Styv_conj (b, s_compact)) in
+      name_and_definition_transformed :: list_new_definitions
+  | Styv_imply (b, s) ->
+      let s_compact, list_new_definitions = normalize_type_definition name s in
+      let name_and_definition_transformed = (name, Styv_imply (b, s_compact)) in
+      name_and_definition_transformed :: list_new_definitions
+  | Styv_ichoice (s1, s2) ->
+      let s1_compact, list_new_definitions1 =
+        normalize_type_definition name s1
+      in
+      let s2_compact, list_new_definitions2 =
+        normalize_type_definition name s2
+      in
+      let name_and_definition_transformed =
+        (name, Styv_ichoice (s1_compact, s2_compact))
+      in
+      (name_and_definition_transformed :: list_new_definitions1)
+      @ list_new_definitions2
+  | Styv_echoice (s1, s2) ->
+      let s1_compact, list_new_definitions1 =
+        normalize_type_definition name s1
+      in
+      let s2_compact, list_new_definitions2 =
+        normalize_type_definition name s2
+      in
+      let name_and_definition_transformed =
+        (name, Styv_echoice (s1_compact, s2_compact))
+      in
+      (name_and_definition_transformed :: list_new_definitions1)
+      @ list_new_definitions2
+  | Styv_var _ -> failwith "Some type name is defined as a type name"
+
+let normalize_list_definitions list_definitions =
+  list_definitions
+  |> List.map ~f:normalize_type_name_and_definition
+  |> List.concat
+
+(* Mainf function for checking type equality *)
 
 let type_equality_check prog first_type_name second_type_name =
   let list_type_definitions =
     collect_type_definitions prog
     |> detect_duplicated_definitions |> check_all_names_defined
     |> eliminate_redundant_type_names_from_all_definitions
-    |> eliminate_unguarded_type_names
+    |> eliminate_unguarded_type_names |> normalize_list_definitions
   in
   (* For debugging *)
   let () =
