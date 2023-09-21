@@ -3,4 +3,5 @@ type S1 = real /\ real /\ &{$ | T1}
 type S2 = real /\ real /\ &{$ | S2}
 type S3 = real /\ real /\ &{$ | real /\ real /\ &{$ | S3}}
 
-type NonLinear = &{ $ | real /\ NonLinear[NonLinear] }
+type NonLinear1 = &{ $ | real /\ NonLinear1[NonLinear1] }
+type NonLinear2 = &{ $ | real /\ NonLinear2[NonLinear2] }

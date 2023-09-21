@@ -792,10 +792,6 @@ let type_equality_check prog first_type_name second_type_name =
     |> eliminate_redundant_type_names_from_all_definitions
     |> eliminate_unguarded_type_names |> normalize_list_definitions
   in
-  (* For debugging *)
-  let () =
-    print_list_type_definitions Format.std_formatter list_type_definitions
-  in
   let list_names_norms = compute_norms_of_type_names list_type_definitions in
   let initial_full_base =
     create_initial_full_base list_type_definitions list_names_norms
@@ -803,20 +799,29 @@ let type_equality_check prog first_type_name second_type_name =
   let final_base =
     refine_base list_type_definitions list_names_norms initial_full_base
   in
+  (* For debugging *)
   let () =
+    print_list_type_definitions Format.std_formatter list_type_definitions;
     print_list_names_norms list_names_norms;
     print_base final_base
   in
-  let first_type_definition =
-    List.Assoc.find_exn list_type_definitions ~equal:String.equal
-      first_type_name
-  and second_type_definition =
-    List.Assoc.find_exn list_type_definitions ~equal:String.equal
-      second_type_name
-  in
+  (* Type-equality checking for regular guide types *)
+  (* let equality_result =
+       let first_type_definition =
+         List.Assoc.find_exn list_type_definitions ~equal:String.equal
+           first_type_name
+       and second_type_definition =
+         List.Assoc.find_exn list_type_definitions ~equal:String.equal
+           second_type_name
+       in
+       regular_type_equality list_type_definitions first_type_definition
+         second_type_definition
+     in *)
+  (* Type-equality checking for context-free guide types *)
   let equality_result =
-    regular_type_equality list_type_definitions first_type_definition
-      second_type_definition
+    equal_by_decomposition list_names_norms final_base
+      (Styv_var (first_type_name, Styv_one))
+      (Styv_var (second_type_name, Styv_one))
   in
   let () =
     match equality_result with
