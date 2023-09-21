@@ -365,6 +365,7 @@ let rec normalize_type_definition type_name definition =
       (current_definition_compact, list_new_definitions_recursive)
 
 let normalize_type_name_and_definition (name, definition) =
+  let () = counter_fresh_type_name := 0 in
   match definition with
   | Styv_one -> failwith "Some type name is defined as immediate termination"
   | Styv_conj (b, s) ->
@@ -406,7 +407,102 @@ let normalize_list_definitions list_definitions =
   |> List.map ~f:normalize_type_name_and_definition
   |> List.concat
 
-(* Mainf function for checking type equality *)
+(* Compute norms of strings of type names *)
+
+let print_list_names_norms list_names_norms =
+  let print_norm (name, counter) =
+    match counter with
+    | None -> printf "Type %s has infinite norm\n" name
+    | Some n -> printf "Type %s has norm %i\n" name n
+  in
+  List.iter list_names_norms ~f:print_norm
+
+let rec compute_norm_definition_from_current_norms list_names_norms definition =
+  match definition with
+  | Styv_one -> Some 0
+  | Styv_conj (_, s) -> (
+      let recursive_result =
+        compute_norm_definition_from_current_norms list_names_norms s
+      in
+      match recursive_result with None -> None | Some n -> Some (1 + n))
+  | Styv_imply (_, s) -> (
+      let recursive_result =
+        compute_norm_definition_from_current_norms list_names_norms s
+      in
+      match recursive_result with None -> None | Some n -> Some (1 + n))
+  | Styv_ichoice (s1, s2) -> (
+      let s1_norm =
+        compute_norm_definition_from_current_norms list_names_norms s1
+      in
+      let s2_norm =
+        compute_norm_definition_from_current_norms list_names_norms s2
+      in
+      match (s1_norm, s2_norm) with
+      | None, None -> None
+      | Some n1, None -> Some (1 + n1)
+      | None, Some n2 -> Some (1 + n2)
+      | Some n1, Some n2 -> Some (1 + min n1 n2))
+  | Styv_echoice (s1, s2) -> (
+      let s1_norm =
+        compute_norm_definition_from_current_norms list_names_norms s1
+      in
+      let s2_norm =
+        compute_norm_definition_from_current_norms list_names_norms s2
+      in
+      match (s1_norm, s2_norm) with
+      | None, None -> None
+      | Some n1, None -> Some (1 + n1)
+      | None, Some n2 -> Some (1 + n2)
+      | Some n1, Some n2 -> Some (1 + min n1 n2))
+  | Styv_var (name, continuation) -> (
+      let continuation_norm =
+        compute_norm_definition_from_current_norms list_names_norms continuation
+      in
+      let name_norm =
+        List.Assoc.find_exn list_names_norms ~equal:String.equal name
+      in
+      match (name_norm, continuation_norm) with
+      | None, None -> None
+      | Some _, None -> None
+      | None, Some _ -> None
+      | Some n1, Some n2 -> Some (n1 + n2))
+
+let refine_norms list_definitions list_names_norms =
+  let compute_new_counter (name, old_counter) =
+    let definition =
+      List.Assoc.find_exn list_definitions ~equal:String.equal name
+    in
+    let new_counter =
+      compute_norm_definition_from_current_norms list_names_norms definition
+    in
+    let any_update =
+      match (old_counter, new_counter) with
+      | None, None -> false
+      | Some _, None ->
+          failwith "The new counter value is larger than the current counter"
+      | None, Some _ -> true
+      | Some n1, Some n2 -> n1 <> n2
+    in
+    (any_update, (name, new_counter))
+  in
+  let list_change, map_list_new =
+    List.unzip (List.map list_names_norms ~f:compute_new_counter)
+  in
+  let any_change = List.exists list_change ~f:(fun b -> b) in
+  (any_change, map_list_new)
+
+let compute_norms_by_saturation list_definitions =
+  let initial_map_list =
+    List.map list_definitions ~f:(fun (name, _) -> (name, None))
+  in
+  let rec recursively_refine_map map_list =
+    let any_change, map_list_updated = refine_norms list_definitions map_list in
+    if any_change then recursively_refine_map map_list_updated
+    else map_list_updated
+  in
+  recursively_refine_map initial_map_list
+
+(* Main function for checking type equality *)
 
 let type_equality_check prog first_type_name second_type_name =
   let list_type_definitions =
@@ -418,6 +514,10 @@ let type_equality_check prog first_type_name second_type_name =
   (* For debugging *)
   let () =
     print_list_type_definitions Format.std_formatter list_type_definitions
+  in
+  let () =
+    let list_names_norms = compute_norms_by_saturation list_type_definitions in
+    print_list_names_norms list_names_norms
   in
   let first_type_definition =
     List.Assoc.find_exn list_type_definitions ~equal:String.equal
