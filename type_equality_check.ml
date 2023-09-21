@@ -407,9 +407,9 @@ let normalize_list_definitions list_definitions =
   |> List.map ~f:normalize_type_name_and_definition
   |> List.concat
 
-(* Compute norms of strings of type names *)
+(* Compute norms of type names *)
 
-let print_list_names_norms list_names_norms =
+let print_list_names_optinal_norms list_names_norms =
   let print_norm (name, counter) =
     match counter with
     | None -> printf "Type %s has infinite norm\n" name
@@ -481,7 +481,7 @@ let refine_norms list_definitions list_names_norms =
       | Some _, None ->
           failwith "The new counter value is larger than the current counter"
       | None, Some _ -> true
-      | Some n1, Some n2 -> n1 <> n2
+      | Some n1, Some n2 -> n1 > n2
     in
     (any_update, (name, new_counter))
   in
@@ -491,8 +491,8 @@ let refine_norms list_definitions list_names_norms =
   let any_change = List.exists list_change ~f:(fun b -> b) in
   (any_change, map_list_new)
 
-let compute_norms_by_saturation list_definitions =
-  let initial_map_list =
+let compute_norms_of_type_names list_definitions =
+  let initial_list_names_norms =
     List.map list_definitions ~f:(fun (name, _) -> (name, None))
   in
   let rec recursively_refine_map map_list =
@@ -500,7 +500,149 @@ let compute_norms_by_saturation list_definitions =
     if any_change then recursively_refine_map map_list_updated
     else map_list_updated
   in
-  recursively_refine_map initial_map_list
+  let list_names_norms_saturated =
+    recursively_refine_map initial_list_names_norms
+  in
+  let extract_finite_norm (name, norm) =
+    match norm with None -> None | Some n -> Some (name, n)
+  in
+  let list_names_finite_norms =
+    List.map list_names_norms_saturated ~f:extract_finite_norm
+  in
+  if List.exists list_names_finite_norms ~f:Option.is_none then
+    failwith "Some type name has an infinite norm"
+  else List.filter_opt list_names_finite_norms
+
+let print_list_names_norms list_names_norms =
+  let print_norm (name, norm) = printf "Type %s has norm %i\n" name norm in
+  List.iter list_names_norms ~f:print_norm
+
+(* Create the initial full base *)
+
+let rec get_norm_of_name_string list_names_norms definition =
+  match definition with
+  | Styv_one -> 0
+  | Styv_var (name, continuation) ->
+      let name_norm =
+        List.Assoc.find_exn list_names_norms ~equal:String.equal name
+      in
+      let continuation_norm =
+        get_norm_of_name_string list_names_norms continuation
+      in
+      name_norm + continuation_norm
+  | _ -> failwith "The given definition is not a string of type names"
+
+let make_single_norm_reducing_step list_names_norms definition =
+  match definition with
+  | Styv_one -> failwith "We cannot make a norm-reducing step"
+  | Styv_conj (_, s) -> s
+  | Styv_imply (_, s) -> s
+  | Styv_ichoice (s1, s2) ->
+      let s1_norm = get_norm_of_name_string list_names_norms s1 in
+      let s2_norm = get_norm_of_name_string list_names_norms s2 in
+      if s1_norm <= s2_norm then s1 else s2
+  | Styv_echoice (s1, s2) ->
+      let s1_norm = get_norm_of_name_string list_names_norms s1 in
+      let s2_norm = get_norm_of_name_string list_names_norms s2 in
+      if s1_norm <= s2_norm then s1 else s2
+  | Styv_var _ -> failwith "The given definition is a string of type names"
+
+let rec substitute_into_type_name_string target type_name_string =
+  match target with
+  | Styv_one -> type_name_string
+  | Styv_var (name, continuation) ->
+      let continuation_substituted =
+        substitute_into_type_name_string continuation type_name_string
+      in
+      Styv_var (name, continuation_substituted)
+  | _ -> failwith "The target of substitution is not a string of type names"
+
+let rec make_norm_reducing_steps list_definitions list_names_norms definition
+    num_steps =
+  assert (num_steps >= 0);
+  if num_steps = 0 then definition
+  else
+    match definition with
+    | Styv_one ->
+        failwith "The given n is larger than the norm of the definition"
+    | Styv_conj (_, s) ->
+        make_norm_reducing_steps list_definitions list_names_norms s
+          (num_steps - 1)
+    | Styv_imply (_, s) ->
+        make_norm_reducing_steps list_definitions list_names_norms s
+          (num_steps - 1)
+    | Styv_ichoice (s1, s2) ->
+        let s1_norm = get_norm_of_name_string list_names_norms s1 in
+        let s2_norm = get_norm_of_name_string list_names_norms s2 in
+        if s1_norm <= s2_norm then
+          make_norm_reducing_steps list_definitions list_names_norms s1
+            (num_steps - 1)
+        else
+          make_norm_reducing_steps list_definitions list_names_norms s2
+            (num_steps - 1)
+    | Styv_echoice (s1, s2) ->
+        let s1_norm = get_norm_of_name_string list_names_norms s1 in
+        let s2_norm = get_norm_of_name_string list_names_norms s2 in
+        if s1_norm <= s2_norm then
+          make_norm_reducing_steps list_definitions list_names_norms s1
+            (num_steps - 1)
+        else
+          make_norm_reducing_steps list_definitions list_names_norms s2
+            (num_steps - 1)
+    | Styv_var (name, continuation) ->
+        let name_norm =
+          List.Assoc.find_exn list_names_norms ~equal:String.equal name
+        in
+        if name_norm <= num_steps then
+          make_norm_reducing_steps list_definitions list_names_norms
+            continuation (num_steps - name_norm)
+        else
+          let definition =
+            List.Assoc.find_exn list_definitions ~equal:String.equal name
+          in
+          let definition_continuation =
+            make_single_norm_reducing_step list_names_norms definition
+          in
+          let definition_reduced =
+            make_norm_reducing_steps list_definitions list_names_norms
+              definition_continuation (num_steps - 1)
+          in
+          substitute_into_type_name_string definition_reduced continuation
+
+let create_initial_full_base list_definitions list_names_norms =
+  let list_type_names = List.map list_definitions ~f:(fun (name, _) -> name) in
+  let list_pairs_type_names =
+    List.cartesian_product list_type_names list_type_names
+  in
+  let create_corresponding_type (name1, name2) =
+    let norm1 =
+      List.Assoc.find_exn list_names_norms ~equal:String.equal name1
+    in
+    let norm2 =
+      List.Assoc.find_exn list_names_norms ~equal:String.equal name2
+    in
+    if norm1 < norm2 then None
+    else
+      let definition1 =
+        List.Assoc.find_exn list_definitions ~equal:String.equal name1
+      in
+      let name1_norm_reduced =
+        make_norm_reducing_steps list_definitions list_names_norms definition1
+          norm2
+      in
+      let corresponding_type = Styv_var (name2, name1_norm_reduced) in
+      Some (name1, corresponding_type)
+  in
+  List.filter_map list_pairs_type_names ~f:create_corresponding_type
+
+let print_base base =
+  let print_candidate_decomposition pair =
+    let name, decomposition = pair in
+    Format.fprintf Format.std_formatter
+      "(Type name, decomposition) = (%s, %a)\n" name Ast_ops.print_sess_tyv
+      decomposition
+  in
+  List.iter base ~f:print_candidate_decomposition
 
 (* Main function for checking type equality *)
 
@@ -515,9 +657,13 @@ let type_equality_check prog first_type_name second_type_name =
   let () =
     print_list_type_definitions Format.std_formatter list_type_definitions
   in
+  let list_names_norms = compute_norms_of_type_names list_type_definitions in
+  let initial_full_base =
+    create_initial_full_base list_type_definitions list_names_norms
+  in
   let () =
-    let list_names_norms = compute_norms_by_saturation list_type_definitions in
-    print_list_names_norms list_names_norms
+    print_list_names_norms list_names_norms;
+    print_base initial_full_base
   in
   let first_type_definition =
     List.Assoc.find_exn list_type_definitions ~equal:String.equal
