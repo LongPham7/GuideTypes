@@ -1,6 +1,5 @@
 open Core
 open Ast_types
-(* open Or_error.Let_syntax *)
 
 let collect_type_definitions prog =
   List.filter_map prog ~f:(fun top ->
@@ -14,6 +13,20 @@ let collect_type_definitions prog =
 
 module TypeNameSet = Set.Make (String)
 
+(* Make sure that we do not have multple definitions for the same type name *)
+
+let detect_duplicated_definitions list_definitions =
+  let contains_duplicated_definitions =
+    List.contains_dup list_definitions ~compare:(fun (name1, _) (name2, _) ->
+        String.compare name1 name2)
+  in
+  if contains_duplicated_definitions then
+    failwith "We have multiple definitions for the same type name"
+  else list_definitions
+
+(* Check that all type names mentioned inside type definitions are actually
+   defined *)
+
 let rec extract_type_names type_definition =
   match type_definition with
   | Styv_one -> TypeNameSet.empty
@@ -25,7 +38,7 @@ let rec extract_type_names type_definition =
       TypeNameSet.union (extract_type_names s1) (extract_type_names s2)
   | Styv_var (name, s) -> TypeNameSet.add (extract_type_names s) name
 
-let all_names_defined list_definitions =
+let check_all_names_defined list_definitions =
   let defined_type_names =
     TypeNameSet.of_list (List.map list_definitions ~f:(fun (name, _) -> name))
   in
@@ -38,8 +51,152 @@ let all_names_defined list_definitions =
         TypeNameSet.union acc x)
   in
   if TypeNameSet.is_subset mentioned_type_names ~of_:defined_type_names then
-    true
-  else false
+    list_definitions
+  else failwith "Some type names are mentioned but undefined"
+
+(* Eliminate type names defined as $. Such type names are redundant and can be
+   eliminated. *)
+
+let rec eliminate_redundant_type_names redundant_type_names definition =
+  match definition with
+  | Styv_one -> Styv_one
+  | Styv_conj (b, s) ->
+      let s_updated = eliminate_redundant_type_names redundant_type_names s in
+      Styv_conj (b, s_updated)
+  | Styv_imply (b, s) ->
+      let s_updated = eliminate_redundant_type_names redundant_type_names s in
+      Styv_imply (b, s_updated)
+  | Styv_ichoice (s1, s2) ->
+      let s1_updated = eliminate_redundant_type_names redundant_type_names s1 in
+      let s2_updated = eliminate_redundant_type_names redundant_type_names s2 in
+      Styv_ichoice (s1_updated, s2_updated)
+  | Styv_echoice (s1, s2) ->
+      let s1_updated = eliminate_redundant_type_names redundant_type_names s1 in
+      let s2_updated = eliminate_redundant_type_names redundant_type_names s2 in
+      Styv_echoice (s1_updated, s2_updated)
+  | Styv_var (name, continuation) ->
+      let name_is_edundant =
+        List.exists redundant_type_names ~f:(fun redundant_name ->
+            String.equal redundant_name name)
+      in
+      if name_is_edundant then
+        eliminate_redundant_type_names redundant_type_names continuation
+      else
+        let continuation_updated =
+          eliminate_redundant_type_names redundant_type_names continuation
+        in
+        Styv_var (name, continuation_updated)
+
+let eliminate_redundant_type_names_from_all_definitions list_definitions =
+  let is_termination definition =
+    match definition with Styv_one -> true | _ -> false
+  in
+  let redundant_type_names =
+    List.filter_map list_definitions ~f:(fun (name, definition) ->
+        if is_termination definition then Some name else None)
+  in
+  let remaining_definitions =
+    List.filter list_definitions ~f:(fun (_, definition) ->
+        not (is_termination definition))
+  in
+  List.map remaining_definitions ~f:(fun (name, definition) ->
+      (name, eliminate_redundant_type_names redundant_type_names definition))
+
+(* Elimiante type names whose definitions are also type names. We also check if
+   there is any circular definition of type names. *)
+
+let substitute_equivalent_type_names_into_pair (name1, name2) (target1, target2)
+    =
+  if String.equal target2 name1 then (target1, name2) else (target1, target2)
+
+let normalize_list_equivalent_type_names list_pairs =
+  let rec normalize_with_acc acc remaining_pairs =
+    match remaining_pairs with
+    | [] -> acc
+    | hd_pair :: tl_pairs ->
+        let acc_substituted =
+          List.map acc ~f:(substitute_equivalent_type_names_into_pair hd_pair)
+        in
+        let tl_pairs_substituted =
+          List.map tl_pairs
+            ~f:(substitute_equivalent_type_names_into_pair hd_pair)
+        in
+        normalize_with_acc (hd_pair :: acc_substituted) tl_pairs_substituted
+  in
+  normalize_with_acc [] list_pairs
+
+let rec substitute_equivalent_type_names_into_definition list_equivalent_names
+    definition =
+  match definition with
+  | Styv_one -> Styv_one
+  | Styv_conj (b, s) ->
+      let s_substituted =
+        substitute_equivalent_type_names_into_definition list_equivalent_names s
+      in
+      Styv_conj (b, s_substituted)
+  | Styv_imply (b, s) ->
+      let s_substituted =
+        substitute_equivalent_type_names_into_definition list_equivalent_names s
+      in
+      Styv_imply (b, s_substituted)
+  | Styv_ichoice (s1, s2) ->
+      let s1_substituted =
+        substitute_equivalent_type_names_into_definition list_equivalent_names
+          s1
+      in
+      let s2_substituted =
+        substitute_equivalent_type_names_into_definition list_equivalent_names
+          s2
+      in
+      Styv_ichoice (s1_substituted, s2_substituted)
+  | Styv_echoice (s1, s2) ->
+      let s1_substituted =
+        substitute_equivalent_type_names_into_definition list_equivalent_names
+          s1
+      in
+      let s2_substituted =
+        substitute_equivalent_type_names_into_definition list_equivalent_names
+          s2
+      in
+      Styv_ichoice (s1_substituted, s2_substituted)
+  | Styv_var (name, continuation) -> (
+      let continuation_substituted =
+        substitute_equivalent_type_names_into_definition list_equivalent_names
+          continuation
+      in
+      match List.Assoc.find list_equivalent_names ~equal:String.equal name with
+      | None -> Styv_var (name, continuation_substituted)
+      | Some new_name -> Styv_var (new_name, continuation_substituted))
+
+let eliminate_unguarded_type_names list_definitions =
+  let extract_equivalent_type_name (name, definition) =
+    match definition with
+    | Styv_var (equivalent_name, _) -> Some (name, equivalent_name)
+    | _ -> None
+  in
+  let list_equivalent_names =
+    list_definitions
+    |> List.filter_map ~f:extract_equivalent_type_name
+    |> normalize_list_equivalent_type_names
+  in
+  let is_guarded definition =
+    match definition with Styv_var _ -> false | _ -> true
+  in
+  if
+    List.exists list_equivalent_names ~f:(fun (name1, name2) ->
+        String.equal name1 name2)
+  then failwith "Circular definition of type names is detected"
+  else
+    let list_remaining_definitions =
+      List.filter list_definitions ~f:(fun (_, definition) ->
+          is_guarded definition)
+    in
+    List.map list_remaining_definitions ~f:(fun (name, definition) ->
+        ( name,
+          substitute_equivalent_type_names_into_definition list_equivalent_names
+            definition ))
+
+(* Print a list of type definitions *)
 
 let print_list_type_definitions fmt list_definitions =
   let print_type_name_definition fmt type_name type_definition =
@@ -51,6 +208,8 @@ let print_list_type_definitions fmt list_definitions =
   List.iter list_definitions ~f:(fun (type_name, type_definition) ->
       print_type_name_definition fmt type_name type_definition);
   Format.pp_print_newline fmt ()
+
+(* Type-equality checking for regular guide types *)
 
 let detect_cycle acc definition1 definition2 =
   let type_pair_matched (s, t) =
@@ -136,22 +295,30 @@ let regular_type_equality list_type_definitions definition1 definition2 =
   in
   recursively_check_equality [] definition1 definition2
 
+(* Type-equality checking for context-free guide types *)
+
+let counter_fresh_type_variable = ref 0
+
+(* let normalize_type_definition type_name definition =
+   match definition with
+   | Styv_one ->x
+   | _ -> *)
+
 let type_equality_check prog first_type_name second_type_name =
-  let list_type_definitions = collect_type_definitions prog in
-  (* For debugging *)
-  let () =
-    if all_names_defined list_type_definitions then
-      print_endline "All mentioned type names are defined"
-    else print_endline "Some type names are mentioned but undefined"
+  let list_type_definitions =
+    collect_type_definitions prog
+    |> detect_duplicated_definitions |> check_all_names_defined
+    |> eliminate_redundant_type_names_from_all_definitions
+    |> eliminate_unguarded_type_names
   in
+  (* For debugging *)
   let () =
     print_list_type_definitions Format.std_formatter list_type_definitions
   in
   let first_type_definition =
     List.Assoc.find_exn list_type_definitions ~equal:String.equal
       first_type_name
-  in
-  let second_type_definition =
+  and second_type_definition =
     List.Assoc.find_exn list_type_definitions ~equal:String.equal
       second_type_name
   in
@@ -161,7 +328,9 @@ let type_equality_check prog first_type_name second_type_name =
   in
   let () =
     match equality_result with
-    | false -> print_endline "The result is false"
-    | true -> print_endline "The result is true"
+    | false ->
+        printf "Types %s and %s are unequal\n" first_type_name second_type_name
+    | true ->
+        printf "Types %s and %s are equal\n" first_type_name second_type_name
   in
   Ok ()
