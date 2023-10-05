@@ -1,0 +1,25 @@
+external ast_const: real -> ast
+external ast_add: ast -> ast -> ast
+
+type Latent
+type LatentG
+
+type Previous_trace_type
+type Previous_trace_typeG
+
+proc Pcfg() -> ast | old : Previous_trace_type | lat : Latent = {
+  _ <- observe{old}(BETA(3; 1));
+  k <- sample{lat}(BETA(3; 1));
+  PcfgGen(k)
+}
+
+proc PcfgGen(k: ureal) -> ast | . | lat : LatentG = {
+  u <- sample{lat}(UNIF);
+  if{lat} . then
+      v <- sample{lat}(NORMAL(0; 1));
+      return ast_const(v)
+  else
+      lhs <- PcfgGen(k);
+      rhs <- PcfgGen(k);
+      return ast_add(lhs)(rhs)
+}

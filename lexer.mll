@@ -80,6 +80,7 @@ let keyword_table = Hashtbl.of_alist_exn (module String) [
   ("NORMAL", NORMAL);
   ("POIS", POIS);
   ("UNIF", UNIF);
+  ("SAME", SAME);
 ]
 
 (* Update the current location with file name and line number. *)

@@ -60,6 +60,7 @@ and emit_dist fmt = function
   | D_bin (n, exp) -> Format.fprintf fmt "dist.Binomial(%d, %a)" n emit_aexp exp
   | D_geo exp -> Format.fprintf fmt "dist.Geometric(%a)" emit_aexp exp
   | D_pois exp -> Format.fprintf fmt "dist.Poisson(%a)" emit_aexp exp
+  | D_same bty -> Format.fprintf fmt "dist.Same(%a)" Ast_ops.print_base_tyv bty
 
 let emit_ret_or_bnd ?bind lev fmt =
   match bind with

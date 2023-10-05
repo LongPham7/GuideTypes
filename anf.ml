@@ -148,6 +148,7 @@ and normalize_dist dist cont =
     normalize_exp_name exp (fun nexp ->
         cont (D_pois nexp)
       )
+  | D_same bty -> cont (D_same bty)
 
 and normalize_exp_name exp cont =
   normalize_exp exp (fun nexp ->

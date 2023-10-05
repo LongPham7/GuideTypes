@@ -36,6 +36,7 @@ and base_ty_desc =
 
 type base_tyv =
   | Btyv_prim of prim_ty
+  | Btyv_prim_uncovered of prim_ty
   | Btyv_arrow of base_tyv * base_tyv
   | Btyv_dist of base_tyv
   | Btyv_tensor of prim_ty * int list
@@ -69,6 +70,7 @@ type 'a dist =
   | D_bin of int * 'a
   | D_geo of 'a
   | D_pois of 'a
+  | D_same of base_tyv
 
 type exp = {
   exp_desc: exp_desc;

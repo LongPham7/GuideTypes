@@ -57,7 +57,8 @@ let rec join_type ~loc tyv1 tyv2 =
       let%bind pty = join_prim ~loc pty1 pty2 in
       Ok (Btyv_prim pty)
   | Btyv_dist tyv1', Btyv_dist tyv2' ->
-      if equal_base_tyv tyv1' tyv2' then Ok (Btyv_dist tyv1')
+      if Ast_ops.equal_base_tyv_modulo_coverage tyv1' tyv2' then
+        Ok (Btyv_dist (Ast_ops.join_base_tyv_modulo_coverage tyv1' tyv2'))
       else Or_error.of_exn (Type_error ("join error", loc))
   | Btyv_arrow (tyv11, tyv12), Btyv_arrow (tyv21, tyv22) ->
       let%bind tyv1' = meet_type ~loc tyv11 tyv21 in
@@ -393,6 +394,12 @@ and tycheck_dist ~loc ctxt dist =
   | D_pois exp ->
       let%bind tyv = tycheck_exp ctxt exp in
       lift [ Pty_preal ] Pty_nat [ tyv ]
+  | D_same bty -> (
+      match bty with
+      | Btyv_prim pty -> Ok (Btyv_prim_uncovered pty)
+      | _ ->
+          Or_error.of_exn
+            (Invalid_argument "D_same applied to an invalid base type"))
 
 let rec eval_sty sty =
   match sty.sty_desc with
@@ -446,6 +453,23 @@ let collect_externals prog =
       | Top_sess _ -> None
       | Top_proc _ -> None
       | Top_external (var_name, ty) -> Some (var_name.txt, eval_ty ty))
+
+let channel_direction_is_left dir =
+  match dir with `Left -> true | `Right -> false
+
+let merge_session_types_conditional_branches_old_channel styv1 styv2 =
+  (* For debugging *)
+  let () =
+    Format.printf
+      "Merge two session types across branches on the old channel: styv1 = %a, \
+       styv2 = %a\n"
+      Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2
+  in
+  match (styv1, styv2) with
+  | Styv_ichoice (s1, t1), Styv_ichoice (s2, t2) ->
+      assert (equal_sess_tyv t1 Styv_one && equal_sess_tyv s2 Styv_one);
+      Some (`Left, Styv_ichoice (s1, t2))
+  | _, _ -> failwith "The two given session types don't have internal choice"
 
 let tycheck_cmd psig_ctxt =
   let rec forward ctxt cmd =
@@ -591,8 +615,31 @@ let tycheck_cmd psig_ctxt =
                     match dir1 with
                     | `Left -> Some (`Left, Styv_ichoice (styv1, styv2))
                     | `Right -> Some (`Right, Styv_echoice (styv1, styv2))
-                  else if equal_sess_tyv styv1 styv2 then Some (dir1, styv1)
-                  else raise (Type_error ("mismatched sessions", cmd.cmd_loc))))
+                  else if
+                    String.(key = "old")
+                    && channel_direction_is_left dir1
+                    && String.(channel_name.txt <> "old")
+                  then
+                    merge_session_types_conditional_branches_old_channel styv1
+                      styv2
+                  else if
+                    Ast_ops.equal_sess_tyv_modulo_coverage styv1 styv2
+                    (* We check syntactic equality of session types, modulo
+                       coverage. That is, we don't distinguish between covered
+                       and uncovered base types appearing in session types. *)
+                  then
+                    Some
+                      (dir1, Ast_ops.join_sess_tyv_modulo_coverage styv1 styv2)
+                  else
+                    (* For debugging *)
+                    let () =
+                      Format.printf "styv1 = %a, styv2 = %a\n"
+                        Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv
+                        styv2
+                    in
+                    raise
+                      (Type_error
+                         ("mismatched sessions in M_branch_recv", cmd.cmd_loc))))
     | M_branch_send (_, cmd1, cmd2, channel_name) ->
         let%bind sess1 = backward ctxt sess cmd1 in
         let%bind sess2 = backward ctxt sess cmd2 in
@@ -604,8 +651,18 @@ let tycheck_cmd psig_ctxt =
                     match dir1 with
                     | `Left -> Some (`Left, Styv_echoice (styv1, styv2))
                     | `Right -> Some (`Right, Styv_ichoice (styv1, styv2))
-                  else if equal_sess_tyv styv1 styv2 then Some (dir1, styv1)
-                  else raise (Type_error ("mismatched sessions", cmd.cmd_loc))))
+                  else if
+                    Ast_ops.equal_sess_tyv_modulo_coverage styv1 styv2
+                    (* We check syntactic equality of session types, modulo
+                       coverage. That is, we don't distinguish between covered
+                       and uncovered base types appearing in session types. *)
+                  then
+                    Some
+                      (dir1, Ast_ops.join_sess_tyv_modulo_coverage styv1 styv2)
+                  else
+                    raise
+                      (Type_error
+                         ("mismatched sessions in M_branch_send", cmd.cmd_loc))))
     | M_branch_self (_, cmd1, cmd2) ->
         let%bind sess1 = backward ctxt sess cmd1 in
         let%bind sess2 = backward ctxt sess cmd2 in
@@ -613,8 +670,16 @@ let tycheck_cmd psig_ctxt =
             Map.merge sess1 sess2 ~f:(fun ~key:_ -> function
               | `Left _ | `Right _ -> assert false
               | `Both ((dir1, styv1), (_, styv2)) ->
-                  if equal_sess_tyv styv1 styv2 then Some (dir1, styv1)
-                  else raise (Type_error ("mismatched sessions", cmd.cmd_loc))))
+                  if Ast_ops.equal_sess_tyv_modulo_coverage styv1 styv2 then
+                    (* We check syntactic equality of session types, modulo
+                       coverage. That is, we don't distinguish between covered
+                       and uncovered base types appearing in session types. *)
+                    Some
+                      (dir1, Ast_ops.join_sess_tyv_modulo_coverage styv1 styv2)
+                  else
+                    raise
+                      (Type_error
+                         ("mismatched sessions in M_branch_self", cmd.cmd_loc))))
     | M_call (proc_name, _) -> (
         match Map.find psig_ctxt proc_name.txt with
         | None ->
@@ -712,7 +777,7 @@ let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
     | None -> print_endline "Right session type: None"
     | Some (channel_name, session_type) ->
         Format.fprintf Format.std_formatter
-          "Left session type: channel name = %s, type = %a\n" channel_name
+          "Right session type: channel name = %s, type = %a\n" channel_name
           Ast_ops.print_sess_tyv session_type
   in
   if not (is_subtype tyv psigv.psigv_ret_ty) then
@@ -730,7 +795,12 @@ let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
                   type_id Ast_ops.print_sess_tyv sty;
                 Hashtbl.set sty_ctxt ~key:type_id ~data:(Some sty);
                 false
-            | Some sty_def -> not (equal_sess_tyv sty sty_def)))
+            | Some sty_def ->
+                (* Here, we use syntactic equality checking for session types that
+                   takes into account coverage checking. This is because we want to
+                   make sure that the session type provided by the user exactly
+                   matches the type we infer from the code. *)
+                not (equal_sess_tyv sty sty_def)))
   then Or_error.of_exn (Type_error ("mismatched left session", proc.proc_loc))
   else if
     Option.value_map sess_right ~default:false ~f:(fun (_, sty) ->
