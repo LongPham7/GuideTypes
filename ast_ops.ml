@@ -54,13 +54,13 @@ let print_sess_type_context fmt context =
   let print_type_name_definition ~key:type_name ~data:type_definition =
     match type_definition with
     | None ->
-        Format.fprintf fmt "(Type name, definition) = (%s, None) " type_name
+        Format.fprintf fmt "(Type name, definition) = (%s, None)\n" type_name
     | Some definition ->
-        Format.fprintf fmt "(Type name, definition) = (%s, %a) " type_name
+        Format.fprintf fmt "(Type name, definition) = (%s, %a)\n" type_name
           print_sess_tyv definition
   in
   let num_entries = Hashtbl.length context in
-  Format.fprintf fmt "Typing context has %i entries: " num_entries;
+  Format.fprintf fmt "Typing context has %i entries:\n" num_entries;
   Hashtbl.iteri context ~f:print_type_name_definition;
   Format.pp_print_newline fmt ()
 

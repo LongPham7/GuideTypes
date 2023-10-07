@@ -1,5 +1,6 @@
 open Core
 open Ast_types
+open Typecheck_common
 open Or_error.Let_syntax
 
 exception Type_error of string * Location.t
@@ -25,6 +26,7 @@ let is_prim_subtype pty1 pty2 =
 let rec is_subtype tyv1 tyv2 =
   match (tyv1, tyv2) with
   | Btyv_prim pty1, Btyv_prim pty2 -> is_prim_subtype pty1 pty2
+  | Btyv_prim_uncovered pty1, Btyv_prim pty2 -> is_prim_subtype pty1 pty2
   | Btyv_dist tyv1', Btyv_dist tyv2' -> equal_base_tyv tyv1' tyv2'
   | Btyv_arrow (tyv11, tyv12), Btyv_arrow (tyv21, tyv22) ->
       is_subtype tyv21 tyv11 && is_subtype tyv12 tyv22
@@ -113,16 +115,6 @@ and meet_type ~loc tyv1 tyv2 =
       let%bind tyv2' = meet_type ~loc tyv12 tyv22 in
       Ok (Btyv_product (tyv1', tyv2'))
   | _ -> Or_error.of_exn (Type_error ("meet error", loc))
-
-let rec eval_ty ty =
-  match ty.bty_desc with
-  | Bty_prim pty -> Btyv_prim pty
-  | Bty_arrow (ty1, ty2) -> Btyv_arrow (eval_ty ty1, eval_ty ty2)
-  | Bty_dist ty0 -> Btyv_dist (eval_ty ty0)
-  | Bty_tensor (pty, dims) -> Btyv_tensor (pty, dims)
-  | Bty_simplex n -> Btyv_simplex n
-  | Bty_external type_name -> Btyv_external type_name.txt
-  | Bty_product (ty1, ty2) -> Btyv_product (eval_ty ty1, eval_ty ty2)
 
 let tycheck_bop_prim bop pty1 pty2 =
   match (bop.txt, pty1, pty2) with
@@ -250,7 +242,7 @@ let rec tycheck_exp ctxt exp =
           if is_subtype tyv2 tyv11 then Ok tyv12
           else
             Or_error.of_exn
-              (Type_error ("mismatched argument types", exp2.exp_loc))
+              (Type_error ("mismatched argument types in E_app", exp2.exp_loc))
       | _ ->
           Or_error.of_exn (Type_error ("non-arrow function type", exp.exp_loc)))
   | E_let (exp1, var_name, exp2) ->
@@ -401,16 +393,6 @@ and tycheck_dist ~loc ctxt dist =
           Or_error.of_exn
             (Invalid_argument "D_same applied to an invalid base type"))
 
-let rec eval_sty sty =
-  match sty.sty_desc with
-  | Sty_one -> Styv_one
-  | Sty_conj (ty1, sty2) -> Styv_conj (eval_ty ty1, eval_sty sty2)
-  | Sty_imply (ty1, sty2) -> Styv_imply (eval_ty ty1, eval_sty sty2)
-  | Sty_ichoice (sty1, sty2) -> Styv_ichoice (eval_sty sty1, eval_sty sty2)
-  | Sty_echoice (sty1, sty2) -> Styv_echoice (eval_sty sty1, eval_sty sty2)
-  | Sty_var (type_name, None) -> Styv_var (type_name.txt, Styv_one)
-  | Sty_var (type_name, Some sty0) -> Styv_var (type_name.txt, eval_sty sty0)
-
 let collect_sess_tys prog =
   Hashtbl.of_alist_or_error
     (module String)
@@ -467,8 +449,19 @@ let merge_session_types_conditional_branches_old_channel styv1 styv2 =
   in
   match (styv1, styv2) with
   | Styv_ichoice (s1, t1), Styv_ichoice (s2, t2) ->
-      assert (equal_sess_tyv t1 Styv_one && equal_sess_tyv s2 Styv_one);
-      Some (`Left, Styv_ichoice (s1, t2))
+      (* We have two branches for a message (i.e., branch selection) from the
+         model and another two branches for a branch selection in the old trace.
+         Therefore, we have a total of four branches/cases. The first case is
+         where both the current and previous subguides choose the first branch.
+         The second case is where the current subguide chooses the first branch,
+         but the previous subguide chooses the second branch. The third case is
+         where both subguides choose the second branch. Lastly, the fourth case
+         is where the current subguide chooses the second branch, but the
+         previous subguide chooses the first branch. Consequently, t1 (i.e., the
+         session type for the second case) and t2 (i.e., the session type for
+         the fourth case) must be equivalent to termination.*)
+      assert (equal_sess_tyv t1 Styv_one && equal_sess_tyv t2 Styv_one);
+      Some (`Left, Styv_ichoice (s1, s2), [])
   | _, _ -> failwith "The two given session types don't have internal choice"
 
 let tycheck_cmd psig_ctxt =
@@ -504,7 +497,8 @@ let tycheck_cmd psig_ctxt =
                      ~f:(fun tyv (_, tyv') -> is_subtype tyv tyv'))
               then
                 Or_error.of_exn
-                  (Type_error ("mismatched argument types", cmd.cmd_loc))
+                  (Type_error
+                     ("mismatched argument types in M_call", cmd.cmd_loc))
               else Ok psigv.psigv_ret_ty)
     | M_sample_recv (exp, _) | M_sample_send (exp, _) -> (
         let%bind tyv = tycheck_exp ctxt exp in
@@ -561,9 +555,10 @@ let tycheck_cmd psig_ctxt =
                    ("inconsistent initial value for iter", init_exp.exp_loc))
         | _ -> Or_error.of_exn (Type_error ("not iterable", iter_exp.exp_loc)))
   in
-  let rec backward ctxt sess cmd =
+  let rec backward ctxt sess_and_acc_sess_eq_constrs cmd =
+    let sess, acc_sess_eq_constrs = sess_and_acc_sess_eq_constrs in
     match cmd.cmd_desc with
-    | M_ret _ -> Ok sess
+    | M_ret _ -> Ok sess_and_acc_sess_eq_constrs
     | M_bnd (cmd1, var_name, cmd2) ->
         let%bind tyv1 = forward ctxt cmd1 in
         let%bind ctxt' =
@@ -572,8 +567,10 @@ let tycheck_cmd psig_ctxt =
               | None -> ctxt
               | Some var_name -> Map.add_exn ctxt ~key:var_name.txt ~data:tyv1)
         in
-        let%bind sess' = backward ctxt' sess cmd2 in
-        backward ctxt sess' cmd1
+        let%bind sess_and_acc' =
+          backward ctxt' sess_and_acc_sess_eq_constrs cmd2
+        in
+        backward ctxt sess_and_acc' cmd1
     | M_sample_recv (_, channel_name) -> (
         let%bind tyv = forward ctxt cmd in
         match Map.find sess channel_name.txt with
@@ -583,12 +580,14 @@ let tycheck_cmd psig_ctxt =
                  ("unknown channel " ^ channel_name.txt, channel_name.loc))
         | Some (`Left, sty) ->
             Ok
-              (Map.set sess ~key:channel_name.txt
-                 ~data:(`Left, Styv_conj (tyv, sty)))
+              ( Map.set sess ~key:channel_name.txt
+                  ~data:(`Left, Styv_conj (tyv, sty)),
+                acc_sess_eq_constrs )
         | Some (`Right, sty) ->
             Ok
-              (Map.set sess ~key:channel_name.txt
-                 ~data:(`Right, Styv_imply (tyv, sty))))
+              ( Map.set sess ~key:channel_name.txt
+                  ~data:(`Right, Styv_imply (tyv, sty)),
+                acc_sess_eq_constrs ))
     | M_sample_send (_, channel_name) -> (
         let%bind tyv = forward ctxt cmd in
         match Map.find sess channel_name.txt with
@@ -598,88 +597,118 @@ let tycheck_cmd psig_ctxt =
                  ("unknown channel " ^ channel_name.txt, channel_name.loc))
         | Some (`Left, sty) ->
             Ok
-              (Map.set sess ~key:channel_name.txt
-                 ~data:(`Left, Styv_imply (tyv, sty)))
+              ( Map.set sess ~key:channel_name.txt
+                  ~data:(`Left, Styv_imply (tyv, sty)),
+                acc_sess_eq_constrs )
         | Some (`Right, sty) ->
             Ok
-              (Map.set sess ~key:channel_name.txt
-                 ~data:(`Right, Styv_conj (tyv, sty))))
+              ( Map.set sess ~key:channel_name.txt
+                  ~data:(`Right, Styv_conj (tyv, sty)),
+                acc_sess_eq_constrs ))
     | M_branch_recv (cmd1, cmd2, channel_name) ->
-        let%bind sess1 = backward ctxt sess cmd1 in
-        let%bind sess2 = backward ctxt sess cmd2 in
+        let%bind sess1, acc_sess_eq_constrs1 =
+          backward ctxt sess_and_acc_sess_eq_constrs cmd1
+        in
+        let%bind sess2, acc_sess_eq_constrs2 =
+          backward ctxt sess_and_acc_sess_eq_constrs cmd2
+        in
+        let merge_result =
+          Map.merge sess1 sess2 ~f:(fun ~key -> function
+            | `Left _ | `Right _ -> assert false
+            | `Both ((dir1, styv1), (_, styv2)) ->
+                if String.(key = channel_name.txt) then
+                  match dir1 with
+                  | `Left -> Some (`Left, Styv_ichoice (styv1, styv2), [])
+                  | `Right -> Some (`Right, Styv_echoice (styv1, styv2), [])
+                else if
+                  String.(key = "old")
+                  && channel_direction_is_left dir1
+                  && String.(channel_name.txt <> "old")
+                then
+                  merge_session_types_conditional_branches_old_channel styv1
+                    styv2
+                else if
+                  String.(key <> "old")
+                  && (not (channel_direction_is_left dir1))
+                  && String.(channel_name.txt = "old")
+                  (* We return the first session type because it corresponds to
+                     the branch where both channels (i.e., the channel between
+                     the current subguide and the model and another channel for
+                     the previous trace) are present. Put differently, the first
+                     session type is for the case where both the current and
+                     previous subguides choose the same branch.
+
+                     Therefore, styv1 may contain uncovered random variables. On
+                     the other hand, styv2 must be free of uncovered random
+                     variables - it must draw fresh samples for all random
+                     variables. Hence, when we merge styv1 and styv2, the result
+                     must be styv1, provided that they are equivalent modulo
+                     coverage (i.e., they are bisimilar to each other if we
+                     ignore covered and uncovered random variables). To check
+                     that styv1 and styv2 are indeed equivalent modulo coverage,
+                     we store them in an output list. This list of session-type
+                     pairs will be aggregated and will be checked for
+                     equivalence later. *)
+                then Some (dir1, styv1, [ (styv1, styv2) ])
+                else
+                  (* For debugging *)
+                  let () =
+                    Format.printf "styv1 = %a, styv2 = %a\n"
+                      Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2
+                  in
+                  raise
+                    (Type_error
+                       ("mismatched sessions in M_branch_recv", cmd.cmd_loc)))
+        in
+        let new_sess_eqs =
+          merge_result |> Map.data
+          |> List.map ~f:(fun (_, _, z) -> z)
+          |> List.concat
+        in
+        let merge_type_only =
+          Map.map merge_result ~f:(fun (x, y, _) -> (x, y))
+        in
         Or_error.try_with (fun () ->
-            Map.merge sess1 sess2 ~f:(fun ~key -> function
-              | `Left _ | `Right _ -> assert false
-              | `Both ((dir1, styv1), (_, styv2)) ->
-                  if String.(key = channel_name.txt) then
-                    match dir1 with
-                    | `Left -> Some (`Left, Styv_ichoice (styv1, styv2))
-                    | `Right -> Some (`Right, Styv_echoice (styv1, styv2))
-                  else if
-                    String.(key = "old")
-                    && channel_direction_is_left dir1
-                    && String.(channel_name.txt <> "old")
-                  then
-                    merge_session_types_conditional_branches_old_channel styv1
-                      styv2
-                  else if
-                    Ast_ops.equal_sess_tyv_modulo_coverage styv1 styv2
-                    (* We check syntactic equality of session types, modulo
-                       coverage. That is, we don't distinguish between covered
-                       and uncovered base types appearing in session types. *)
-                  then
-                    Some
-                      (dir1, Ast_ops.join_sess_tyv_modulo_coverage styv1 styv2)
-                  else
-                    (* For debugging *)
-                    let () =
-                      Format.printf "styv1 = %a, styv2 = %a\n"
-                        Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv
-                        styv2
-                    in
-                    raise
-                      (Type_error
-                         ("mismatched sessions in M_branch_recv", cmd.cmd_loc))))
+            ( merge_type_only,
+              new_sess_eqs @ acc_sess_eq_constrs1 @ acc_sess_eq_constrs2 ))
     | M_branch_send (_, cmd1, cmd2, channel_name) ->
-        let%bind sess1 = backward ctxt sess cmd1 in
-        let%bind sess2 = backward ctxt sess cmd2 in
+        let%bind sess1, acc_sess_eq_constrs1 =
+          backward ctxt sess_and_acc_sess_eq_constrs cmd1
+        in
+        let%bind sess2, acc_sess_eq_constrs2 =
+          backward ctxt sess_and_acc_sess_eq_constrs cmd2
+        in
         Or_error.try_with (fun () ->
-            Map.merge sess1 sess2 ~f:(fun ~key -> function
-              | `Left _ | `Right _ -> assert false
-              | `Both ((dir1, styv1), (_, styv2)) ->
-                  if String.(key = channel_name.txt) then
-                    match dir1 with
-                    | `Left -> Some (`Left, Styv_echoice (styv1, styv2))
-                    | `Right -> Some (`Right, Styv_ichoice (styv1, styv2))
-                  else if
-                    Ast_ops.equal_sess_tyv_modulo_coverage styv1 styv2
-                    (* We check syntactic equality of session types, modulo
-                       coverage. That is, we don't distinguish between covered
-                       and uncovered base types appearing in session types. *)
-                  then
-                    Some
-                      (dir1, Ast_ops.join_sess_tyv_modulo_coverage styv1 styv2)
-                  else
-                    raise
-                      (Type_error
-                         ("mismatched sessions in M_branch_send", cmd.cmd_loc))))
+            ( Map.merge sess1 sess2 ~f:(fun ~key -> function
+                | `Left _ | `Right _ -> assert false
+                | `Both ((dir1, styv1), (_, styv2)) ->
+                    if String.(key = channel_name.txt) then
+                      match dir1 with
+                      | `Left -> Some (`Left, Styv_echoice (styv1, styv2))
+                      | `Right -> Some (`Right, Styv_ichoice (styv1, styv2))
+                    else if equal_sess_tyv styv1 styv2 then Some (dir1, styv1)
+                    else
+                      raise
+                        (Type_error
+                           ("mismatched sessions in M_branch_send", cmd.cmd_loc))),
+              acc_sess_eq_constrs1 @ acc_sess_eq_constrs2 ))
     | M_branch_self (_, cmd1, cmd2) ->
-        let%bind sess1 = backward ctxt sess cmd1 in
-        let%bind sess2 = backward ctxt sess cmd2 in
+        let%bind sess1, acc_sess_eq_constrs1 =
+          backward ctxt sess_and_acc_sess_eq_constrs cmd1
+        in
+        let%bind sess2, acc_sess_eq_constrs2 =
+          backward ctxt sess_and_acc_sess_eq_constrs cmd2
+        in
         Or_error.try_with (fun () ->
-            Map.merge sess1 sess2 ~f:(fun ~key:_ -> function
-              | `Left _ | `Right _ -> assert false
-              | `Both ((dir1, styv1), (_, styv2)) ->
-                  if Ast_ops.equal_sess_tyv_modulo_coverage styv1 styv2 then
-                    (* We check syntactic equality of session types, modulo
-                       coverage. That is, we don't distinguish between covered
-                       and uncovered base types appearing in session types. *)
-                    Some
-                      (dir1, Ast_ops.join_sess_tyv_modulo_coverage styv1 styv2)
-                  else
-                    raise
-                      (Type_error
-                         ("mismatched sessions in M_branch_self", cmd.cmd_loc))))
+            ( Map.merge sess1 sess2 ~f:(fun ~key:_ -> function
+                | `Left _ | `Right _ -> assert false
+                | `Both ((dir1, styv1), (_, styv2)) ->
+                    if equal_sess_tyv styv1 styv2 then Some (dir1, styv1)
+                    else
+                      raise
+                        (Type_error
+                           ("mismatched sessions in M_branch_self", cmd.cmd_loc))),
+              acc_sess_eq_constrs1 @ acc_sess_eq_constrs2 ))
     | M_call (proc_name, _) -> (
         match Map.find psig_ctxt proc_name.txt with
         | None ->
@@ -697,17 +726,18 @@ let tycheck_cmd psig_ctxt =
               Or_error.of_exn (Type_error ("mismatched channels", cmd.cmd_loc))
             else
               Or_error.try_with (fun () ->
-                  Map.merge sess0 sess ~f:(fun ~key:_ -> function
-                    | `Left _ -> assert false
-                    | `Right (dir, sty) -> Some (dir, sty)
-                    | `Both (type_id, (dir, sty)) ->
-                        Some (dir, Styv_var (type_id, sty)))))
+                  ( Map.merge sess0 sess ~f:(fun ~key:_ -> function
+                      | `Left _ -> assert false
+                      | `Right (dir, sty) -> Some (dir, sty)
+                      | `Both (type_id, (dir, sty)) ->
+                          Some (dir, Styv_var (type_id, sty))),
+                    acc_sess_eq_constrs )))
     | M_loop (n, _, bind_name, bind_ty, cmd0) ->
         let bind_tyv = eval_ty bind_ty in
         let ctxt' = Map.set ctxt ~key:bind_name.txt ~data:bind_tyv in
         List.fold_result
           (List.init n ~f:(fun _ -> ()))
-          ~init:sess
+          ~init:sess_and_acc_sess_eq_constrs
           ~f:(fun acc () -> backward ctxt' acc cmd0)
     | M_iter (iter_exp, _, iter_name, bind_name, bind_ty, cmd0) -> (
         let%bind iter_tyv = tycheck_exp ctxt iter_exp in
@@ -719,7 +749,7 @@ let tycheck_cmd psig_ctxt =
             let ctxt'' = Map.set ctxt' ~key:bind_name.txt ~data:bind_tyv in
             List.fold_result
               (List.init (List.hd_exn dims) ~f:(fun _ -> ()))
-              ~init:sess
+              ~init:sess_and_acc_sess_eq_constrs
               ~f:(fun acc () -> backward ctxt'' acc cmd0)
         | _ -> Or_error.of_exn (Type_error ("not iterable", iter_exp.exp_loc)))
   in
@@ -733,7 +763,7 @@ let tycheck_cmd psig_ctxt =
       String.Map.of_alist_or_error
         (List.append (Option.to_list sess_left) (Option.to_list sess_right))
     in
-    let%bind sess' = backward ctxt sess cmd in
+    let%bind sess', type_eq_consts = backward ctxt (sess, []) cmd in
     Ok
       ( tyv,
         Option.map sess_left ~f:(fun (channel_id, _) ->
@@ -741,7 +771,8 @@ let tycheck_cmd psig_ctxt =
             (channel_id, sty)),
         Option.map sess_right ~f:(fun (channel_id, _) ->
             let _, sty = Map.find_exn sess' channel_id in
-            (channel_id, sty)) )
+            (channel_id, sty)),
+        type_eq_consts )
 
 let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
   let psigv = eval_proc_sig proc.proc_sig in
@@ -755,7 +786,7 @@ let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
            psigv.psigv_param_tys;
          ])
   in
-  let%bind tyv, sess_left, sess_right =
+  let%bind tyv, sess_left, sess_right, type_eq_constrs =
     tycheck_cmd psig_ctxt ctxt
       (Option.map psigv.psigv_sess_left ~f:(fun (channel_id, _) ->
            (channel_id, Styv_one)))
@@ -815,9 +846,48 @@ let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
                   type_id Ast_ops.print_sess_tyv sty;
                 Hashtbl.set sty_ctxt ~key:type_id ~data:(Some sty);
                 false
-            | Some sty_def -> not (equal_sess_tyv sty sty_def)))
+            | Some sty_def ->
+                Format.printf "sty_def = %a, sty = %a line 833\n"
+                  Ast_ops.print_sess_tyv sty_def Ast_ops.print_sess_tyv sty;
+                not (equal_sess_tyv sty sty_def)))
   then Or_error.of_exn (Type_error ("mismatched right session", proc.proc_loc))
-  else Ok ()
+  else
+    (* For debugging *)
+    (* let () =
+         Format.printf
+           "Session type context before checking type equality at the end of type \
+            inference:\n\
+            %a"
+           Ast_ops.print_sess_type_context sty_ctxt;
+         List.iter type_eq_constrs ~f:(fun (x, y) ->
+             Format.printf "They should be equivalent modulo coverage: %a and %a\n"
+               Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y)
+       in *)
+    let sty_ctxt_list =
+      List.filter_map (Hashtbl.to_alist sty_ctxt) ~f:(fun (name, definition) ->
+          match definition with None -> None | Some d -> Some (name, d))
+    in
+    let list_equality_result =
+      match type_eq_constrs with
+      | [] ->
+          (* If the list is empty, we don't even need to compute a Caucal base *)
+          []
+      | _ ->
+          Type_equality_check.type_equality_check_list_type_pairs sty_ctxt_list
+            type_eq_constrs
+    in
+    let () =
+      print_endline "We check all type-equality constraints from type inference";
+      List.iter list_equality_result ~f:(fun (x, y, eq) ->
+          match eq with
+          | true ->
+              Format.printf "Types %a and %a are equal modulo coverage\n"
+                Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y
+          | false ->
+              Format.printf "Types %a and %a are unequal modulo coverage\n"
+                Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y)
+    in
+    Ok ()
 
 let rec verify_sess_ty sty_ctxt sty =
   match sty.sty_desc with

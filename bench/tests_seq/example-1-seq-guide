@@ -11,10 +11,10 @@ proc Guide[a: preal; b: preal; c: preal; d: preal]() -> unit | old: Previous_tra
       return()
   else
     if{old} . then
+      _ <- observe{old}(BETA(c; d));
       _ <- sample{lat}(if (1 < 2) then SAME(ureal) else BETA(c; d));
       return()
     else
-      _ <- observe{old}(BETA(c; d));
       _ <- sample{lat}(BETA(c; d));
       return()
 }

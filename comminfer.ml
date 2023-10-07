@@ -55,7 +55,7 @@ let typecheck prog =
 
 let type_equality_check prog first_type_name second_type_name =
   Timer.wrap_duration "type equality checking" (fun () ->
-      Type_equality_check.type_equality_check prog first_type_name
+      Type_equality_check.type_equality_check_prog prog first_type_name
         second_type_name)
 
 let anf prog =
