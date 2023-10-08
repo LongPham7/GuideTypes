@@ -1,6 +1,7 @@
 open Core
 open Ast_types
 open Ast_ops
+open Type_equality_check_common
 
 (* The type-equality checking algorithm for context-free guide types implemented
    in this module is explained in the paper "A Fast Algorithm for Deciding
@@ -10,31 +11,6 @@ open Ast_ops
    context-free processes are obtained by viewing context-free grammars as
    transition systems. The algebra formed by context-free processes is called
    Basic Process Algebra (BPA). *)
-
-let collect_type_definitions prog =
-  List.filter_map prog ~f:(fun top ->
-      match top with
-      | Top_proc _ -> None
-      | Top_sess (type_name, sty) -> (
-          match sty with
-          | Some x -> Some (type_name.txt, Typecheck_common.eval_sty x)
-          | None -> None)
-      | Top_external _ -> None)
-
-module TypeNameSet = Set.Make (String)
-
-(* Print a list of type definitions *)
-
-let print_list_type_definitions fmt list_definitions =
-  let print_type_name_definition fmt type_name type_definition =
-    Format.fprintf fmt "(Type name, definition) = (%s, %a)\n" type_name
-      Ast_ops.print_sess_tyv type_definition
-  in
-  let num_entries = List.length list_definitions in
-  Format.fprintf fmt "The file has %i type definitions:\n" num_entries;
-  List.iter list_definitions ~f:(fun (type_name, type_definition) ->
-      print_type_name_definition fmt type_name type_definition);
-  Format.pp_print_newline fmt ()
 
 (* Make sure that we do not have multiple definitions for the same type name *)
 
@@ -49,6 +25,8 @@ let detect_duplicated_definitions list_definitions =
 
 (* Check that all type names mentioned inside type definitions are actually
    defined *)
+
+module TypeNameSet = Set.Make (String)
 
 let rec extract_type_names type_definition =
   match type_definition with
@@ -192,41 +170,6 @@ let detect_cycle_type_names list_definitions =
    into T1's definition. We keep doing this until all type definitions are
    guarded. This procedure should terminate as long as there is no cycle of type
    names. *)
-
-let rec substitute_into_type_definition target substituted_type =
-  match target with
-  | Styv_one -> substituted_type
-  | Styv_conj (b, s) ->
-      let substitution_result =
-        substitute_into_type_definition s substituted_type
-      in
-      Styv_conj (b, substitution_result)
-  | Styv_imply (b, s) ->
-      let substitution_result =
-        substitute_into_type_definition s substituted_type
-      in
-      Styv_conj (b, substitution_result)
-  | Styv_ichoice (s1, s2) ->
-      let substitution_result1 =
-        substitute_into_type_definition s1 substituted_type
-      in
-      let substitution_result2 =
-        substitute_into_type_definition s2 substituted_type
-      in
-      Styv_ichoice (substitution_result1, substitution_result2)
-  | Styv_echoice (s1, s2) ->
-      let substitution_result1 =
-        substitute_into_type_definition s1 substituted_type
-      in
-      let substitution_result2 =
-        substitute_into_type_definition s2 substituted_type
-      in
-      Styv_echoice (substitution_result1, substitution_result2)
-  | Styv_var (name, continuation) ->
-      let substitution_result =
-        substitute_into_type_definition continuation substituted_type
-      in
-      Styv_var (name, substitution_result)
 
 let expand_unguarded_type_definitions list_definitions =
   let expand_unguarded_type_definition definition =
@@ -738,8 +681,8 @@ let rec equal_by_decomposition list_names_norms base type_name_string1
 
 (* Refine a full base while maintaining its fullness *)
 
-let bisimulate_name_and_candidate_decomposition list_definitions list_names_norms
-    base (name, decomposition) =
+let bisimulate_name_and_candidate_decomposition list_definitions
+    list_names_norms base (name, decomposition) =
   let definition =
     List.Assoc.find_exn list_definitions ~equal:String.equal name
   in
@@ -818,12 +761,21 @@ let rec refine_base list_definitions list_names_norms base =
 
 (* Main function for checking type equality *)
 
-let type_equality_check list_type_definitions first_type second_type =
-  let list_type_definitions =
-    list_type_definitions |> detect_duplicated_definitions
+let create_type_from_type_name list_removed_names name =
+  match List.Assoc.find list_removed_names ~equal:String.equal name with
+  | None -> Styv_var (name, Styv_one)
+  | Some def -> def
+
+let type_equality_check list_type_definitions_raw first_type_name
+    second_type_name =
+  let list_type_definitions_without_termination, list_removed_names =
+    list_type_definitions_raw |> detect_duplicated_definitions
     |> check_all_names_defined
-    |> eliminate_redundant_type_names_from_all_definitions |> fst
-    |> eliminate_unguarded_type_names |> normalize_list_definitions
+    |> eliminate_redundant_type_names_from_all_definitions
+  in
+  let list_type_definitions =
+    list_type_definitions_without_termination |> eliminate_unguarded_type_names
+    |> normalize_list_definitions
   in
   let list_names_norms = compute_norms_of_type_names list_type_definitions in
   let initial_full_base =
@@ -841,7 +793,9 @@ let type_equality_check list_type_definitions first_type second_type =
   (* Type-equality checking for regular guide types *)
   (* regular_type_equality list_type_definitions first_type second_type *)
   (* Type-equality checking for context-free guide types *)
-  equal_by_decomposition list_names_norms final_base first_type second_type
+  equal_by_decomposition list_names_norms final_base
+    (create_type_from_type_name list_removed_names first_type_name)
+    (create_type_from_type_name list_removed_names second_type_name)
 
 let convert_type_definitions_to_names list_pairs =
   let create_new_type_name i definition =
@@ -850,9 +804,7 @@ let convert_type_definitions_to_names list_pairs =
   List.mapi list_pairs ~f:(fun i (x, y) ->
       (create_new_type_name (2 * i) x, create_new_type_name ((2 * i) + 1) y))
 
-let create_type_from_type_name name = Styv_var (name, Styv_one)
-
-let type_equality_check_list_type_pairs list_type_definitions list_pairs =
+let type_equality_check_list_type_pairs list_type_definitions_raw list_pairs =
   let list_pairs_with_fresh_type_names =
     convert_type_definitions_to_names list_pairs
   in
@@ -861,11 +813,14 @@ let type_equality_check_list_type_pairs list_type_definitions list_pairs =
     |> List.map ~f:(fun (name_def1, name_def2) -> [ name_def1; name_def2 ])
     |> List.concat
   in
-  let list_type_definitions =
-    list_new_type_definitions @ list_type_definitions
+  let list_type_definitions_without_termination, list_removed_names =
+    list_new_type_definitions @ list_type_definitions_raw
     |> detect_duplicated_definitions |> check_all_names_defined
-    |> eliminate_redundant_type_names_from_all_definitions |> fst
-    |> eliminate_unguarded_type_names |> normalize_list_definitions
+    |> eliminate_redundant_type_names_from_all_definitions
+  in
+  let list_type_definitions =
+    list_type_definitions_without_termination |> eliminate_unguarded_type_names
+    |> normalize_list_definitions
   in
   let list_names_norms = compute_norms_of_type_names list_type_definitions in
   let initial_full_base =
@@ -876,26 +831,25 @@ let type_equality_check_list_type_pairs list_type_definitions list_pairs =
   in
   (* For debugging *)
   (* let () =
-       print_list_type_definitions Format.std_formatter list_type_definitions;
-       print_endline "The list of norms of type names:";
-       print_list_names_norms list_names_norms;
-       print_endline "Final base:";
-       print_base final_base
-     in *)
+    print_list_type_definitions Format.std_formatter list_type_definitions;
+    print_endline "The list of norms of type names:";
+    print_list_names_norms list_names_norms;
+    print_endline "Final base:";
+    print_base final_base
+  in *)
   List.map list_pairs_with_fresh_type_names
     ~f:(fun ((name1, def1), (name2, def2)) ->
       ( def1,
         def2,
         equal_by_decomposition list_names_norms final_base
-          (create_type_from_type_name name1)
-          (create_type_from_type_name name2) ))
+          (create_type_from_type_name list_removed_names name1)
+          (create_type_from_type_name list_removed_names name2) ))
 
 let type_equality_check_prog prog first_type_name second_type_name =
   let equality_result =
     type_equality_check
       (collect_type_definitions prog)
-      (create_type_from_type_name first_type_name)
-      (create_type_from_type_name second_type_name)
+      first_type_name second_type_name
   in
   let () =
     match equality_result with

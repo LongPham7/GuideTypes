@@ -14,9 +14,3 @@ val equal_base_tyv_modulo_coverage :
 
 val join_base_tyv_modulo_coverage :
   Ast_types.base_tyv -> Ast_types.base_tyv -> Ast_types.base_tyv
-
-val equal_sess_tyv_modulo_coverage :
-  Ast_types.sess_tyv -> Ast_types.sess_tyv -> bool
-
-val join_sess_tyv_modulo_coverage :
-  Ast_types.sess_tyv -> Ast_types.sess_tyv -> Ast_types.sess_tyv

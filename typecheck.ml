@@ -439,6 +439,31 @@ let collect_externals prog =
 let channel_direction_is_left dir =
   match dir with `Left -> true | `Right -> false
 
+(* We have two branches for a message (i.e., branch selection) from the
+   model and another two branches for a branch selection in the old trace.
+   Therefore, we have a total of four branches/cases. The first case is
+   where both the current and previous subguides choose the first branch.
+   The second case is where the current subguide chooses the first branch,
+   but the previous subguide chooses the second branch. The third case is
+   where both subguides choose the second branch. Lastly, the fourth case
+   is where the current subguide chooses the second branch, but the
+   previous subguide chooses the first branch.
+   
+   An advantage of this design is that, during type inference, when we merge two
+   guide types from the first and second (or the third and fourth) cases, it is
+   easy to tell which of the two branches is for the case where both the current
+   and previous subguides are present. A drawback is that, when we simulate a
+   command with a guide type during coverage checking, a problem arises. For
+   instance, suppose we want to simulate a command with a guide type T = +{ A1 |
+   A2 } for some guide types A1 and A2. We first receive a branch selection from
+   the model and then receive a branch selection from the previous subguide.
+   Hence, type A1 corresponds to the first branch if we enter the first branch
+   selection from model. However, if we enter the second branch selection from
+   the model, A1 corresponds to the second branch. Therefore, which inner branch
+   (i.e., a branch selection from the previous subguide) corresponds to A1
+   depends on which outer branch (i.e., branch selection from the model) we
+   enter. This makes the coverage checking challenging. *)
+
 let merge_session_types_conditional_branches_old_channel styv1 styv2 =
   (* For debugging *)
   let () =
@@ -448,19 +473,8 @@ let merge_session_types_conditional_branches_old_channel styv1 styv2 =
       Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2
   in
   match (styv1, styv2) with
-  | Styv_ichoice (s1, t1), Styv_ichoice (s2, t2) ->
-      (* We have two branches for a message (i.e., branch selection) from the
-         model and another two branches for a branch selection in the old trace.
-         Therefore, we have a total of four branches/cases. The first case is
-         where both the current and previous subguides choose the first branch.
-         The second case is where the current subguide chooses the first branch,
-         but the previous subguide chooses the second branch. The third case is
-         where both subguides choose the second branch. Lastly, the fourth case
-         is where the current subguide chooses the second branch, but the
-         previous subguide chooses the first branch. Consequently, t1 (i.e., the
-         session type for the second case) and t2 (i.e., the session type for
-         the fourth case) must be equivalent to termination.*)
-      assert (equal_sess_tyv t1 Styv_one && equal_sess_tyv t2 Styv_one);
+  | Styv_ichoice (s1, _), Styv_ichoice (s2, _) ->
+      (* assert (equal_sess_tyv t1 Styv_one && equal_sess_tyv t2 Styv_one); *)
       Some (`Left, Styv_ichoice (s1, s2), [])
   | _, _ -> failwith "The two given session types don't have internal choice"
 
