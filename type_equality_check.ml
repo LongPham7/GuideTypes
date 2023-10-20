@@ -766,6 +766,7 @@ let create_type_from_type_name list_removed_names name =
   | None -> Styv_var (name, Styv_one)
   | Some def -> def
 
+(* Check the equality of two given type names *)
 let type_equality_check list_type_definitions_raw first_type_name
     second_type_name =
   let list_type_definitions_without_termination, list_removed_names =
@@ -804,6 +805,9 @@ let convert_type_definitions_to_names list_pairs =
   List.mapi list_pairs ~f:(fun i (x, y) ->
       (create_new_type_name (2 * i) x, create_new_type_name ((2 * i) + 1) y))
 
+(* Given a list of pairs of types, check the equality of each pair. Types are
+   not required to be type names. If a type is not a type name, a fresh type
+   name is created and is bound to it. *)
 let type_equality_check_list_type_pairs list_type_definitions_raw list_pairs =
   let list_pairs_with_fresh_type_names =
     convert_type_definitions_to_names list_pairs

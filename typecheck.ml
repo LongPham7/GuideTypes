@@ -403,23 +403,6 @@ let collect_sess_tys prog =
              Some (type_name.txt, Option.map ~f:eval_sty sty)
          | Top_external _ -> None))
 
-let eval_proc_sig psig =
-  {
-    psigv_theta_tys =
-      List.map psig.psig_theta_tys ~f:(fun (var_name, pty) ->
-          (var_name.txt, eval_ty pty));
-    psigv_param_tys =
-      List.map psig.psig_param_tys ~f:(fun (var_name, ty) ->
-          (var_name.txt, eval_ty ty));
-    psigv_ret_ty = eval_ty psig.psig_ret_ty;
-    psigv_sess_left =
-      Option.map psig.psig_sess_left ~f:(fun (channel_name, type_name) ->
-          (channel_name.txt, type_name.txt));
-    psigv_sess_right =
-      Option.map psig.psig_sess_right ~f:(fun (channel_name, type_name) ->
-          (channel_name.txt, type_name.txt));
-  }
-
 let collect_proc_sigs prog =
   String.Map.of_alist_or_error
     (List.filter_map prog ~f:(fun top ->
@@ -428,13 +411,6 @@ let collect_proc_sigs prog =
          | Top_proc (proc_name, { proc_sig; _ }) ->
              Some (proc_name.txt, eval_proc_sig proc_sig)
          | Top_external _ -> None))
-
-let collect_externals prog =
-  List.filter_map prog ~f:(fun top ->
-      match top with
-      | Top_sess _ -> None
-      | Top_proc _ -> None
-      | Top_external (var_name, ty) -> Some (var_name.txt, eval_ty ty))
 
 let channel_direction_is_left dir =
   match dir with `Left -> true | `Right -> false
@@ -448,7 +424,7 @@ let channel_direction_is_left dir =
    where both subguides choose the second branch. Lastly, the fourth case
    is where the current subguide chooses the second branch, but the
    previous subguide chooses the first branch.
-   
+
    An advantage of this design is that, during type inference, when we merge two
    guide types from the first and second (or the third and fourth) cases, it is
    easy to tell which of the two branches is for the case where both the current

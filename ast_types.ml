@@ -27,6 +27,7 @@ type base_ty = {
 
 and base_ty_desc =
   | Bty_prim of prim_ty
+  | Bty_prim_uncovered of prim_ty
   | Bty_arrow of base_ty * base_ty
   | Bty_dist of base_ty
   | Bty_tensor of prim_ty * int list

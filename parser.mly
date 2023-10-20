@@ -103,6 +103,13 @@ let mkcmd ~loc cmd_desc = {
 %token UNIT
 %token UREAL
 
+%token BOOL_U
+%token NAT_U
+%token PREAL_U
+%token REAL_U
+%token UNIT_U
+%token UREAL_U
+
 %right OR
 %right AND
 %left EQUAL LESSGREATER LESS LESSEQUAL GREATER GREATEREQUAL
@@ -201,6 +208,8 @@ base_prim_ty:
   | mkbty(
       pty = prim_ty
       { Bty_prim pty }
+    | pty = prim_ty_uncovered
+      { Bty_prim_uncovered pty }
     | bty = base_prim_ty; DIST
       { Bty_dist bty }
     | LPAREN; pty = prim_ty; SEMI; LBRACKET; dims = separated_list(SEMI, INTV); RBRACKET; RPAREN; TENSOR
@@ -226,6 +235,22 @@ prim_ty:
   | NAT; LBRACKET; n = INTV; RBRACKET
     { Pty_fnat n }
   | NAT
+    { Pty_nat }
+
+prim_ty_uncovered:
+  | UNIT_U
+    { Pty_unit }
+  | BOOL_U
+    { Pty_bool }
+  | UREAL_U
+    { Pty_ureal }
+  | PREAL_U
+    { Pty_preal }
+  | REAL_U
+    { Pty_real }
+  | NAT_U; LBRACKET; n = INTV; RBRACKET
+    { Pty_fnat n }
+  | NAT_U
     { Pty_nat }
 
 exp:
