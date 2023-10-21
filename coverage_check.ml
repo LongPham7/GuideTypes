@@ -1,29 +1,27 @@
 open Core
-open Type_equality_check_common
-open Typecheck_common
+open Guide_type_utility
 open Typecheck
 open Ast_types
 
 (* Access function definitions *)
 
-let collect_function_definitions prog =
-  List.filter_map prog ~f:(fun top ->
-      match top with
-      | Top_proc (f_id, process) -> Some (f_id.txt, process)
-      | Top_sess _ -> None
-      | Top_external _ -> None)
-
 let get_function_definition list_function_definitions f_id =
-  List.Assoc.find_exn list_function_definitions ~equal:String.equal f_id
+  match List.Assoc.find list_function_definitions ~equal:String.equal f_id with
+  | Some x -> x
+  | None ->
+      failwith
+        (sprintf "Function %s has no definition in get_function_definition" f_id)
 
 (* Expand a type name to its definition so that it becomes clear what the first
    transition step of the type is *)
 
 let expand_type_name list_type_definitions (name, continuation) =
-  let name_definition =
-    List.Assoc.find_exn list_type_definitions ~equal:String.equal name
-  in
-  substitute_into_type_definition name_definition continuation
+  match List.Assoc.find list_type_definitions ~equal:String.equal name with
+  | None ->
+      failwith
+        (sprintf "Type name %s has no definition in expand_type_name" name)
+  | Some name_definition ->
+      substitute_into_type_definition name_definition continuation
 
 let rec recursively_expand_type_name list_type_definitions definition =
   match definition with
@@ -265,46 +263,67 @@ let simulate_type_with_proc list_function_definitions list_type_definitions proc
   simulate_type_with_command list_function_definitions list_type_definitions cmd
     ctxt channel_id_target input_type
 
-let coverage_check_prog prog type_name =
-  let list_type_definitions = collect_type_definitions prog in
-  (* Print out the type definitions *)
-  let () =
-    print_list_type_definitions Format.std_formatter list_type_definitions
+let successively_simulate_type_with_guide_composition list_function_definitions
+    list_type_definitions guide_composition ext_ctxt initial_uncovered_type =
+  let simulate acc (proc, channel_name) =
+    let cumulative_covered_type, list_type_definitions = acc in
+    let final_type, _, acc_output =
+      simulate_type_with_proc list_function_definitions list_type_definitions
+        proc ext_ctxt channel_name cumulative_covered_type
+    in
+    let list_new_type_definitions =
+      List.map acc_output ~f:(fun (_, _, possible_definition) ->
+          match possible_definition with
+          | _, None ->
+              failwith "A type definition is missing from the output acc"
+          | type_name, Some x -> (type_name, x))
+    in
+    (final_type, list_new_type_definitions @ list_type_definitions)
   in
+  List.fold guide_composition
+    ~init:(initial_uncovered_type, list_type_definitions)
+    ~f:simulate
+
+(* Main function for coverage checking *)
+
+let coverage_check_prog prog =
+  let list_type_definitions = collect_type_definitions prog in
   let ext_ctxt = collect_externals prog in
   let list_function_definitions = collect_function_definitions prog in
-  let function_name = "Guide" in
-  let function_def =
-    match
-      List.Assoc.find list_function_definitions ~equal:String.equal
-        function_name
-    with
-    | Some x -> x
-    | None -> failwith "The provided function name does not exist in the file"
+  let list_guides = collect_guide_composition prog in
+  let list_guide_defs_right_channels =
+    let extract_function_def function_name =
+      match
+        List.Assoc.find list_function_definitions ~equal:String.equal
+          function_name
+      with
+      | Some x -> x
+      | None -> failwith "The provided function name does not exist in the file"
+    in
+    let extract_function_def_and_right_channel function_name =
+      let function_def = extract_function_def function_name in
+      let right_channel_name = get_right_channel_name function_def in
+      (function_def, right_channel_name)
+    in
+    List.map list_guides ~f:extract_function_def_and_right_channel
   in
-  let final_type, list_continuations, acc =
-    simulate_type_with_proc list_function_definitions list_type_definitions
-      function_def ext_ctxt "lat"
-      (Styv_var (type_name, Styv_one))
+  let initial_uncovered_type =
+    prog |> collect_initial_uncovered_type |> eval_sty
   in
-  let list_new_type_definitions = List.map acc ~f:(fun (_, _, x) -> x) in
-  (* Print out the new types introduced by coverage checking *)
-  let () =
-    print_endline "New types introduced by coverage checking:";
-    List.iter list_new_type_definitions ~f:(fun (type_name, definition) ->
-        match definition with
-        | None -> failwith "Some type name has no definition"
-        | Some definition ->
-            Format.printf "(Type name, definition) = (%s, %a)\n" type_name
-              Ast_ops.print_sess_tyv definition)
+  let final_type, acc =
+    successively_simulate_type_with_guide_composition list_function_definitions
+      list_type_definitions list_guide_defs_right_channels ext_ctxt
+      initial_uncovered_type
   in
-  (* Print out the type constructed *)
+  (* Print out the result of coverage checking *)
   let () =
     Format.printf "Final type of coverage checking = %a\n"
-      Ast_ops.print_sess_tyv final_type
-  in
-  let () =
-    List.iter list_continuations ~f:(fun definition ->
-        Format.printf "Continuation = %a\n" Ast_ops.print_sess_tyv definition)
+      Ast_ops.print_sess_tyv final_type;
+    (* List.iter list_continuations ~f:(fun definition ->
+        Format.printf "Continuation = %a\n" Ast_ops.print_sess_tyv definition); *)
+    print_endline "New types introduced by coverage checking:";
+    List.iter acc ~f:(fun (type_name, definition) ->
+        Format.printf "(Type name, definition) = (%s, %a)\n" type_name
+          Ast_ops.print_sess_tyv definition)
   in
   Ok ()

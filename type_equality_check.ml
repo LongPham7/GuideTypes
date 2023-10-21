@@ -1,7 +1,7 @@
 open Core
 open Ast_types
 open Ast_ops
-open Type_equality_check_common
+open Guide_type_utility
 
 (* The type-equality checking algorithm for context-free guide types implemented
    in this module is explained in the paper "A Fast Algorithm for Deciding
@@ -174,14 +174,22 @@ let detect_cycle_type_names list_definitions =
 let expand_unguarded_type_definitions list_definitions =
   let expand_unguarded_type_definition definition =
     match definition with
-    | Styv_var (head_name, continuation) ->
-        let head_name_definition =
-          List.Assoc.find_exn list_definitions ~equal:String.equal head_name
-        in
-        (substitute_into_type_definition head_name_definition continuation, true)
+    | Styv_var (head_name, continuation) -> (
+        match
+          List.Assoc.find list_definitions ~equal:String.equal head_name
+        with
+        | None ->
+            failwith
+              (sprintf
+                 "Type name %s has no definition in \
+                  expand_unguarded_type_definitions"
+                 head_name)
+        | Some head_name_definition ->
+            ( substitute_into_type_definition head_name_definition continuation,
+              true ))
     | _ -> (definition, false)
   in
-  let list_definitions_substitued_and_change =
+  let list_definitions_substituted_and_change =
     List.map list_definitions ~f:(fun (name, definition) ->
         let definition_substituted, any_change =
           expand_unguarded_type_definition definition
@@ -189,10 +197,11 @@ let expand_unguarded_type_definitions list_definitions =
         (name, definition_substituted, any_change))
   in
   let list_definitions_substituted =
-    List.map list_definitions_substitued_and_change ~f:(fun (x, y, _) -> (x, y))
+    List.map list_definitions_substituted_and_change ~f:(fun (x, y, _) ->
+        (x, y))
   in
   let any_change =
-    List.exists list_definitions_substitued_and_change ~f:(fun (_, _, z) -> z)
+    List.exists list_definitions_substituted_and_change ~f:(fun (_, _, z) -> z)
   in
   (list_definitions_substituted, any_change)
 
@@ -223,12 +232,16 @@ let detect_cycle acc definition1 definition2 =
   List.exists acc ~f:type_pair_matched
 
 let expand_type_name list_type_definitions (name, continuation) =
-  let type_definition =
-    List.Assoc.find_exn list_type_definitions
+  match
+    List.Assoc.find list_type_definitions
       ~equal:(fun x y -> String.equal x y)
       name
-  in
-  substitute_into_type_definition type_definition continuation
+  with
+  | None ->
+      failwith
+        (sprintf "Type name %s has no definition in expand_type_name" name)
+  | Some type_definition ->
+      substitute_into_type_definition type_definition continuation
 
 let regular_type_equality list_type_definitions definition1 definition2 =
   let rec recursively_check_equality acc definition1 definition2 =
@@ -337,7 +350,8 @@ let rec normalize_type_definition type_name definition =
 let normalize_type_name_and_definition (name, definition) =
   let () = counter_fresh_type_name := 0 in
   match definition with
-  | Styv_one -> failwith "Some type name is defined as immediate termination"
+  | Styv_one ->
+      failwith (sprintf "Type name %s is defined as immediate termination" name)
   | Styv_conj (b, s) ->
       let s_compact, list_new_definitions = normalize_type_definition name s in
       let name_and_definition_transformed = (name, Styv_conj (b, s_compact)) in
@@ -370,7 +384,8 @@ let normalize_type_name_and_definition (name, definition) =
       in
       (name_and_definition_transformed :: list_new_definitions1)
       @ list_new_definitions2
-  | Styv_var _ -> failwith "Some type name is defined as a type name"
+  | Styv_var _ ->
+      failwith (sprintf "Type name %s is defined as a type name" name)
 
 let normalize_list_definitions list_definitions =
   list_definitions
@@ -429,7 +444,14 @@ let rec compute_norm_definition_from_current_norms list_names_norms definition =
         compute_norm_definition_from_current_norms list_names_norms continuation
       in
       let name_norm =
-        List.Assoc.find_exn list_names_norms ~equal:String.equal name
+        match List.Assoc.find list_names_norms ~equal:String.equal name with
+        | None ->
+            failwith
+              (sprintf
+                 "Type name %s has no norm in \
+                  compute_norm_definition_from_current_norms"
+                 name)
+        | Some x -> x
       in
       match (name_norm, continuation_norm) with
       | None, None -> None
@@ -440,7 +462,11 @@ let rec compute_norm_definition_from_current_norms list_names_norms definition =
 let refine_norms list_definitions list_names_norms =
   let compute_new_counter (name, old_counter) =
     let definition =
-      List.Assoc.find_exn list_definitions ~equal:String.equal name
+      match List.Assoc.find list_definitions ~equal:String.equal name with
+      | None ->
+          failwith
+            (sprintf "Type name %s has no definition in refine_norms" name)
+      | Some x -> x
     in
     let new_counter =
       compute_norm_definition_from_current_norms list_names_norms definition
@@ -494,7 +520,12 @@ let rec get_norm_of_type_name_string list_names_norms type_name_string =
   | Styv_one -> 0
   | Styv_var (name, continuation) ->
       let name_norm =
-        List.Assoc.find_exn list_names_norms ~equal:String.equal name
+        match List.Assoc.find list_names_norms ~equal:String.equal name with
+        | None ->
+            failwith
+              (sprintf
+                 "Type name %s has no norm in get_norm_of_type_name_string" name)
+        | Some x -> x
       in
       let continuation_norm =
         get_norm_of_type_name_string list_names_norms continuation
@@ -564,14 +595,26 @@ let rec make_norm_reducing_steps list_definitions list_names_norms definition
             (num_steps - 1)
     | Styv_var (name, continuation) ->
         let name_norm =
-          List.Assoc.find_exn list_names_norms ~equal:String.equal name
+          match List.Assoc.find list_names_norms ~equal:String.equal name with
+          | None ->
+              failwith
+                (sprintf "Type name %s has no norm in make_norm_reducing_steps"
+                   name)
+          | Some x -> x
         in
         if name_norm <= num_steps then
           make_norm_reducing_steps list_definitions list_names_norms
             continuation (num_steps - name_norm)
         else
           let definition =
-            List.Assoc.find_exn list_definitions ~equal:String.equal name
+            match List.Assoc.find list_definitions ~equal:String.equal name with
+            | None ->
+                failwith
+                  (sprintf
+                     "Type name %s has no definition in \
+                      make_norm_reducing_steps"
+                     name)
+            | Some x -> x
           in
           let definition_continuation =
             make_single_norm_reducing_step list_names_norms definition
@@ -589,15 +632,31 @@ let create_initial_full_base list_definitions list_names_norms =
   in
   let create_corresponding_type (name1, name2) =
     let norm1 =
-      List.Assoc.find_exn list_names_norms ~equal:String.equal name1
+      match List.Assoc.find list_names_norms ~equal:String.equal name1 with
+      | None ->
+          failwith
+            (sprintf "Type name %s has no norm in create_initial_full_base"
+               name1)
+      | Some x -> x
     in
     let norm2 =
-      List.Assoc.find_exn list_names_norms ~equal:String.equal name2
+      match List.Assoc.find list_names_norms ~equal:String.equal name2 with
+      | None ->
+          failwith
+            (sprintf "Type name %s has no norm in create_initial_full_base"
+               name2)
+      | Some x -> x
     in
     if norm1 < norm2 then None
     else
       let definition1 =
-        List.Assoc.find_exn list_definitions ~equal:String.equal name1
+        match List.Assoc.find list_definitions ~equal:String.equal name1 with
+        | None ->
+            failwith
+              (sprintf
+                 "Type name %s has no definition in create_initial_full_base"
+                 name1)
+        | Some x -> x
       in
       let name1_norm_reduced =
         make_norm_reducing_steps list_definitions list_names_norms definition1
@@ -653,10 +712,24 @@ let rec equal_by_decomposition list_names_norms base type_name_string1
         head_and_tail_of_type_name_string type_name_string2
       in
       let head_name1_norm =
-        List.Assoc.find_exn list_names_norms ~equal:String.equal head_name1
+        match
+          List.Assoc.find list_names_norms ~equal:String.equal head_name1
+        with
+        | None ->
+            failwith
+              (sprintf "Type name %s has no norm in equal_by_decomposition"
+                 head_name1)
+        | Some x -> x
       in
       let head_name2_norm =
-        List.Assoc.find_exn list_names_norms ~equal:String.equal head_name2
+        match
+          List.Assoc.find list_names_norms ~equal:String.equal head_name2
+        with
+        | None ->
+            failwith
+              (sprintf "Type name %s has no norm in equal_by_decomposition"
+                 head_name2)
+        | Some x -> x
       in
       let decompose (large_head, small_continuation)
           (small_head, large_continuation) =
@@ -684,13 +757,29 @@ let rec equal_by_decomposition list_names_norms base type_name_string1
 let bisimulate_name_and_candidate_decomposition list_definitions
     list_names_norms base (name, decomposition) =
   let definition =
-    List.Assoc.find_exn list_definitions ~equal:String.equal name
+    match List.Assoc.find list_definitions ~equal:String.equal name with
+    | None ->
+        failwith
+          (sprintf
+             "Type name %s has no definition in \
+              bisimulate_name_and_candidate_decomposition"
+             name)
+    | Some x -> x
   in
   let decomposition_hd, decomposition_tl =
     head_and_tail_of_type_name_string decomposition
   in
   let decomposition_hd_definition =
-    List.Assoc.find_exn list_definitions ~equal:String.equal decomposition_hd
+    match
+      List.Assoc.find list_definitions ~equal:String.equal decomposition_hd
+    with
+    | None ->
+        failwith
+          (sprintf
+             "Type name %s has no definition in \
+              bisimulate_name_and_candidate_decomposition"
+             decomposition_hd)
+    | Some x -> x
   in
   match (definition, decomposition_hd_definition) with
   | Styv_one, Styv_one -> true
@@ -835,12 +924,12 @@ let type_equality_check_list_type_pairs list_type_definitions_raw list_pairs =
   in
   (* For debugging *)
   (* let () =
-    print_list_type_definitions Format.std_formatter list_type_definitions;
-    print_endline "The list of norms of type names:";
-    print_list_names_norms list_names_norms;
-    print_endline "Final base:";
-    print_base final_base
-  in *)
+       print_list_type_definitions Format.std_formatter list_type_definitions;
+       print_endline "The list of norms of type names:";
+       print_list_names_norms list_names_norms;
+       print_endline "Final base:";
+       print_base final_base
+     in *)
   List.map list_pairs_with_fresh_type_names
     ~f:(fun ((name1, def1), (name2, def2)) ->
       ( def1,

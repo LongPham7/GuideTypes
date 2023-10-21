@@ -234,4 +234,6 @@ let normalize_prog prog =
       | Top_sess _ -> None
       | Top_proc (proc_name, proc) -> Some (proc_name.txt, normalize_proc proc)
       | Top_external _ -> None
+      | Top_initial_type _ -> None
+      | Top_guide_composition _ -> None
     )

@@ -161,5 +161,7 @@ type sess_or_proc =
   | Top_sess of type_id * sess_ty option
   | Top_proc of procedure_id * proc
   | Top_external of variable_id * base_ty
+  | Top_initial_type of sess_ty
+  | Top_guide_composition of string list
 
 type prog = sess_or_proc list

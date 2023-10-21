@@ -103,6 +103,9 @@ let mkcmd ~loc cmd_desc = {
 %token UNIT
 %token UREAL
 
+%token INITIAL_TYPE
+%token GUIDE_COMPOSITION
+
 %token BOOL_U
 %token NAT_U
 %token PREAL_U
@@ -140,6 +143,10 @@ toplevel:
     { Top_proc (proc_name, { proc_sig; proc_body; proc_loc = make_loc $sloc }) }
   | EXTERNAL; var_name = mkloc(LIDENT); COLON; ty = base_ty
     { Top_external (var_name, ty) }
+  | INITIAL_TYPE; COLON; sty_body = sess_ty
+    { Top_initial_type sty_body }
+  | GUIDE_COMPOSITION; COLON; list_guides = separated_nonempty_list(SEMI, UIDENT)
+    { Top_guide_composition list_guides }
 
 proc_sig:
   | psig_theta_tys = proc_theta; LPAREN; psig_param_tys = separated_list(SEMI, param_ty); RPAREN; MINUSGREATER; psig_ret_ty = base_ty; BAR; psig_sess_left = chtype; BAR; psig_sess_right = chtype

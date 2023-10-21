@@ -58,9 +58,9 @@ let type_equality_check prog first_type_name second_type_name =
       Type_equality_check.type_equality_check_prog prog first_type_name
         second_type_name)
 
-let coverage_check prog type_name =
-  Timer.wrap_duration "type equality checking" (fun () ->
-      Coverage_check.coverage_check_prog prog type_name)
+let coverage_check prog =
+  Timer.wrap_duration "coverage checking" (fun () ->
+      Coverage_check.coverage_check_prog prog)
 
 let anf prog =
   Timer.wrap_duration "normalizing" (fun () -> Anf.normalize_prog prog)
@@ -120,13 +120,12 @@ let cmd_type_equality_check =
 let cmd_coverage_check =
   Command.basic ~summary:"coverage check"
     (let open Command.Let_syntax in
-     let%map_open filename = anon ("filename" %: Filename.arg_type)
-     and type_name = anon ("type name" %: string) in
+     let%map_open filename = anon ("filename" %: Filename.arg_type) in
      fun () ->
        let result =
          let open Or_error.Let_syntax in
          let%bind prog = parse_file filename in
-         let%bind () = coverage_check prog type_name in
+         let%bind () = coverage_check prog in
          Ok ()
        in
        report_result result)

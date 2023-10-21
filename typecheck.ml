@@ -1,6 +1,6 @@
 open Core
 open Ast_types
-open Typecheck_common
+open Guide_type_utility
 open Or_error.Let_syntax
 
 exception Type_error of string * Location.t
@@ -401,7 +401,9 @@ let collect_sess_tys prog =
          | Top_proc _ -> None
          | Top_sess (type_name, sty) ->
              Some (type_name.txt, Option.map ~f:eval_sty sty)
-         | Top_external _ -> None))
+         | Top_external _ -> None
+         | Top_initial_type _ -> None
+         | Top_guide_composition _ -> None))
 
 let collect_proc_sigs prog =
   String.Map.of_alist_or_error
@@ -410,7 +412,9 @@ let collect_proc_sigs prog =
          | Top_sess _ -> None
          | Top_proc (proc_name, { proc_sig; _ }) ->
              Some (proc_name.txt, eval_proc_sig proc_sig)
-         | Top_external _ -> None))
+         | Top_external _ -> None
+         | Top_initial_type _ -> None
+         | Top_guide_composition _ -> None))
 
 let channel_direction_is_left dir =
   match dir with `Left -> true | `Right -> false
@@ -918,7 +922,8 @@ let tycheck_prog prog =
                     (Type_error ("non-contractive type", sty.sty_loc))
               | _ -> verify_sess_ty sty_ctxt sty))
       | Top_proc (_, proc) -> tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc
-      | Top_external _ -> Ok ())
+      | Top_external _ -> Ok ()
+      | _ -> Ok ())
 
 let () =
   Location.register_error_of_exn (function

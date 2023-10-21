@@ -49,6 +49,9 @@ let keyword_table = Hashtbl.of_alist_exn (module String) [
   ("unit_u", UNIT_U);
   ("ureal_u", UREAL_U);
 
+  ("Initial_type", INITIAL_TYPE);
+  ("Guide_composition", GUIDE_COMPOSITION);
+
   ("&", AMPERSAND);
   ("*", ASTERISK);
   ("|", BAR);
