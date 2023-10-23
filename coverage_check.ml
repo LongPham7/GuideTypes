@@ -81,10 +81,8 @@ let create_fresh_type_name () =
   let () = counter_fresh_type_name := fresh_number + 1 in
   "T_temp_" ^ Int.to_string fresh_number
 
-(* Simulate an input type alongside a command. It returns (i) a type constructed
-   by simulating the input type alongside the command, (ii) the list of
-   continuations after the simulation, and (iii) the list of newly created type
-   names and their definitions that are introduced during coverage checking. *)
+(* Determine if a given expression in a sampling statement is covered (i.e., it
+   draws a fresh sample) *)
 
 let distribution_base_type exp ctxt =
   let dist_base_type =
@@ -96,6 +94,9 @@ let distribution_base_type exp ctxt =
   | Btyv_prim x -> (true, x)
   | Btyv_prim_uncovered x -> (false, x)
   | _ -> failwith "The base type of the distribution is not supported"
+
+(* Check the coverage of Styv_conj. This is used as a helper function inside
+   simulate_type_with_command. *)
 
 let covered_by_list_conj_types prim_type list_input_types =
   let covered_by_conj_type definition =
@@ -115,9 +116,14 @@ let covered_by_list_conj_types prim_type list_input_types =
   in
   List.for_all list_input_types ~f:covered_by_conj_type
 
-(* Simulate an input type alongside a command. ctxt is a context used to infer
-   the type of an expression. channel_id_target is the name of the channel
-   between the subguide and the model. *)
+(* Simulate an input type alongside a command. It returns (i) a type constructed
+   by simulating the input type alongside the command, (ii) the list of
+   continuations after the simulation, and (iii) the list of newly created type
+   names and their definitions that are introduced during coverage checking.
+
+   ctxt is a context used to infer the type of an expression. channel_id_target
+   is the name of the channel between the subguide and the model.*)
+
 let simulate_type_with_command list_function_definitions list_type_definitions
     cmd ctxt channel_id_target input_type =
   (* acc records the pairs of (function ID, list of guide types) that the
@@ -263,6 +269,11 @@ let simulate_type_with_proc list_function_definitions list_type_definitions proc
   simulate_type_with_command list_function_definitions list_type_definitions cmd
     ctxt channel_id_target input_type
 
+(* Simulate a type alongside each process in the sequential composition of
+   subguides. The input initial type is simulated alongside the first subguide.
+   Its output type is then simulated alongside the second subguide. We repeat it
+   until we obtain the final type after simulating the last subguide. *)
+
 let successively_simulate_type_with_guide_composition list_function_definitions
     list_type_definitions guide_composition ext_ctxt initial_uncovered_type =
   let simulate acc (proc, channel_name) =
@@ -274,8 +285,10 @@ let successively_simulate_type_with_guide_composition list_function_definitions
     let list_new_type_definitions =
       List.map acc_output ~f:(fun (_, _, possible_definition) ->
           match possible_definition with
-          | _, None ->
-              failwith "A type definition is missing from the output acc"
+          | type_name, None ->
+              failwith
+                (sprintf "Type name %s has no definition in the output acc"
+                   type_name)
           | type_name, Some x -> (type_name, x))
     in
     (final_type, list_new_type_definitions @ list_type_definitions)
@@ -283,6 +296,137 @@ let successively_simulate_type_with_guide_composition list_function_definitions
   List.fold guide_composition
     ~init:(initial_uncovered_type, list_type_definitions)
     ~f:simulate
+
+(* Check if a given type is fully covered *)
+
+let is_base_type_covered base_type =
+  match base_type with
+  | Btyv_prim _ -> true
+  | Btyv_prim_uncovered _ -> false
+  | _ ->
+      failwith
+        "The given base type is not a (covered or uncovered) primitive type"
+
+(* Extract all type names mentioned in a given type. We also return whether the
+   type only mentions covered base types (except inside type names). The first
+   output is a Boolean flag indicating that the input type only mentions covered
+   base types (except possibly inside other type names). The second output is
+   the list of type names mentioned. *)
+let rec extract_all_type_names_mentioned definition =
+  match definition with
+  | Styv_one -> (true, [])
+  | Styv_conj (b, s) ->
+      if not (is_base_type_covered b) then (false, [])
+      else extract_all_type_names_mentioned s
+  | Styv_imply (b, s) ->
+      if not (is_base_type_covered b) then (false, [])
+      else extract_all_type_names_mentioned s
+  | Styv_ichoice (s1, s2) ->
+      let is_covered1, list_type_names1 = extract_all_type_names_mentioned s1 in
+      let is_covered2, list_type_names2 = extract_all_type_names_mentioned s2 in
+      if is_covered1 && is_covered2 then
+        ( true,
+          List.dedup_and_sort
+            (list_type_names1 @ list_type_names2)
+            ~compare:String.compare )
+      else (false, [])
+  | Styv_echoice (s1, s2) ->
+      let is_covered1, list_type_names1 = extract_all_type_names_mentioned s1 in
+      let is_covered2, list_type_names2 = extract_all_type_names_mentioned s2 in
+      if is_covered1 && is_covered2 then
+        ( true,
+          List.dedup_and_sort
+            (list_type_names1 @ list_type_names2)
+            ~compare:String.compare )
+      else (false, [])
+  | Styv_var (type_name, continuation) ->
+      let is_continuation_covered, list_type_names =
+        extract_all_type_names_mentioned continuation
+      in
+      if is_continuation_covered then
+        ( true,
+          List.dedup_and_sort
+            (type_name :: list_type_names)
+            ~compare:String.compare )
+      else (false, [])
+
+(* Create an initial mapping from type names to their full-coverage statuses *)
+let create_initial_full_coverage_map list_definitions =
+  let list_type_names =
+    List.map list_definitions ~f:(fun (type_name, _) -> type_name)
+  in
+  let get_all_type_names_mentioned type_name =
+    let type_definition =
+      match List.Assoc.find list_definitions ~equal:String.equal type_name with
+      | None ->
+          failwith
+            (sprintf
+               "Type name %s has no definition in is_type_name_fully_covered"
+               type_name)
+      | Some x -> x
+    in
+    extract_all_type_names_mentioned type_definition
+  in
+  let create_initial_entry type_name =
+    let is_covered, all_types_names_mentioned =
+      get_all_type_names_mentioned type_name
+    in
+    (type_name, (all_types_names_mentioned, is_covered))
+  in
+  List.map list_type_names ~f:create_initial_entry
+
+let is_type_name_covered_in_coverage_map coverage_map type_name =
+  let _, is_covered =
+    match List.Assoc.find coverage_map ~equal:String.equal type_name with
+    | None ->
+        failwith
+          (sprintf
+             "Type name %s has no entry in refine_map_full_coverage_checking"
+             type_name)
+    | Some x -> x
+  in
+  is_covered
+
+(* Refine the coverage map (i.e., mapping from type names to their current
+   full-coverage statuses) by one step *)
+let refine_full_coverage_map coverage_map =
+  let refine_single_entry (type_name, (all_types_names_mentioned, is_covered)) =
+    let still_full_covered =
+      List.for_all all_types_names_mentioned ~f:(fun x ->
+          is_type_name_covered_in_coverage_map coverage_map x)
+    in
+    let any_change = Bool.( <> ) is_covered still_full_covered in
+    (any_change, (type_name, (all_types_names_mentioned, still_full_covered)))
+  in
+  let list_change, result_refinement =
+    coverage_map |> List.map ~f:refine_single_entry |> List.unzip
+  in
+  let any_change = List.exists list_change ~f:(fun x -> x) in
+  (any_change, result_refinement)
+
+(* Recursively refine the coverage map until it is saturated *)
+let is_type_name_fully_covered list_definitions =
+  let initial_coverage_map =
+    create_initial_full_coverage_map list_definitions
+  in
+  let rec recursively_refine_map_full_coverage_checking coverage_map =
+    let any_change, result_refinement = refine_full_coverage_map coverage_map in
+    if any_change then
+      recursively_refine_map_full_coverage_checking result_refinement
+    else result_refinement
+  in
+  recursively_refine_map_full_coverage_checking initial_coverage_map
+
+let check_full_coverage list_definitions definition =
+  let is_covered, all_type_names_mentioned =
+    extract_all_type_names_mentioned definition
+  in
+  let coverage_map = is_type_name_fully_covered list_definitions in
+  let all_type_names_covered =
+    List.for_all all_type_names_mentioned ~f:(fun x ->
+        is_type_name_covered_in_coverage_map coverage_map x)
+  in
+  if is_covered && all_type_names_covered then true else false
 
 (* Main function for coverage checking *)
 
@@ -324,6 +468,10 @@ let coverage_check_prog prog =
     print_endline "New types introduced by coverage checking:";
     List.iter acc ~f:(fun (type_name, definition) ->
         Format.printf "(Type name, definition) = (%s, %a)\n" type_name
-          Ast_ops.print_sess_tyv definition)
+          Ast_ops.print_sess_tyv definition);
+    let is_final_type_fully_covered = check_full_coverage acc final_type in
+    if is_final_type_fully_covered then
+      print_endline "The final type is fully covered"
+    else print_endline "The final type is not fully covered"
   in
   Ok ()

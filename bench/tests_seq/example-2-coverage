@@ -21,5 +21,24 @@ proc Guide[a: preal; b: preal; c: preal; d: preal]() -> unit | old: Previous_tra
       return()
 }
 
+proc Guide2[a: preal; b: preal; c: preal; d: preal]() -> unit | old: Previous_trace_type | lat : Latent = {
+  _ <- observe{old}(GAMMA(2; 1));
+  v <- sample{lat}(SAME(preal));
+  if{lat} . then
+    if{old} . then
+      return ()
+    else
+      return()
+  else
+    if{old} . then
+      _ <- observe{old}(BETA(c; d));
+      _ <- sample{lat}(BETA(c; d));
+      _ <- Guide();
+      return()
+    else
+      _ <- sample{lat}(BETA(c; d));
+      return()
+}
+
 Initial_type: Init_type
-Guide_composition: Guide; Guide
+Guide_composition: Guide; Guide2
