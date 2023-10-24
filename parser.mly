@@ -1,5 +1,6 @@
 %{
 open Ast_types
+open Guide_type_utility
 
 let mkloc = Location.mkloc
 
@@ -112,6 +113,8 @@ let mkcmd ~loc cmd_desc = {
 %token REAL_U
 %token UNIT_U
 %token UREAL_U
+%token TENSOR_U
+%token SIMPLEX_U
 
 %right OR
 %right AND
@@ -221,8 +224,12 @@ base_prim_ty:
       { Bty_dist bty }
     | LPAREN; pty = prim_ty; SEMI; LBRACKET; dims = separated_list(SEMI, INTV); RBRACKET; RPAREN; TENSOR
       { Bty_tensor (pty, dims) }
+    | LPAREN; pty = prim_ty; SEMI; LBRACKET; dims = separated_list(SEMI, INTV); RBRACKET; RPAREN; TENSOR_U
+      { Bty_tensor_uncovered (pty, dims) }
     | SIMPLEX; LBRACKET; n = INTV; RBRACKET
       { Bty_simplex n }
+    | SIMPLEX_U; LBRACKET; n = INTV; RBRACKET
+      { Bty_simplex_uncovered n }
     | type_name = mkloc(LIDENT)
       { Bty_external type_name }
     )
@@ -339,10 +346,8 @@ prim_exp:
       { E_let (exp1, var_name, exp2) }
     | dist = dist(exp)
       { E_dist dist }
-    (* As of now, we only support primitive types inside SAME. However, ideally, 
-    we should support all base types, not just primitive types. *)
-    | SAME; LPAREN; pty = prim_ty; RPAREN
-      { E_dist (D_same (Btyv_prim pty)) }
+    | SAME; LPAREN; bty = base_prim_ty; RPAREN
+      { E_dist (D_same (eval_ty bty)) }
     | TENSOR; LPAREN; exp0 = exp; RPAREN
       { E_tensor exp0 }
     | STACK; LPAREN; exps = separated_nonempty_list(SEMI, exp); RPAREN

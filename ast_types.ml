@@ -31,7 +31,9 @@ and base_ty_desc =
   | Bty_arrow of base_ty * base_ty
   | Bty_dist of base_ty
   | Bty_tensor of prim_ty * int list
+  | Bty_tensor_uncovered of prim_ty * int list
   | Bty_simplex of int
+  | Bty_simplex_uncovered of int
   | Bty_external of type_id
   | Bty_product of base_ty * base_ty
 
@@ -41,7 +43,9 @@ type base_tyv =
   | Btyv_arrow of base_tyv * base_tyv
   | Btyv_dist of base_tyv
   | Btyv_tensor of prim_ty * int list
+  | Btyv_tensor_uncovered of prim_ty * int list
   | Btyv_simplex of int
+  | Btyv_simplex_uncovered of int
   | Btyv_external of string
   | Btyv_product of base_tyv * base_tyv
 [@@deriving equal, compare]

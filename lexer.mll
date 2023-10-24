@@ -48,6 +48,8 @@ let keyword_table = Hashtbl.of_alist_exn (module String) [
   ("real_u", REAL_U);
   ("unit_u", UNIT_U);
   ("ureal_u", UREAL_U);
+  ("tensor_u", TENSOR_U);
+  ("simplex_u", SIMPLEX_U);
 
   ("Initial_type", INITIAL_TYPE);
   ("Guide_composition", GUIDE_COMPOSITION);

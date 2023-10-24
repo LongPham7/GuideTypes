@@ -1,6 +1,8 @@
 type Old_trace
 type Latent
 
+type Init_type
+
 external identity_matrix2: (real; [2; 2]) tensor
 
 external dirichlet3: (preal; [3]) tensor -> simplex[3] dist
@@ -36,3 +38,6 @@ proc Proposal() -> unit | old: Old_trace | lat : Latent = {
     return ());
   return ()
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

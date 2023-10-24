@@ -10,7 +10,9 @@ let rec eval_ty ty =
   | Bty_arrow (ty1, ty2) -> Btyv_arrow (eval_ty ty1, eval_ty ty2)
   | Bty_dist ty0 -> Btyv_dist (eval_ty ty0)
   | Bty_tensor (pty, dims) -> Btyv_tensor (pty, dims)
+  | Bty_tensor_uncovered (pty, dims) -> Btyv_tensor_uncovered (pty, dims)
   | Bty_simplex n -> Btyv_simplex n
+  | Bty_simplex_uncovered n -> Btyv_simplex_uncovered n
   | Bty_external type_name -> Btyv_external type_name.txt
   | Bty_product (ty1, ty2) -> Btyv_product (eval_ty ty1, eval_ty ty2)
 
@@ -121,6 +123,17 @@ let get_right_channel_name proc =
   | Some (channel_name, _) -> channel_name
 
 (* Utility functions for extracting information from programs *)
+
+let collect_proc_sigs prog =
+  String.Map.of_alist_or_error
+    (List.filter_map prog ~f:(fun top ->
+         match top with
+         | Top_sess _ -> None
+         | Top_proc (proc_name, { proc_sig; _ }) ->
+             Some (proc_name.txt, eval_proc_sig proc_sig)
+         | Top_external _ -> None
+         | Top_initial_type _ -> None
+         | Top_guide_composition _ -> None))
 
 let collect_type_definitions prog =
   List.filter_map prog ~f:(fun top ->

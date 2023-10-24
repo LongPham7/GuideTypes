@@ -10,6 +10,9 @@ external gda2: simplex[2] -> (real; [3]) tensor dist -> (real; [3]) tensor dist 
 type Old_trace
 type Latent
 
+type Init_type = (real; [3]) tensor_u /\ (real; [3]) tensor_u /\ simplex_u[2] /\ $
+# type Init_type = preal_u /\ &{ $ | ureal_u /\ $ }
+
 proc Guide() -> unit | old : Old_trace | lat : Latent = {
   mu_prior <- { return mvn3(stack(tensor(1); tensor(1); tensor(1)))(identity_matrix3) };
   _ <- observe{old}(mu_prior);
@@ -21,3 +24,6 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
   gda_dist <- { return let sigma = identity_matrix3 in gda2(pi)(mvn3(mu1)(sigma))(mvn3(mu2)(sigma)) end };
   return ()
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

@@ -26,14 +26,24 @@ let is_prim_subtype pty1 pty2 =
 let rec is_subtype tyv1 tyv2 =
   match (tyv1, tyv2) with
   | Btyv_prim pty1, Btyv_prim pty2 -> is_prim_subtype pty1 pty2
-  | Btyv_prim_uncovered pty1, Btyv_prim pty2 -> is_prim_subtype pty1 pty2
+  | Btyv_prim_uncovered pty1, Btyv_prim_uncovered pty2 ->
+      is_prim_subtype pty1 pty2
+  | Btyv_prim pty1, Btyv_prim_uncovered pty2 -> is_prim_subtype pty1 pty2
   | Btyv_dist tyv1', Btyv_dist tyv2' -> equal_base_tyv tyv1' tyv2'
   | Btyv_arrow (tyv11, tyv12), Btyv_arrow (tyv21, tyv22) ->
       is_subtype tyv21 tyv11 && is_subtype tyv12 tyv22
   | Btyv_tensor (pty1, dims1), Btyv_tensor (pty2, dims2)
     when Poly.(dims1 = dims2) ->
       is_prim_subtype pty1 pty2
+  | Btyv_tensor_uncovered (pty1, dims1), Btyv_tensor_uncovered (pty2, dims2)
+    when Poly.(dims1 = dims2) ->
+      is_prim_subtype pty1 pty2
+  | Btyv_tensor (pty1, dims1), Btyv_tensor_uncovered (pty2, dims2)
+    when Poly.(dims1 = dims2) ->
+      is_prim_subtype pty1 pty2
   | Btyv_simplex n1, Btyv_simplex n2 when n1 = n2 -> true
+  | Btyv_simplex_uncovered n1, Btyv_simplex_uncovered n2 when n1 = n2 -> true
+  | Btyv_simplex n1, Btyv_simplex_uncovered n2 when n1 = n2 -> true
   | Btyv_simplex n1, Btyv_tensor (pty2, dims2) when Poly.([ n1 ] = dims2) ->
       is_prim_subtype Pty_ureal pty2
   | Btyv_tensor (pty1, dims1), Btyv_simplex n2 when Poly.(dims1 = [ n2 ]) ->
@@ -389,6 +399,8 @@ and tycheck_dist ~loc ctxt dist =
   | D_same bty -> (
       match bty with
       | Btyv_prim pty -> Ok (Btyv_prim_uncovered pty)
+      | Btyv_tensor (pty, dims) -> Ok (Btyv_tensor (pty, dims))
+      | Btyv_simplex n -> Ok (Btyv_simplex_uncovered n)
       | _ ->
           Or_error.of_exn
             (Invalid_argument "D_same applied to an invalid base type"))
@@ -401,17 +413,6 @@ let collect_sess_tys prog =
          | Top_proc _ -> None
          | Top_sess (type_name, sty) ->
              Some (type_name.txt, Option.map ~f:eval_sty sty)
-         | Top_external _ -> None
-         | Top_initial_type _ -> None
-         | Top_guide_composition _ -> None))
-
-let collect_proc_sigs prog =
-  String.Map.of_alist_or_error
-    (List.filter_map prog ~f:(fun top ->
-         match top with
-         | Top_sess _ -> None
-         | Top_proc (proc_name, { proc_sig; _ }) ->
-             Some (proc_name.txt, eval_proc_sig proc_sig)
          | Top_external _ -> None
          | Top_initial_type _ -> None
          | Top_guide_composition _ -> None))
@@ -462,7 +463,7 @@ let merge_session_types_outer_conditional_branches styv1 styv2 =
            "The two session types %a and %a don't have internal choice"
            Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2)
 
-let tycheck_cmd psig_ctxt =
+let forward_wrapper psig_ctxt =
   let rec forward ctxt cmd =
     match cmd.cmd_desc with
     | M_ret exp -> tycheck_exp ctxt exp
@@ -553,12 +554,15 @@ let tycheck_cmd psig_ctxt =
                    ("inconsistent initial value for iter", init_exp.exp_loc))
         | _ -> Or_error.of_exn (Type_error ("not iterable", iter_exp.exp_loc)))
   in
+  forward
+
+let tycheck_cmd psig_ctxt =
   let rec backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd =
     let sess, acc_sess_eq_constrs = sess_and_acc_sess_eq_constrs in
     match cmd.cmd_desc with
     | M_ret _ -> Ok sess_and_acc_sess_eq_constrs
     | M_bnd (cmd1, var_name, cmd2) ->
-        let%bind tyv1 = forward ctxt cmd1 in
+        let%bind tyv1 = forward_wrapper psig_ctxt ctxt cmd1 in
         let%bind ctxt' =
           Or_error.try_with (fun () ->
               match var_name with
@@ -570,7 +574,7 @@ let tycheck_cmd psig_ctxt =
         in
         backward ~access_to_old_trace ctxt sess_and_acc' cmd1
     | M_sample_recv (_, channel_name) -> (
-        let%bind tyv = forward ctxt cmd in
+        let%bind tyv = forward_wrapper psig_ctxt ctxt cmd in
         match Map.find sess channel_name.txt with
         | None ->
             Or_error.of_exn
@@ -587,7 +591,7 @@ let tycheck_cmd psig_ctxt =
                   ~data:(`Right, Styv_imply (tyv, sty)),
                 acc_sess_eq_constrs ))
     | M_sample_send (_, channel_name) -> (
-        let%bind tyv = forward ctxt cmd in
+        let%bind tyv = forward_wrapper psig_ctxt ctxt cmd in
         match Map.find sess channel_name.txt with
         | None ->
             Or_error.of_exn
@@ -775,7 +779,7 @@ let tycheck_cmd psig_ctxt =
         | _ -> Or_error.of_exn (Type_error ("not iterable", iter_exp.exp_loc)))
   in
   fun ctxt sess_left sess_right cmd ->
-    let%bind tyv = forward ctxt cmd in
+    let%bind tyv = forward_wrapper psig_ctxt ctxt cmd in
     let sess_left = Option.map sess_left ~f:(fun (k, v) -> (k, (`Left, v))) in
     let sess_right =
       Option.map sess_right ~f:(fun (k, v) -> (k, (`Right, v)))

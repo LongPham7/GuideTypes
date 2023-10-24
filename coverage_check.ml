@@ -85,33 +85,33 @@ let create_fresh_type_name () =
    draws a fresh sample) *)
 
 let distribution_base_type exp ctxt =
-  let dist_base_type =
-    match tycheck_exp ctxt exp with
-    | Ok (Btyv_dist x) -> x
-    | _ -> failwith "The given expression is not a distribution"
-  in
-  match dist_base_type with
-  | Btyv_prim x -> (true, x)
-  | Btyv_prim_uncovered x -> (false, x)
+  match tycheck_exp ctxt exp with
+  | Ok (Btyv_dist x) -> x
+  | error ->
+      let () =
+        Or_error.iter_error error ~f:(fun e -> Error.pp Format.std_formatter e)
+      in
+      failwith "The given expression is not a distribution in line 94"
+
+let get_covered_and_uncovered_distribution_base_types bty =
+  match bty with
+  | Btyv_prim x -> (true, Btyv_prim x, Btyv_prim_uncovered x)
+  | Btyv_prim_uncovered x -> (false, Btyv_prim x, Btyv_prim_uncovered x)
+  | Btyv_tensor (pty, dims) ->
+      (true, Btyv_tensor (pty, dims), Btyv_tensor_uncovered (pty, dims))
+  | Btyv_tensor_uncovered (pty, dims) ->
+      (false, Btyv_tensor (pty, dims), Btyv_tensor_uncovered (pty, dims))
+  | Btyv_simplex n -> (true, Btyv_simplex n, Btyv_simplex_uncovered n)
+  | Btyv_simplex_uncovered n -> (false, Btyv_simplex n, Btyv_simplex_uncovered n)
   | _ -> failwith "The base type of the distribution is not supported"
 
 (* Check the coverage of Styv_conj. This is used as a helper function inside
    simulate_type_with_command. *)
 
-let covered_by_list_conj_types prim_type list_input_types =
+let covered_by_list_conj_types covered_dist_base_type list_input_types =
   let covered_by_conj_type definition =
     match definition with
-    | Styv_conj (b, _) -> (
-        match b with
-        | Btyv_prim p ->
-            assert (equal_prim_ty p prim_type);
-            true
-        | Btyv_prim_uncovered p ->
-            assert (equal_prim_ty p prim_type);
-            false
-        | _ ->
-            failwith
-              "The given type is not a (covered or uncovered) primitive type")
+    | Styv_conj (b, _) -> equal_base_tyv b covered_dist_base_type
     | _ -> failwith "The given type is not of the form Styv_conj"
   in
   List.for_all list_input_types ~f:covered_by_conj_type
@@ -125,24 +125,32 @@ let covered_by_list_conj_types prim_type list_input_types =
    is the name of the channel between the subguide and the model.*)
 
 let simulate_type_with_command list_function_definitions list_type_definitions
-    cmd ctxt channel_id_target input_type =
+    cmd psig_ctxt ctxt channel_id_target input_type =
   (* acc records the pairs of (function ID, list of guide types) that the
      coverage checking has encountered so far. acc is used to detect a cycle.
      Additionally, each pair also comes with a freshly generate type name such
      that we can refer to it when we encounter it for the second time (i.e.,
      when a cycle is detected). *)
-  let rec simulate cmd list_input_types acc =
+  let rec simulate ctxt cmd list_input_types acc =
     let list_input_types =
       expand_list_input_types list_type_definitions list_input_types
     in
     match cmd.cmd_desc with
     | M_ret _ -> (Styv_one, list_input_types, acc)
-    | M_bnd (cmd1, _, cmd2) ->
+    | M_bnd (cmd1, var_name, cmd2) ->
+        let tyv1 = Or_error.ok_exn (forward_wrapper psig_ctxt ctxt cmd1) in
+        let ctxt' =
+          match var_name with
+          | None -> ctxt
+          | Some var_name ->
+              if Map.mem ctxt var_name.txt then ctxt
+              else Map.add_exn ctxt ~key:var_name.txt ~data:tyv1
+        in
         let type1, list_continuations1, acc1 =
-          simulate cmd1 list_input_types acc
+          simulate ctxt cmd1 list_input_types acc
         in
         let type2, list_continuations2, acc2 =
-          simulate cmd2 list_continuations1 acc1
+          simulate ctxt' cmd2 list_continuations1 acc1
         in
         (substitute_into_type_definition type1 type2, list_continuations2, acc2)
     | M_call (f_id, _) -> (
@@ -159,7 +167,7 @@ let simulate_type_with_command list_function_definitions list_type_definitions
               (f_id.txt, list_input_types, (f_fresh_type_name, None)) :: acc
             in
             let f_type, list_continuations, acc_intermediate =
-              simulate f_def.proc_body list_input_types acc_augmented
+              simulate ctxt f_def.proc_body list_input_types acc_augmented
             in
             let acc_updated =
               update_type_definition_in_acc acc_intermediate
@@ -175,29 +183,32 @@ let simulate_type_with_command list_function_definitions list_type_definitions
              the subguide and model"
         else (Styv_one, list_input_types, acc)
     | M_sample_send (exp, channel_id) ->
-        let is_covered, dist_base_type = distribution_base_type exp ctxt in
+        let dist_base_type = distribution_base_type exp ctxt in
+        let is_covered, covered_dist_base_type, uncovered_dist_base_type =
+          get_covered_and_uncovered_distribution_base_types dist_base_type
+        in
         if String.equal channel_id_target channel_id.txt then
           let list_continuations =
             List.map list_input_types ~f:(fun definition ->
                 match definition with
                 | Styv_conj (tyv, continuation) ->
                     assert (
-                      equal_base_tyv tyv (Btyv_prim dist_base_type)
-                      || equal_base_tyv tyv (Btyv_prim_uncovered dist_base_type));
+                      equal_base_tyv tyv covered_dist_base_type
+                      || equal_base_tyv tyv uncovered_dist_base_type);
                     continuation
                 | _ -> failwith "The given type is not of the form Styv_conj")
           in
           let is_covered_by_input_types =
-            covered_by_list_conj_types dist_base_type list_input_types
+            covered_by_list_conj_types covered_dist_base_type list_input_types
           in
           (* If the sampling statement of the current command or all input types
              cover the random variable, it is deemed covered. *)
           if is_covered || is_covered_by_input_types then
-            ( Styv_conj (Btyv_prim dist_base_type, Styv_one),
+            ( Styv_conj (covered_dist_base_type, Styv_one),
               list_continuations,
               acc )
           else
-            ( Styv_conj (Btyv_prim_uncovered dist_base_type, Styv_one),
+            ( Styv_conj (uncovered_dist_base_type, Styv_one),
               list_continuations,
               acc )
         else (Styv_one, list_input_types, acc)
@@ -212,9 +223,9 @@ let simulate_type_with_command list_function_definitions list_type_definitions
                       "Because the given type is not of the form Styv_echoice, \
                        we cannot swap the two branches")
           in
-          let type1, result1, acc1 = simulate cmd1 list_input_types acc in
+          let type1, result1, acc1 = simulate ctxt cmd1 list_input_types acc in
           let type2, result2, acc2 =
-            simulate cmd2 list_input_types_branch_swapped acc1
+            simulate ctxt cmd2 list_input_types_branch_swapped acc1
           in
           let list_continuations =
             List.dedup_and_sort (result1 @ result2) ~compare:compare_sess_tyv
@@ -230,14 +241,14 @@ let simulate_type_with_command list_function_definitions list_type_definitions
           (* We only enter the first branch because the second branch
              corresponds to the case where the previous subguide diverges from
              the current subguide. *)
-          simulate cmd1 list_first_branch_continuations acc
+          simulate ctxt cmd1 list_first_branch_continuations acc
     | M_branch_send _ -> failwith "A guide program cannot contain M_branch_send"
     | M_branch_self (_, cmd1, cmd2) ->
         let type1, list_continuations1, acc1 =
-          simulate cmd1 list_input_types acc
+          simulate ctxt cmd1 list_input_types acc
         in
         let type2, list_continuations2, acc2 =
-          simulate cmd2 list_input_types acc1
+          simulate ctxt cmd2 list_input_types acc1
         in
         (* For simplicity, we require the two types constructed for the two
            internal branches should be syntactically identical. *)
@@ -247,27 +258,28 @@ let simulate_type_with_command list_function_definitions list_type_definitions
         if n <= 0 then (Styv_one, list_input_types, acc)
         else
           let type_one_iter, list_continuations_one_iter, acc_one_iter =
-            simulate cmd list_input_types acc
+            simulate ctxt cmd list_input_types acc
           in
           let decremented_cmd =
             { cmd with cmd_desc = M_loop (n - 1, e, v_id, btyv, cmd) }
           in
           let type_remaining_iters, list_continuations, acc_remaining_iters =
-            simulate decremented_cmd list_continuations_one_iter acc_one_iter
+            simulate ctxt decremented_cmd list_continuations_one_iter
+              acc_one_iter
           in
           ( substitute_into_type_definition type_one_iter type_remaining_iters,
             list_continuations,
             acc_remaining_iters )
     | M_iter _ -> failwith "M_iter is not supported in coverage checking"
   in
-  simulate cmd [ input_type ] []
+  simulate ctxt cmd [ input_type ] []
 
 let simulate_type_with_proc list_function_definitions list_type_definitions proc
-    ext_ctxt channel_id_target input_type =
+    psig_ctxt ext_ctxt channel_id_target input_type =
   let cmd = proc.proc_body in
   let ctxt = extract_context_of_process ext_ctxt proc in
   simulate_type_with_command list_function_definitions list_type_definitions cmd
-    ctxt channel_id_target input_type
+    psig_ctxt ctxt channel_id_target input_type
 
 (* Simulate a type alongside each process in the sequential composition of
    subguides. The input initial type is simulated alongside the first subguide.
@@ -275,12 +287,13 @@ let simulate_type_with_proc list_function_definitions list_type_definitions proc
    until we obtain the final type after simulating the last subguide. *)
 
 let successively_simulate_type_with_guide_composition list_function_definitions
-    list_type_definitions guide_composition ext_ctxt initial_uncovered_type =
+    list_type_definitions guide_composition psig_ctxt ext_ctxt
+    initial_uncovered_type =
   let simulate acc (proc, channel_name) =
     let cumulative_covered_type, list_type_definitions = acc in
     let final_type, _, acc_output =
       simulate_type_with_proc list_function_definitions list_type_definitions
-        proc ext_ctxt channel_name cumulative_covered_type
+        proc psig_ctxt ext_ctxt channel_name cumulative_covered_type
     in
     let list_new_type_definitions =
       List.map acc_output ~f:(fun (_, _, possible_definition) ->
@@ -303,6 +316,10 @@ let is_base_type_covered base_type =
   match base_type with
   | Btyv_prim _ -> true
   | Btyv_prim_uncovered _ -> false
+  | Btyv_tensor _ -> true
+  | Btyv_tensor_uncovered _ -> false
+  | Btyv_simplex _ -> true
+  | Btyv_simplex_uncovered _ -> false
   | _ ->
       failwith
         "The given base type is not a (covered or uncovered) primitive type"
@@ -433,6 +450,7 @@ let check_full_coverage list_definitions definition =
 let coverage_check_prog prog =
   let list_type_definitions = collect_type_definitions prog in
   let ext_ctxt = collect_externals prog in
+  let psig_ctxt = Or_error.ok_exn (collect_proc_sigs prog) in
   let list_function_definitions = collect_function_definitions prog in
   let list_guides = collect_guide_composition prog in
   let list_guide_defs_right_channels =
@@ -456,7 +474,7 @@ let coverage_check_prog prog =
   in
   let final_type, acc =
     successively_simulate_type_with_guide_composition list_function_definitions
-      list_type_definitions list_guide_defs_right_channels ext_ctxt
+      list_type_definitions list_guide_defs_right_channels psig_ctxt ext_ctxt
       initial_uncovered_type
   in
   (* Print out the result of coverage checking *)

@@ -31,7 +31,14 @@ and print_base_tyv_prim fmt = function
            ~pp_sep:(fun fmt () -> Format.fprintf fmt "; ")
            (fun fmt n -> Format.fprintf fmt "%d" n))
         dims
+  | Btyv_tensor_uncovered (pty, dims) ->
+      Format.fprintf fmt "(%a; [%a]) tensor_u" print_prim_ty pty
+        (Format.pp_print_list
+           ~pp_sep:(fun fmt () -> Format.fprintf fmt "; ")
+           (fun fmt n -> Format.fprintf fmt "%d" n))
+        dims
   | Btyv_simplex n -> Format.fprintf fmt "simplex[%d]" n
+  | Btyv_simplex_uncovered n -> Format.fprintf fmt "simplex_u[%d]" n
   | Btyv_external name -> Format.fprintf fmt "%s" name
   | tyv -> Format.fprintf fmt "(%a)" print_base_tyv tyv
 
