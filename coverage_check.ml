@@ -469,8 +469,7 @@ let coverage_check_prog prog =
     List.iter acc ~f:(fun (type_name, definition) ->
         Format.printf "(Type name, definition) = (%s, %a)\n" type_name
           Ast_ops.print_sess_tyv definition);
-    let is_final_type_fully_covered = check_full_coverage acc final_type in
-    if is_final_type_fully_covered then
+    if check_full_coverage acc final_type then
       print_endline "The final type is fully covered"
     else print_endline "The final type is not fully covered"
   in

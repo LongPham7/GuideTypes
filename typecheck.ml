@@ -456,7 +456,11 @@ let merge_session_types_conditional_branches_old_channel styv1 styv2 =
   | Styv_ichoice (s1, _), Styv_ichoice (s2, _) ->
       (* assert (equal_sess_tyv t1 Styv_one && equal_sess_tyv t2 Styv_one); *)
       Some (`Left, Styv_ichoice (s1, s2), [])
-  | _, _ -> failwith "The two given session types don't have internal choice"
+  | _, _ ->
+      failwith
+        (Format.asprintf
+           "The two session types %a and %a don't have internal choice"
+           Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2)
 
 let tycheck_cmd psig_ctxt =
   let rec forward ctxt cmd =
@@ -684,7 +688,11 @@ let tycheck_cmd psig_ctxt =
                     else
                       raise
                         (Type_error
-                           ("mismatched sessions in M_branch_send", cmd.cmd_loc))),
+                           ( Format.asprintf
+                               "mismatched sessions %a and %a in M_branch_send"
+                               Ast_ops.print_sess_tyv styv1
+                               Ast_ops.print_sess_tyv styv2,
+                             cmd.cmd_loc ))),
               acc_sess_eq_constrs1 @ acc_sess_eq_constrs2 ))
     | M_branch_self (_, cmd1, cmd2) ->
         let%bind sess1, acc_sess_eq_constrs1 =
@@ -845,43 +853,7 @@ let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
                   Ast_ops.print_sess_tyv sty_def Ast_ops.print_sess_tyv sty;
                 not (equal_sess_tyv sty sty_def)))
   then Or_error.of_exn (Type_error ("mismatched right session", proc.proc_loc))
-  else
-    (* For debugging *)
-    (* let () =
-         Format.printf
-           "Session type context before checking type equality at the end of type \
-            inference:\n\
-            %a"
-           Ast_ops.print_sess_type_context sty_ctxt;
-         List.iter type_eq_constrs ~f:(fun (x, y) ->
-             Format.printf "They should be equivalent modulo coverage: %a and %a\n"
-               Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y)
-       in *)
-    let sty_ctxt_list =
-      List.filter_map (Hashtbl.to_alist sty_ctxt) ~f:(fun (name, definition) ->
-          match definition with None -> None | Some d -> Some (name, d))
-    in
-    let list_equality_result =
-      match type_eq_constrs with
-      | [] ->
-          (* If the list is empty, we don't even need to compute a Caucal base *)
-          []
-      | _ ->
-          Type_equality_check.type_equality_check_list_type_pairs sty_ctxt_list
-            type_eq_constrs
-    in
-    let () =
-      print_endline "We check all type-equality constraints from type inference";
-      List.iter list_equality_result ~f:(fun (x, y, eq) ->
-          match eq with
-          | true ->
-              Format.printf "Types %a and %a are equal modulo coverage\n"
-                Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y
-          | false ->
-              Format.printf "Types %a and %a are unequal modulo coverage\n"
-                Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y)
-    in
-    Ok ()
+  else Ok type_eq_constrs
 
 let rec verify_sess_ty sty_ctxt sty =
   match sty.sty_desc with
@@ -910,20 +882,61 @@ let tycheck_prog prog =
   (* For debugging *)
   Ast_ops.print_proc_signature_context Format.std_formatter psig_ctxt;
   let ext_ctxt = collect_externals prog in
-  List.fold_result prog ~init:() ~f:(fun () top ->
-      match top with
-      | Top_sess (_, sty) -> (
-          match sty with
-          | None -> Ok ()
-          | Some sty -> (
-              match sty.sty_desc with
-              | Sty_var _ ->
-                  Or_error.of_exn
-                    (Type_error ("non-contractive type", sty.sty_loc))
-              | _ -> verify_sess_ty sty_ctxt sty))
-      | Top_proc (_, proc) -> tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc
-      | Top_external _ -> Ok ()
-      | _ -> Ok ())
+  (* List of pairs of types whose equality must be checked *)
+  let%bind type_eq_constrs =
+    List.fold_result prog ~init:[] ~f:(fun acc top ->
+        match top with
+        | Top_sess (_, sty) -> (
+            match sty with
+            | None -> Ok acc
+            | Some sty -> (
+                match sty.sty_desc with
+                | Sty_var _ ->
+                    Or_error.of_exn
+                      (Type_error ("non-contractive type", sty.sty_loc))
+                | _ ->
+                    let%bind () = verify_sess_ty sty_ctxt sty in
+                    Ok acc))
+        | Top_proc (_, proc) ->
+            let%bind type_eq_consts =
+              tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc
+            in
+            Ok (type_eq_consts @ acc)
+        | Top_external _ -> Ok acc
+        | _ -> Ok acc)
+  in
+  let sty_ctxt_list =
+    List.filter_map (Hashtbl.to_alist sty_ctxt) ~f:(fun (name, definition) ->
+        match definition with None -> None | Some d -> Some (name, d))
+  in
+  (* We must check the equality of types we have inferred types for all
+     processes. Otherwise, if we instead checked the type equality at the end of
+     type-inference of a single process (rather than all processes in the
+     program), we could encoungere a type name whose definition has not been
+     inferred yet. *)
+  let list_equality_result =
+    match type_eq_constrs with
+    | [] ->
+        (* If the list is empty, we don't even need to compute a Caucal base *)
+        []
+    | _ ->
+        Type_equality_check.type_equality_check_list_type_pairs sty_ctxt_list
+          type_eq_constrs
+  in
+  let () =
+    if not (List.is_empty list_equality_result) then (
+      print_endline "We check all type-equality constraints from type inference";
+      List.iter list_equality_result ~f:(fun (x, y, eq) ->
+          match eq with
+          | true ->
+              Format.printf "Types %a and %a are equal modulo coverage\n"
+                Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y
+          | false ->
+              Format.printf "Types %a and %a are unequal modulo coverage\n"
+                Ast_ops.print_sess_tyv x Ast_ops.print_sess_tyv y))
+    else ()
+  in
+  Ok ()
 
 let () =
   Location.register_error_of_exn (function

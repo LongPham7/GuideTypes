@@ -1,0 +1,24 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=aistats/branching-aistats
+
+external fib: nat -> nat
+
+type Old_trace
+type Latent
+
+proc Guide() -> unit | old: Old_trace | lat : Latent = {
+  _ <- observe{old}(GEO(0.5));
+  _ <- sample{lat}(GEO(0.5));
+  if{lat} . then
+    if{old} . then
+      return ()
+    else
+      return ()
+  else
+    if{old} . then
+      _ <- observe{old}(GEO(0.5));
+      _ <- sample{lat}(GEO(0.5));
+      return ()
+    else
+      _ <- sample{lat}(GEO(0.5));
+      return ()
+}

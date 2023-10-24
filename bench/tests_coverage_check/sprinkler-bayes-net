@@ -1,0 +1,13 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=bayes-net
+
+type Old_trace
+type Latent
+
+proc Guide() -> bool | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(BER(0.5));
+  is_cloudy <- sample{lat}(BER(0.5));
+
+  _ <- observe{old}(BER(0.8));
+  is_raining <- sample{lat}(if is_cloudy then BER(0.8) else BER(0.2));
+  return is_raining
+}

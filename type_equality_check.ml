@@ -53,7 +53,13 @@ let check_all_names_defined list_definitions =
   in
   if TypeNameSet.is_subset mentioned_type_names ~of_:defined_type_names then
     list_definitions
-  else failwith "Some type names are mentioned but undefined"
+  else
+    let diff = TypeNameSet.diff mentioned_type_names defined_type_names in
+    let () =
+      print_endline "Set difference in check_all_names_defined:";
+      TypeNameSet.iter diff ~f:(fun x -> printf "Type name = %s\n" x)
+    in
+    failwith "Some type names are mentioned but undefined"
 
 (* Eliminate type names defined as $ (i.e., termination). It is important to
    eliminate such type names because in Greibach normal form (GNF) of
