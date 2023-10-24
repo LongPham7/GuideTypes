@@ -1,0 +1,26 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=practical/faithful_user
+
+type Old_trace
+type Latent
+
+proc Guide() -> unit | old : Old_trace | lat : Latent = {
+  fake_rate <- {
+    _ <- observe{old}(POIS(5));
+    tmp <- sample{lat}(POIS(5));
+    return (tmp + 1)
+  };
+  user_rate <- {
+    _ <- observe{old}(POIS(30));
+    tmp <- sample{lat}(POIS(30));
+    return (tmp + 1)
+  };
+  faking <- { return BER(0.05) };
+
+  _ <- observe{old}(faking);
+  is_faking <- sample{lat}(faking);
+  final_is_faking <- loop[5; is_faking] (fn (is_faking: bool) ->
+    _ <- observe{old}(faking);
+    new_is_faking <- sample{lat}(faking);
+    return (is_faking or new_is_faking));
+  return ()
+}

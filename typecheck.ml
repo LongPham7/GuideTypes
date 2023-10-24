@@ -668,21 +668,14 @@ let tycheck_cmd psig_ctxt =
                         Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv
                         styv2
                     in
-                    failwith
-                      "Because the old trace is accessible, we must have a \
-                       conditional statement on the old channel"
+                    raise
+                      (Type_error
+                         ( "Because the old trace is accessible, we must have \
+                            a conditional statement on the old channel",
+                           cmd.cmd_loc ))
                 else (
                   assert (String.(channel_name.txt <> "old"));
-                  Some (dir1, styv1, [ (styv1, styv2) ]))
-            (* else
-               (* For debugging *)
-               let () =
-                 Format.printf "styv1 = %a, styv2 = %a\n"
-                   Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2
-               in
-               raise
-                 (Type_error
-                    ("mismatched sessions in M_branch_recv", cmd.cmd_loc)) *))
+                  Some (dir1, styv1, [ (styv1, styv2) ])))
         in
         let new_sess_eqs =
           merge_result |> Map.data

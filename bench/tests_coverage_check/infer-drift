@@ -1,0 +1,12 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=irr-1
+
+type Old_trace
+type Latent
+
+proc Guide() -> real | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(0; 2));
+  drift <- sample{lat}(NORMAL(0; 2));
+  _ <- observe{old}(GAMMA(1; 1));
+  noise <- sample{lat}(GAMMA(1; 1)); # EXPO(1)
+  return drift
+}

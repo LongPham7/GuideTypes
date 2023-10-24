@@ -1,0 +1,10 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=pencil-factory
+
+type Old_trace
+type Latent
+
+proc Guide(a: preal; b: preal) -> ureal | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(BETA(a; b));
+  p <- sample{lat}(BETA(a; b));
+  return p
+}

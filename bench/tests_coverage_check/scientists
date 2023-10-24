@@ -1,0 +1,14 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=gaussian-posteriors
+
+type Old_trace
+type Latent
+
+proc Guide() -> real | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(0; 50));
+  mu <- sample{lat}(NORMAL(0; 50));
+  _ <- loop[7; ()] (fn (acc: unit) ->
+    _ <- observe{old}(UNIF);
+    noise_level <- sample{lat}(UNIF);
+    return ());
+  return mu
+}
