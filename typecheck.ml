@@ -444,12 +444,12 @@ let channel_direction_is_left dir =
    depends on which outer branch (i.e., branch selection from the model) we
    enter. This makes the coverage checking challenging. *)
 
-let merge_session_types_conditional_branches_old_channel styv1 styv2 =
+let merge_session_types_outer_conditional_branches styv1 styv2 =
   (* For debugging *)
   let () =
     Format.printf
-      "Merge two session types across branches on the old channel: styv1 = %a, \
-       styv2 = %a\n"
+      "Merge two session types across branches of the outer conditional \
+       statement: styv1 = %a, styv2 = %a\n"
       Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2
   in
   match (styv1, styv2) with
@@ -553,7 +553,7 @@ let tycheck_cmd psig_ctxt =
                    ("inconsistent initial value for iter", init_exp.exp_loc))
         | _ -> Or_error.of_exn (Type_error ("not iterable", iter_exp.exp_loc)))
   in
-  let rec backward ctxt sess_and_acc_sess_eq_constrs cmd =
+  let rec backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd =
     let sess, acc_sess_eq_constrs = sess_and_acc_sess_eq_constrs in
     match cmd.cmd_desc with
     | M_ret _ -> Ok sess_and_acc_sess_eq_constrs
@@ -566,9 +566,9 @@ let tycheck_cmd psig_ctxt =
               | Some var_name -> Map.add_exn ctxt ~key:var_name.txt ~data:tyv1)
         in
         let%bind sess_and_acc' =
-          backward ctxt' sess_and_acc_sess_eq_constrs cmd2
+          backward ~access_to_old_trace ctxt' sess_and_acc_sess_eq_constrs cmd2
         in
-        backward ctxt sess_and_acc' cmd1
+        backward ~access_to_old_trace ctxt sess_and_acc' cmd1
     | M_sample_recv (_, channel_name) -> (
         let%bind tyv = forward ctxt cmd in
         match Map.find sess channel_name.txt with
@@ -605,10 +605,17 @@ let tycheck_cmd psig_ctxt =
                 acc_sess_eq_constrs ))
     | M_branch_recv (cmd1, cmd2, channel_name) ->
         let%bind sess1, acc_sess_eq_constrs1 =
-          backward ctxt sess_and_acc_sess_eq_constrs cmd1
+          backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd1
         in
         let%bind sess2, acc_sess_eq_constrs2 =
-          backward ctxt sess_and_acc_sess_eq_constrs cmd2
+          (* If we are in the second branch of the channel for the old trace,
+             this branch has no access to the old trace. Hence, we set the flag
+             access_to_old_trace to false. *)
+          if String.equal channel_name.txt "old" then
+            backward ~access_to_old_trace:false ctxt
+              sess_and_acc_sess_eq_constrs cmd2
+          else
+            backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd2
         in
         let merge_result =
           Map.merge sess1 sess2 ~f:(fun ~key -> function
@@ -618,45 +625,64 @@ let tycheck_cmd psig_ctxt =
                   match dir1 with
                   | `Left -> Some (`Left, Styv_ichoice (styv1, styv2), [])
                   | `Right -> Some (`Right, Styv_echoice (styv1, styv2), [])
-                else if
-                  String.(key = "old")
-                  && channel_direction_is_left dir1
-                  && String.(channel_name.txt <> "old")
-                then
-                  merge_session_types_conditional_branches_old_channel styv1
-                    styv2
-                else if
-                  String.(key <> "old")
-                  && (not (channel_direction_is_left dir1))
-                  && String.(channel_name.txt = "old")
-                  (* We return the first session type because it corresponds to
-                     the branch where both channels (i.e., the channel between
-                     the current subguide and the model and another channel for
-                     the previous trace) are present. Put differently, the first
-                     session type is for the case where both the current and
-                     previous subguides choose the same branch.
+                else if access_to_old_trace then
+                  if
+                    (* This is the outer layer of the double-nested conditional
+                       statement in the presence of the old channel. The current
+                       channel should be the one between the guide and model. *)
+                    String.(key = "old")
+                    && channel_direction_is_left dir1
+                    && String.(channel_name.txt <> "old")
+                  then
+                    merge_session_types_outer_conditional_branches styv1 styv2
+                  else if
+                    (* This is the inner layer of the double-nested conditional
+                       statement in the presence of the old channel. *)
+                    String.(key <> "old")
+                    && (not (channel_direction_is_left dir1))
+                    && String.(channel_name.txt = "old")
+                    (* We return the first session type because it corresponds
+                       to the branch where both channels (i.e., the channel
+                       between the current subguide and the model and another
+                       channel for the previous trace) are present. Put
+                       differently, the first session type is for the case where
+                       both the current and previous subguides choose the same
+                       branch.
 
-                     Therefore, styv1 may contain uncovered random variables. On
-                     the other hand, styv2 must be free of uncovered random
-                     variables - it must draw fresh samples for all random
-                     variables. Hence, when we merge styv1 and styv2, the result
-                     must be styv1, provided that they are equivalent modulo
-                     coverage (i.e., they are bisimilar to each other if we
-                     ignore covered and uncovered random variables). To check
-                     that styv1 and styv2 are indeed equivalent modulo coverage,
-                     we store them in an output list. This list of session-type
-                     pairs will be aggregated and will be checked for
-                     equivalence later. *)
-                then Some (dir1, styv1, [ (styv1, styv2) ])
-                else
-                  (* For debugging *)
-                  let () =
-                    Format.printf "styv1 = %a, styv2 = %a\n"
-                      Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2
-                  in
-                  raise
-                    (Type_error
-                       ("mismatched sessions in M_branch_recv", cmd.cmd_loc)))
+                       Therefore, styv1 may contain uncovered random variables.
+                       On the other hand, styv2 must be free of uncovered random
+                       variables - it must draw fresh samples for all random
+                       variables. Hence, when we merge styv1 and styv2, the
+                       result must be styv1, provided that they are equivalent
+                       modulo coverage (i.e., they are bisimilar to each other
+                       if we ignore covered and uncovered random variables). To
+                       check that styv1 and styv2 are indeed equivalent modulo
+                       coverage, we store them in an output list. This list of
+                       session-type pairs will be aggregated and will be checked
+                       for equivalence later. *)
+                  then Some (dir1, styv1, [ (styv1, styv2) ])
+                  else
+                    (* For debugging *)
+                    let () =
+                      Format.printf "styv1 = %a, styv2 = %a\n"
+                        Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv
+                        styv2
+                    in
+                    failwith
+                      "Because the old trace is accessible, we must have a \
+                       conditional statement on the old channel"
+                else (
+                  assert (String.(channel_name.txt <> "old"));
+                  Some (dir1, styv1, [ (styv1, styv2) ]))
+            (* else
+               (* For debugging *)
+               let () =
+                 Format.printf "styv1 = %a, styv2 = %a\n"
+                   Ast_ops.print_sess_tyv styv1 Ast_ops.print_sess_tyv styv2
+               in
+               raise
+                 (Type_error
+                    ("mismatched sessions in M_branch_recv", cmd.cmd_loc)) *))
         in
         let new_sess_eqs =
           merge_result |> Map.data
@@ -671,10 +697,10 @@ let tycheck_cmd psig_ctxt =
               new_sess_eqs @ acc_sess_eq_constrs1 @ acc_sess_eq_constrs2 ))
     | M_branch_send (_, cmd1, cmd2, channel_name) ->
         let%bind sess1, acc_sess_eq_constrs1 =
-          backward ctxt sess_and_acc_sess_eq_constrs cmd1
+          backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd1
         in
         let%bind sess2, acc_sess_eq_constrs2 =
-          backward ctxt sess_and_acc_sess_eq_constrs cmd2
+          backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd2
         in
         Or_error.try_with (fun () ->
             ( Map.merge sess1 sess2 ~f:(fun ~key -> function
@@ -696,10 +722,10 @@ let tycheck_cmd psig_ctxt =
               acc_sess_eq_constrs1 @ acc_sess_eq_constrs2 ))
     | M_branch_self (_, cmd1, cmd2) ->
         let%bind sess1, acc_sess_eq_constrs1 =
-          backward ctxt sess_and_acc_sess_eq_constrs cmd1
+          backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd1
         in
         let%bind sess2, acc_sess_eq_constrs2 =
-          backward ctxt sess_and_acc_sess_eq_constrs cmd2
+          backward ~access_to_old_trace ctxt sess_and_acc_sess_eq_constrs cmd2
         in
         Or_error.try_with (fun () ->
             ( Map.merge sess1 sess2 ~f:(fun ~key:_ -> function
@@ -740,7 +766,7 @@ let tycheck_cmd psig_ctxt =
         List.fold_result
           (List.init n ~f:(fun _ -> ()))
           ~init:sess_and_acc_sess_eq_constrs
-          ~f:(fun acc () -> backward ctxt' acc cmd0)
+          ~f:(fun acc () -> backward ~access_to_old_trace ctxt' acc cmd0)
     | M_iter (iter_exp, _, iter_name, bind_name, bind_ty, cmd0) -> (
         let%bind iter_tyv = tycheck_exp ctxt iter_exp in
         match iter_tyv with
@@ -752,7 +778,7 @@ let tycheck_cmd psig_ctxt =
             List.fold_result
               (List.init (List.hd_exn dims) ~f:(fun _ -> ()))
               ~init:sess_and_acc_sess_eq_constrs
-              ~f:(fun acc () -> backward ctxt'' acc cmd0)
+              ~f:(fun acc () -> backward ~access_to_old_trace ctxt'' acc cmd0)
         | _ -> Or_error.of_exn (Type_error ("not iterable", iter_exp.exp_loc)))
   in
   fun ctxt sess_left sess_right cmd ->
@@ -765,7 +791,9 @@ let tycheck_cmd psig_ctxt =
       String.Map.of_alist_or_error
         (List.append (Option.to_list sess_left) (Option.to_list sess_right))
     in
-    let%bind sess', type_eq_consts = backward ctxt (sess, []) cmd in
+    let%bind sess', type_eq_consts =
+      backward ~access_to_old_trace:true ctxt (sess, []) cmd
+    in
     Ok
       ( tyv,
         Option.map sess_left ~f:(fun (channel_id, _) ->

@@ -1,0 +1,8 @@
+type Old_trace
+type Latent
+
+proc Guide[a: real; b: preal]() -> unit | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(a; b));
+  weight <- sample{lat}(NORMAL(a; b));
+  return ()
+}

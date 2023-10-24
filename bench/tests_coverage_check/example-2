@@ -1,44 +1,44 @@
+type Old_trace
+type Old_traceG
 type Latent
-type Previous_trace_type
-type Init_type = preal_u /\ &{ $ | ureal_u /\ Init_type[$] }
+type LatentG
+type LatentG_no_old
 
-proc Guide[a: preal; b: preal; c: preal; d: preal]() -> unit | old: Previous_trace_type | lat : Latent = {
-  _ <- observe{old}(GAMMA(2; 1));
-  v <- sample{lat}(GAMMA(a; b));
-  if{lat} . then
-    if{old} . then
-      return ()
-    else
-      return()
-  else
-    if{old} . then
-      _ <- observe{old}(BETA(c; d));
-      _ <- sample{lat}(if (1 < 2) then SAME(ureal) else BETA(c; d));
-      _ <- Guide();
-      return()
-    else
-      _ <- sample{lat}(BETA(c; d));
-      return()
+proc GuidePcfg() -> unit | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(UNIF);
+  k <- sample{lat}(UNIF);
+  GuidePcfgGen(0)
 }
 
-proc Guide2[a: preal; b: preal; c: preal; d: preal]() -> unit | old: Previous_trace_type | lat : Latent = {
-  _ <- observe{old}(GAMMA(2; 1));
-  v <- sample{lat}(SAME(preal));
+proc GuidePcfgGen(dep: nat) -> unit | old : Old_traceG | lat : LatentG = {
+  _ <- observe{old}(UNIF);
+  u <- sample{lat}(UNIF);
   if{lat} . then
     if{old} . then
+      _ <- observe{old}(GAMMA(dep; 1));
+      _ <- sample{lat}(GAMMA(dep; 1));
       return ()
     else
-      return()
+      _ <- sample{lat}(GAMMA(dep; 1));
+      return ()
   else
     if{old} . then
-      _ <- observe{old}(BETA(c; d));
-      _ <- sample{lat}(BETA(c; d));
-      _ <- Guide();
-      return()
+      _ <- GuidePcfgGen(dep + 1);
+      _ <- GuidePcfgGen(dep + 2);
+      return ()
     else
-      _ <- sample{lat}(BETA(c; d));
-      return()
+      _ <- GuidePcfgGen_no_old(dep + 1);
+      _ <- GuidePcfgGen_no_old(dep + 2);
+      return ()
 }
 
-Initial_type: Init_type
-Guide_composition: Guide; Guide2
+proc GuidePcfgGen_no_old(dep: nat) -> unit | . | lat : LatentG_no_old = {
+  u <- sample{lat}(UNIF);
+  if{lat} . then
+    _ <- sample{lat}(GAMMA(dep; 1));
+    return ()
+  else
+    _ <- GuidePcfgGen_no_old(dep + 1);
+    _ <- GuidePcfgGen_no_old(dep + 2);
+    return ()
+}

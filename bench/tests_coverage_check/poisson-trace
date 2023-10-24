@@ -1,0 +1,28 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=poisson-trace
+
+type Old_trace
+type Latent
+type Latent_no_old
+
+proc Guide(l: ureal; k: real; p: ureal) -> real | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(UNIF);
+  u <- sample{lat}(UNIF);
+  if{lat} . then
+    if{old} . then
+      return (k - 1.0)
+    else
+      return (k - 1.0)
+  else
+    if{old} . then
+      Guide(l; k + 1.0; p * u)
+    else
+      Guide_no_old(l; k + 1.0; p * u)
+}
+
+proc Guide_no_old(l: ureal; k: real; p: ureal) -> real | . | lat : Latent_no_old = {
+  u <- sample{lat}(UNIF);
+  if{lat} . then
+    return (k - 1.0)
+  else
+    Guide_no_old(l; k + 1.0; p * u)
+}

@@ -1,0 +1,48 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=marsaglia
+
+external sqrt: real -> real
+external log: real -> real
+
+type Old_trace
+type Latent
+type Latent_no_old
+
+proc Guide(mean: real; var: preal) -> real | old : Old_trace | lat : Latent = {
+  x <- {
+    _ <- observe{old}(UNIF);
+    tmp <- sample{lat}(UNIF);
+    return (tmp * 2.0 - 1.0)
+  };
+  y <- {
+    _ <- observe{old}(UNIF);
+    tmp <- sample{lat}(UNIF);
+    return (tmp * 2.0 - 1.0)
+  };
+  s <- { return (x * x) + (y * y) };
+  if{lat} . then
+    if{old} . then
+      return mean + sqrt(var) * (x * sqrt(-2.0 * (log(s) / s)))
+    else
+      return mean + sqrt(var) * (x * sqrt(-2.0 * (log(s) / s)))
+  else
+    if{old} . then 
+      Guide(mean; var)
+    else
+      Guide_no_old(mean; var)
+}
+
+proc Guide_no_old(mean: real; var: preal) -> real | . | lat : Latent_no_old = {
+  x <- {
+    tmp <- sample{lat}(UNIF);
+    return (tmp * 2.0 - 1.0)
+  };
+  y <- {
+    tmp <- sample{lat}(UNIF);
+    return (tmp * 2.0 - 1.0)
+  };
+  s <- { return (x * x) + (y * y) };
+  if{lat} . then
+      return mean + sqrt(var) * (x * sqrt(-2.0 * (log(s) / s)))
+  else
+      Guide_no_old(mean; var)
+}
