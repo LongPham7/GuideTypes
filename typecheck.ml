@@ -399,7 +399,7 @@ and tycheck_dist ~loc ctxt dist =
   | D_same bty -> (
       match bty with
       | Btyv_prim pty -> Ok (Btyv_prim_uncovered pty)
-      | Btyv_tensor (pty, dims) -> Ok (Btyv_tensor (pty, dims))
+      | Btyv_tensor (pty, dims) -> Ok (Btyv_tensor_uncovered (pty, dims))
       | Btyv_simplex n -> Ok (Btyv_simplex_uncovered n)
       | _ ->
           Or_error.of_exn
@@ -532,7 +532,7 @@ let forward_wrapper psig_ctxt =
               (Type_error ("inconsistent result type in loop", cmd0.cmd_loc))
         else
           Or_error.of_exn
-            (Type_error ("inconsistent intial value for loop", init_exp.exp_loc))
+            (Type_error ("inconsistent initial value for loop", init_exp.exp_loc))
     | M_iter (iter_exp, init_exp, iter_name, bind_name, bind_ty, cmd0) -> (
         let%bind iter_tyv = tycheck_exp ctxt iter_exp in
         match iter_tyv with

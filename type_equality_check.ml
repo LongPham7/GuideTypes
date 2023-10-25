@@ -186,7 +186,7 @@ let expand_unguarded_type_definitions list_definitions =
         with
         | None ->
             failwith
-              (sprintf
+              (Format.asprintf
                  "Type name %s has no definition in \
                   expand_unguarded_type_definitions"
                  head_name)
@@ -245,7 +245,8 @@ let expand_type_name list_type_definitions (name, continuation) =
   with
   | None ->
       failwith
-        (sprintf "Type name %s has no definition in expand_type_name" name)
+        (Format.asprintf "Type name %s has no definition in expand_type_name"
+           name)
   | Some type_definition ->
       substitute_into_type_definition type_definition continuation
 
@@ -357,7 +358,8 @@ let normalize_type_name_and_definition (name, definition) =
   let () = counter_fresh_type_name := 0 in
   match definition with
   | Styv_one ->
-      failwith (sprintf "Type name %s is defined as immediate termination" name)
+      failwith
+        (Format.asprintf "Type name %s is defined as immediate termination" name)
   | Styv_conj (b, s) ->
       let s_compact, list_new_definitions = normalize_type_definition name s in
       let name_and_definition_transformed = (name, Styv_conj (b, s_compact)) in
@@ -391,7 +393,7 @@ let normalize_type_name_and_definition (name, definition) =
       (name_and_definition_transformed :: list_new_definitions1)
       @ list_new_definitions2
   | Styv_var _ ->
-      failwith (sprintf "Type name %s is defined as a type name" name)
+      failwith (Format.asprintf "Type name %s is defined as a type name" name)
 
 let normalize_list_definitions list_definitions =
   list_definitions
@@ -453,7 +455,7 @@ let rec compute_norm_definition_from_current_norms list_names_norms definition =
         match List.Assoc.find list_names_norms ~equal:String.equal name with
         | None ->
             failwith
-              (sprintf
+              (Format.asprintf
                  "Type name %s has no norm in \
                   compute_norm_definition_from_current_norms"
                  name)
@@ -471,7 +473,8 @@ let refine_norms list_definitions list_names_norms =
       match List.Assoc.find list_definitions ~equal:String.equal name with
       | None ->
           failwith
-            (sprintf "Type name %s has no definition in refine_norms" name)
+            (Format.asprintf "Type name %s has no definition in refine_norms"
+               name)
       | Some x -> x
     in
     let new_counter =
@@ -529,7 +532,7 @@ let rec get_norm_of_type_name_string list_names_norms type_name_string =
         match List.Assoc.find list_names_norms ~equal:String.equal name with
         | None ->
             failwith
-              (sprintf
+              (Format.asprintf
                  "Type name %s has no norm in get_norm_of_type_name_string" name)
         | Some x -> x
       in
@@ -604,8 +607,8 @@ let rec make_norm_reducing_steps list_definitions list_names_norms definition
           match List.Assoc.find list_names_norms ~equal:String.equal name with
           | None ->
               failwith
-                (sprintf "Type name %s has no norm in make_norm_reducing_steps"
-                   name)
+                (Format.asprintf
+                   "Type name %s has no norm in make_norm_reducing_steps" name)
           | Some x -> x
         in
         if name_norm <= num_steps then
@@ -616,7 +619,7 @@ let rec make_norm_reducing_steps list_definitions list_names_norms definition
             match List.Assoc.find list_definitions ~equal:String.equal name with
             | None ->
                 failwith
-                  (sprintf
+                  (Format.asprintf
                      "Type name %s has no definition in \
                       make_norm_reducing_steps"
                      name)
@@ -641,16 +644,16 @@ let create_initial_full_base list_definitions list_names_norms =
       match List.Assoc.find list_names_norms ~equal:String.equal name1 with
       | None ->
           failwith
-            (sprintf "Type name %s has no norm in create_initial_full_base"
-               name1)
+            (Format.asprintf
+               "Type name %s has no norm in create_initial_full_base" name1)
       | Some x -> x
     in
     let norm2 =
       match List.Assoc.find list_names_norms ~equal:String.equal name2 with
       | None ->
           failwith
-            (sprintf "Type name %s has no norm in create_initial_full_base"
-               name2)
+            (Format.asprintf
+               "Type name %s has no norm in create_initial_full_base" name2)
       | Some x -> x
     in
     if norm1 < norm2 then None
@@ -659,7 +662,7 @@ let create_initial_full_base list_definitions list_names_norms =
         match List.Assoc.find list_definitions ~equal:String.equal name1 with
         | None ->
             failwith
-              (sprintf
+              (Format.asprintf
                  "Type name %s has no definition in create_initial_full_base"
                  name1)
         | Some x -> x
@@ -723,8 +726,8 @@ let rec equal_by_decomposition list_names_norms base type_name_string1
         with
         | None ->
             failwith
-              (sprintf "Type name %s has no norm in equal_by_decomposition"
-                 head_name1)
+              (Format.asprintf
+                 "Type name %s has no norm in equal_by_decomposition" head_name1)
         | Some x -> x
       in
       let head_name2_norm =
@@ -733,8 +736,8 @@ let rec equal_by_decomposition list_names_norms base type_name_string1
         with
         | None ->
             failwith
-              (sprintf "Type name %s has no norm in equal_by_decomposition"
-                 head_name2)
+              (Format.asprintf
+                 "Type name %s has no norm in equal_by_decomposition" head_name2)
         | Some x -> x
       in
       let decompose (large_head, small_continuation)
@@ -766,7 +769,7 @@ let bisimulate_name_and_candidate_decomposition list_definitions
     match List.Assoc.find list_definitions ~equal:String.equal name with
     | None ->
         failwith
-          (sprintf
+          (Format.asprintf
              "Type name %s has no definition in \
               bisimulate_name_and_candidate_decomposition"
              name)
@@ -781,7 +784,7 @@ let bisimulate_name_and_candidate_decomposition list_definitions
     with
     | None ->
         failwith
-          (sprintf
+          (Format.asprintf
              "Type name %s has no definition in \
               bisimulate_name_and_candidate_decomposition"
              decomposition_hd)

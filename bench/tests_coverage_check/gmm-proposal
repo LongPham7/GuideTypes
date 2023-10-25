@@ -1,7 +1,7 @@
 type Old_trace
 type Latent
 
-type Init_type
+type Init_type = simplex_u[3] /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ $
 
 external identity_matrix2: (real; [2; 2]) tensor
 
@@ -40,4 +40,4 @@ proc Proposal() -> unit | old: Old_trace | lat : Latent = {
 }
 
 Initial_type: Init_type
-Guide_composition: Guide
+Guide_composition: Proposal

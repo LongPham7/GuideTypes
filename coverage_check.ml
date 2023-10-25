@@ -10,7 +10,8 @@ let get_function_definition list_function_definitions f_id =
   | Some x -> x
   | None ->
       failwith
-        (sprintf "Function %s has no definition in get_function_definition" f_id)
+        (Format.asprintf
+           "Function %s has no definition in get_function_definition" f_id)
 
 (* Expand a type name to its definition so that it becomes clear what the first
    transition step of the type is *)
@@ -19,7 +20,8 @@ let expand_type_name list_type_definitions (name, continuation) =
   match List.Assoc.find list_type_definitions ~equal:String.equal name with
   | None ->
       failwith
-        (sprintf "Type name %s has no definition in expand_type_name" name)
+        (Format.asprintf "Type name %s has no definition in expand_type_name"
+           name)
   | Some name_definition ->
       substitute_into_type_definition name_definition continuation
 
@@ -112,7 +114,10 @@ let covered_by_list_conj_types covered_dist_base_type list_input_types =
   let covered_by_conj_type definition =
     match definition with
     | Styv_conj (b, _) -> equal_base_tyv b covered_dist_base_type
-    | _ -> failwith "The given type is not of the form Styv_conj"
+    | _ ->
+        failwith
+          "The given type is not of the form Styv_conj in \
+           covered_by_list_conj_types"
   in
   List.for_all list_input_types ~f:covered_by_conj_type
 
@@ -142,9 +147,7 @@ let simulate_type_with_command list_function_definitions list_type_definitions
         let ctxt' =
           match var_name with
           | None -> ctxt
-          | Some var_name ->
-              if Map.mem ctxt var_name.txt then ctxt
-              else Map.add_exn ctxt ~key:var_name.txt ~data:tyv1
+          | Some var_name -> Map.set ctxt ~key:var_name.txt ~data:tyv1
         in
         let type1, list_continuations1, acc1 =
           simulate ctxt cmd1 list_input_types acc
@@ -196,7 +199,11 @@ let simulate_type_with_command list_function_definitions list_type_definitions
                       equal_base_tyv tyv covered_dist_base_type
                       || equal_base_tyv tyv uncovered_dist_base_type);
                     continuation
-                | _ -> failwith "The given type is not of the form Styv_conj")
+                | _ ->
+                    failwith
+                      (Format.asprintf
+                         "The given type %a is not of the form Styv_conj"
+                         Ast_ops.print_sess_tyv definition))
           in
           let is_covered_by_input_types =
             covered_by_list_conj_types covered_dist_base_type list_input_types
@@ -254,23 +261,42 @@ let simulate_type_with_command list_function_definitions list_type_definitions
            internal branches should be syntactically identical. *)
         assert (equal_sess_tyv type1 type2);
         (type1, list_continuations1 @ list_continuations2, acc2)
-    | M_loop (n, e, v_id, btyv, cmd) ->
-        if n <= 0 then (Styv_one, list_input_types, acc)
-        else
-          let type_one_iter, list_continuations_one_iter, acc_one_iter =
-            simulate ctxt cmd list_input_types acc
+    | M_loop (n, _, bind_name, bind_ty, loop_body) ->
+        let bind_tyv = eval_ty bind_ty in
+        let ctxt' = Map.set ctxt ~key:bind_name.txt ~data:bind_tyv in
+        let insert_into_acc (type_acc, list_continuations_acc, acc_acc) () =
+          let type_updated, list_continuations_updated, acc_updated =
+            simulate ctxt' loop_body list_continuations_acc acc_acc
           in
-          let decremented_cmd =
-            { cmd with cmd_desc = M_loop (n - 1, e, v_id, btyv, cmd) }
-          in
-          let type_remaining_iters, list_continuations, acc_remaining_iters =
-            simulate ctxt decremented_cmd list_continuations_one_iter
-              acc_one_iter
-          in
-          ( substitute_into_type_definition type_one_iter type_remaining_iters,
-            list_continuations,
-            acc_remaining_iters )
-    | M_iter _ -> failwith "M_iter is not supported in coverage checking"
+          ( substitute_into_type_definition type_acc type_updated,
+            list_continuations_updated,
+            acc_updated )
+        in
+        List.fold
+          (List.init n ~f:(fun _ -> ()))
+          ~init:(Styv_one, list_input_types, acc)
+          ~f:insert_into_acc
+    | M_iter (iter_exp, _, iter_name, bind_name, bind_ty, loop_body) -> (
+        let iter_tyv = Or_error.ok_exn (tycheck_exp ctxt iter_exp) in
+        match iter_tyv with
+        | Btyv_tensor (pty, dims) when List.length dims > 0 ->
+            let elem_tyv = Btyv_tensor (pty, List.tl_exn dims) in
+            let bind_tyv = eval_ty bind_ty in
+            let ctxt' = Map.set ctxt ~key:iter_name.txt ~data:elem_tyv in
+            let ctxt'' = Map.set ctxt' ~key:bind_name.txt ~data:bind_tyv in
+            let insert_into_acc (type_acc, list_continuations_acc, acc_acc) () =
+              let type_updated, list_continuations_updated, acc_updated =
+                simulate ctxt'' loop_body list_continuations_acc acc_acc
+              in
+              ( substitute_into_type_definition type_acc type_updated,
+                list_continuations_updated,
+                acc_updated )
+            in
+            List.fold
+              (List.init (List.hd_exn dims) ~f:(fun _ -> ()))
+              ~init:(Styv_one, list_input_types, acc)
+              ~f:insert_into_acc
+        | _ -> failwith "The given M_iter is not iterable")
   in
   simulate ctxt cmd [ input_type ] []
 
@@ -300,8 +326,8 @@ let successively_simulate_type_with_guide_composition list_function_definitions
           match possible_definition with
           | type_name, None ->
               failwith
-                (sprintf "Type name %s has no definition in the output acc"
-                   type_name)
+                (Format.asprintf
+                   "Type name %s has no definition in the output acc" type_name)
           | type_name, Some x -> (type_name, x))
     in
     (final_type, list_new_type_definitions @ list_type_definitions)
@@ -377,7 +403,7 @@ let create_initial_full_coverage_map list_definitions =
       match List.Assoc.find list_definitions ~equal:String.equal type_name with
       | None ->
           failwith
-            (sprintf
+            (Format.asprintf
                "Type name %s has no definition in is_type_name_fully_covered"
                type_name)
       | Some x -> x
@@ -397,7 +423,7 @@ let is_type_name_covered_in_coverage_map coverage_map type_name =
     match List.Assoc.find coverage_map ~equal:String.equal type_name with
     | None ->
         failwith
-          (sprintf
+          (Format.asprintf
              "Type name %s has no entry in refine_map_full_coverage_checking"
              type_name)
     | Some x -> x
