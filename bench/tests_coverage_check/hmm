@@ -2,6 +2,7 @@
 
 type Old_trace
 type Latent
+type Init_type = nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ $
 
 proc Guide() -> unit | old : Old_trace | lat : Latent = {
   init_dist <- { return CAT(1; 1; 1) };
@@ -31,3 +32,6 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
   );
   return ()
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

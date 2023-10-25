@@ -5,6 +5,7 @@ external gp_new: (real -> real) -> (real -> real -> real) -> real -> real dist
 
 type Old_trace
 type Latent
+type Init_type = real_u /\ $
 
 proc Guide() -> real | old : Old_trace | lat : Latent = {
   const <- { return log(10) };
@@ -17,3 +18,6 @@ proc Guide() -> real | old : Old_trace | lat : Latent = {
   gp <- { return gp_new(m)(k) };
   return drift
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

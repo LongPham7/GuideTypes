@@ -2,6 +2,7 @@
 
 type Old_trace
 type Latent
+type Init_type = nat_u /\ nat_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ $
 
 proc Guide() -> unit | old : Old_trace | lat : Latent = {
   fake_rate <- {
@@ -24,3 +25,6 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
     return (is_faking or new_is_faking));
   return ()
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

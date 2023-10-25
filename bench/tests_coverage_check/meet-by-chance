@@ -2,6 +2,7 @@
 
 type Old_trace
 type Latent
+type Init_type = bool_u /\ bool_u /\ $
 
 proc Guide() -> bool | old : Old_trace | lat : Latent = {
   _ <- observe{old}(BER(0.6));
@@ -10,3 +11,6 @@ proc Guide() -> bool | old : Old_trace | lat : Latent = {
   bob_location <- sample{lat}(BER(0.6));
   return (amy_location = bob_location)
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

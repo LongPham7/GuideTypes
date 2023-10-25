@@ -4,6 +4,7 @@ external fib: nat -> nat
 
 type Old_trace
 type Latent
+type Init_type = nat_u /\ +{ $ | nat_u /\ $ }
 
 proc Guide() -> unit | old: Old_trace | lat : Latent = {
   _ <- observe{old}(GEO(0.5));
@@ -22,3 +23,6 @@ proc Guide() -> unit | old: Old_trace | lat : Latent = {
       _ <- sample{lat}(GEO(0.5));
       return ()
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

@@ -6,6 +6,7 @@ external log: real -> real
 type Old_trace
 type Latent
 type Latent_no_old
+type Init_type = ureal_u /\ ureal_u /\ +{ $ | Init_type[$] }
 
 proc Guide(mean: real; var: preal) -> real | old : Old_trace | lat : Latent = {
   x <- {
@@ -46,3 +47,6 @@ proc Guide_no_old(mean: real; var: preal) -> real | . | lat : Latent_no_old = {
   else
       Guide_no_old(mean; var)
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

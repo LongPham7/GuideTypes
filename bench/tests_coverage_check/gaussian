@@ -2,9 +2,13 @@
 
 type Old_trace
 type Latent
+type Init_type = real_u /\ $
 
 proc Guide(mu0: real; sigma0: preal; sigma: preal) -> real | old : Old_trace | lat : Latent = {
   _ <- observe{old}(NORMAL(mu0; sigma0));
   mu <- sample{lat}(NORMAL(mu0; sigma0));
   return mu
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

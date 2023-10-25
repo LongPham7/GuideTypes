@@ -166,11 +166,19 @@ let simulate_type_with_command list_function_definitions list_type_definitions
             let f_def =
               get_function_definition list_function_definitions f_id.txt
             in
+            let f_ctxt = extract_context_of_process [] f_def in
+            let ctxt_updated =
+              Map.merge ctxt f_ctxt ~f:(fun ~key:_ x ->
+                  match x with
+                  | `Left v | `Right v -> Some v
+                  | `Both (_, v2) -> Some v2)
+            in
             let acc_augmented =
               (f_id.txt, list_input_types, (f_fresh_type_name, None)) :: acc
             in
             let f_type, list_continuations, acc_intermediate =
-              simulate ctxt f_def.proc_body list_input_types acc_augmented
+              simulate ctxt_updated f_def.proc_body list_input_types
+                acc_augmented
             in
             let acc_updated =
               update_type_definition_in_acc acc_intermediate
@@ -224,11 +232,13 @@ let simulate_type_with_command list_function_definitions list_type_definitions
           let list_input_types_branch_swapped =
             List.map list_input_types ~f:(fun definition ->
                 match definition with
-                | Styv_echoice (s1, s2) -> Styv_echoice (s2, s1)
+                | Styv_ichoice (s1, s2) -> Styv_ichoice (s2, s1)
                 | _ ->
                     failwith
-                      "Because the given type is not of the form Styv_echoice, \
-                       we cannot swap the two branches")
+                      (Format.asprintf
+                         "Because the given type %a is not of the form \
+                          Styv_ichoice, we cannot swap the two branches"
+                         Ast_ops.print_sess_tyv definition))
           in
           let type1, result1, acc1 = simulate ctxt cmd1 list_input_types acc in
           let type2, result2, acc2 =
@@ -237,13 +247,13 @@ let simulate_type_with_command list_function_definitions list_type_definitions
           let list_continuations =
             List.dedup_and_sort (result1 @ result2) ~compare:compare_sess_tyv
           in
-          (Styv_echoice (type1, type2), list_continuations, acc2)
+          (Styv_ichoice (type1, type2), list_continuations, acc2)
         else
           let list_first_branch_continuations =
             List.map list_input_types ~f:(fun definition ->
                 match definition with
-                | Styv_echoice (s1, _) -> s1
-                | _ -> failwith "The given type is not of the form Styv_echoice")
+                | Styv_ichoice (s1, _) -> s1
+                | _ -> failwith "The given type is not of the form Styv_ichoice")
           in
           (* We only enter the first branch because the second branch
              corresponds to the case where the previous subguide diverges from

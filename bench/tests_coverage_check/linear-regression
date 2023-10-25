@@ -2,6 +2,7 @@
 
 type Old_trace
 type Latent
+type Init_type = real_u /\ real_u /\ real_u /\ preal_u /\ $
 
 proc Guide(xs: (real; [6; 3]) tensor) -> (real; [3]) tensor | old : Old_trace | lat : Latent = {
   _ <- observe{old}(NORMAL(0; 1));
@@ -16,3 +17,6 @@ proc Guide(xs: (real; [6; 3]) tensor) -> (real; [3]) tensor | old : Old_trace | 
 
   return stack(tensor(weight0); tensor(weight1); tensor(weight2))
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

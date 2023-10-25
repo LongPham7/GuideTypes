@@ -214,6 +214,8 @@ let rec tycheck_exp ctxt exp =
       match Map.find ctxt var_name.txt with
       | Some tyv -> Ok tyv
       | None ->
+        print_endline "ctxt in line 217:";
+        Map.iteri ctxt ~f:(fun ~key ~data -> Format.printf "(var, type) = (%s, %a)\n" key Ast_ops.print_base_tyv data);
           Or_error.of_exn
             (Type_error ("undefined variable " ^ var_name.txt, exp.exp_loc)))
   | E_triv -> Ok (Btyv_prim Pty_unit)

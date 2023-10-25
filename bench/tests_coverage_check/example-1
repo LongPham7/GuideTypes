@@ -1,5 +1,6 @@
 type Old_trace
 type Latent
+type Init_type = preal_u /\ +{ $ | ureal_u /\ $ }
 
 proc Guide[a: preal; b: preal; c: preal; d: preal]() -> unit | old : Old_trace | lat : Latent = {
   _ <- observe{old}(GAMMA(a; b));
@@ -18,3 +19,6 @@ proc Guide[a: preal; b: preal; c: preal; d: preal]() -> unit | old : Old_trace |
       _ <- sample{lat}(BETA(c; d));
       return ()
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

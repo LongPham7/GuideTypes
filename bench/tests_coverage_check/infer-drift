@@ -2,6 +2,7 @@
 
 type Old_trace
 type Latent
+type Init_type = real_u /\ preal_u /\ $
 
 proc Guide() -> real | old : Old_trace | lat : Latent = {
   _ <- observe{old}(NORMAL(0; 2));
@@ -10,3 +11,6 @@ proc Guide() -> real | old : Old_trace | lat : Latent = {
   noise <- sample{lat}(GAMMA(1; 1)); # EXPO(1)
   return drift
 }
+
+Initial_type: Init_type
+Guide_composition: Guide

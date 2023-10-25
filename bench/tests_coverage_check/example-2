@@ -4,6 +4,9 @@ type Latent
 type LatentG
 type LatentG_no_old
 
+type Init_type = ureal_u /\ Old_traceG_uncovered[$]
+type Old_traceG_uncovered = ureal_u /\ +{ preal_u /\ $ | Old_traceG_uncovered[Old_traceG_uncovered[$]] }
+
 proc GuidePcfg() -> unit | old : Old_trace | lat : Latent = {
   _ <- observe{old}(UNIF);
   k <- sample{lat}(UNIF);
@@ -42,3 +45,6 @@ proc GuidePcfgGen_no_old(dep: nat) -> unit | . | lat : LatentG_no_old = {
     _ <- GuidePcfgGen_no_old(dep + 2);
     return ()
 }
+
+Initial_type: Init_type
+Guide_composition: GuidePcfg
