@@ -121,6 +121,49 @@ let covered_by_list_conj_types covered_dist_base_type list_input_types =
   in
   List.for_all list_input_types ~f:covered_by_conj_type
 
+(* If a given type is is a type name, split it into the head type name and the
+   continuation *)
+
+let split_type_names_in_list_input_types list_input_types =
+  let is_type_definition_name definition =
+    match definition with Styv_var _ -> true | _ -> false
+  in
+  let list_types_with_head_names, list_types_non_names =
+    List.partition_tf list_input_types ~f:is_type_definition_name
+  in
+  let () =
+    print_endline "Status in line 135";
+    List.iter list_types_with_head_names ~f:(fun name ->
+        Format.printf "Name = %a\n" Ast_ops.print_sess_tyv name);
+    List.iter list_types_non_names ~f:(fun x ->
+        Format.printf "Non-type-names = %a\n" Ast_ops.print_sess_tyv x)
+  in
+  let split_type_name definition =
+    match definition with
+    | Styv_var (name, continuation) -> (name, continuation)
+    | _ -> failwith "The given type does not start with a type name"
+  in
+  let list_names_continuations =
+    List.map list_types_with_head_names ~f:split_type_name
+  in
+  (list_names_continuations, list_types_non_names)
+
+(* Check if a type needs to be expanded *)
+
+let need_type_expansion cmd =
+  match cmd.cmd_desc with
+  | M_sample_recv _ | M_sample_send _ | M_branch_recv _ | M_branch_send _ ->
+      true
+  | _ -> false
+
+(* Check if all types in a given list are immediate termination *)
+
+let immediate_termination_list_types list_types =
+  let is_termination definition =
+    match definition with Styv_one -> true | _ -> false
+  in
+  List.for_all list_types ~f:is_termination
+
 (* Simulate an input type alongside a command. It returns (i) a type constructed
    by simulating the input type alongside the command, (ii) the list of
    continuations after the simulation, and (iii) the list of newly created type
@@ -129,8 +172,9 @@ let covered_by_list_conj_types covered_dist_base_type list_input_types =
    ctxt is a context used to infer the type of an expression. channel_id_target
    is the name of the channel between the subguide and the model.*)
 
-let simulate_type_with_command list_function_definitions list_type_definitions
-    cmd psig_ctxt ctxt channel_id_target input_type =
+let simulate_type_with_command ?(context_free_mode = false)
+    list_function_definitions list_type_definitions cmd psig_ctxt ctxt
+    channel_id_target input_type =
   (* acc records the pairs of (function ID, list of guide types) that the
      coverage checking has encountered so far. acc is used to detect a cycle.
      Additionally, each pair also comes with a freshly generate type name such
@@ -138,7 +182,9 @@ let simulate_type_with_command list_function_definitions list_type_definitions
      when a cycle is detected). *)
   let rec simulate ctxt cmd list_input_types acc =
     let list_input_types =
-      expand_list_input_types list_type_definitions list_input_types
+      if need_type_expansion cmd then
+        expand_list_input_types list_type_definitions list_input_types
+      else list_input_types
     in
     match cmd.cmd_desc with
     | M_ret _ -> (Styv_one, list_input_types, acc)
@@ -162,31 +208,74 @@ let simulate_type_with_command list_function_definitions list_type_definitions
         with
         | Some type_name -> (Styv_var (type_name, Styv_one), [], acc)
         | None ->
+            let list_names_continuations, list_types_non_names =
+              split_type_names_in_list_input_types list_input_types
+            in
             let f_fresh_type_name = create_fresh_type_name () in
-            let f_def =
-              get_function_definition list_function_definitions f_id.txt
-            in
-            let f_ctxt = extract_context_of_process [] f_def in
-            let ctxt_updated =
-              Map.merge ctxt f_ctxt ~f:(fun ~key:_ x ->
-                  match x with
-                  | `Left v | `Right v -> Some v
-                  | `Both (_, v2) -> Some v2)
-            in
-            let acc_augmented =
-              (f_id.txt, list_input_types, (f_fresh_type_name, None)) :: acc
-            in
-            let f_type, list_continuations, acc_intermediate =
-              simulate ctxt_updated f_def.proc_body list_input_types
-                acc_augmented
-            in
-            let acc_updated =
-              update_type_definition_in_acc acc_intermediate
-                (f_fresh_type_name, f_type)
-            in
-            ( Styv_var (f_fresh_type_name, Styv_one),
-              list_continuations,
-              acc_updated ))
+            if context_free_mode && List.is_empty list_types_non_names then
+              (* In this branch, all types in list_input_types start with the
+                 type names, and we are in the context-free mode. *)
+              let list_type_names, list_continuations =
+                List.unzip list_names_continuations
+              in
+              let list_wrapped_type_names =
+                List.map list_type_names ~f:(fun name ->
+                    Styv_var (name, Styv_one))
+              in
+              let acc_augmented =
+                (f_id.txt, list_wrapped_type_names, (f_fresh_type_name, None))
+                :: acc
+              in
+              let f_type, list_continuations1, acc_intermediate =
+                (* Make sure to expand the definitions of type names before the
+                   recursive call of the function simulate. Otherwise, without
+                   expanding their definitions, we would obtain a vacuously true
+                   type definition such as T_temp_0 := T_temp_0[$] in acc. *)
+                let list_type_names_expanded =
+                  expand_list_input_types list_type_definitions
+                    list_wrapped_type_names
+                in
+                simulate ctxt cmd list_type_names_expanded acc_augmented
+              in
+              (* Make sure all continuations after simulating the
+                 list_wrapped_type_names alongside cmd are Styv_one. *)
+              if immediate_termination_list_types list_continuations1 then
+                let acc_updated =
+                  update_type_definition_in_acc acc_intermediate
+                    (f_fresh_type_name, f_type)
+                in
+                ( Styv_var (f_fresh_type_name, Styv_one),
+                  list_continuations,
+                  acc_updated )
+              else
+                failwith
+                  "There is a mismatch between a function call and a type name \
+                   in the context-free mode of M_call"
+            else
+              let f_def =
+                get_function_definition list_function_definitions f_id.txt
+              in
+              let ctxt_updated =
+                let f_ctxt = extract_context_of_process [] f_def in
+                Map.merge ctxt f_ctxt ~f:(fun ~key:_ x ->
+                    match x with
+                    | `Left v | `Right v -> Some v
+                    | `Both (_, v2) -> Some v2)
+              in
+              let acc_augmented =
+                (f_id.txt, list_input_types, (f_fresh_type_name, None)) :: acc
+              in
+              let f_type, list_continuations, acc_intermediate =
+                simulate ctxt_updated f_def.proc_body list_input_types
+                  acc_augmented
+              in
+              let acc_updated =
+                update_type_definition_in_acc acc_intermediate
+                  (f_fresh_type_name, f_type)
+              in
+              ( Styv_var (f_fresh_type_name, Styv_one),
+                list_continuations,
+                acc_updated ))
     | M_sample_recv (_, channel_id) ->
         if String.equal channel_id_target channel_id.txt then
           failwith
@@ -310,26 +399,28 @@ let simulate_type_with_command list_function_definitions list_type_definitions
   in
   simulate ctxt cmd [ input_type ] []
 
-let simulate_type_with_proc list_function_definitions list_type_definitions proc
-    psig_ctxt ext_ctxt channel_id_target input_type =
+let simulate_type_with_proc ?(context_free_mode = false)
+    list_function_definitions list_type_definitions proc psig_ctxt ext_ctxt
+    channel_id_target input_type =
   let cmd = proc.proc_body in
   let ctxt = extract_context_of_process ext_ctxt proc in
-  simulate_type_with_command list_function_definitions list_type_definitions cmd
-    psig_ctxt ctxt channel_id_target input_type
+  simulate_type_with_command ~context_free_mode list_function_definitions
+    list_type_definitions cmd psig_ctxt ctxt channel_id_target input_type
 
 (* Simulate a type alongside each process in the sequential composition of
    subguides. The input initial type is simulated alongside the first subguide.
    Its output type is then simulated alongside the second subguide. We repeat it
    until we obtain the final type after simulating the last subguide. *)
 
-let successively_simulate_type_with_guide_composition list_function_definitions
-    list_type_definitions guide_composition psig_ctxt ext_ctxt
-    initial_uncovered_type =
+let successively_simulate_type_with_guide_composition
+    ?(context_free_mode = false) list_function_definitions list_type_definitions
+    guide_composition psig_ctxt ext_ctxt initial_uncovered_type =
   let simulate acc (proc, channel_name) =
     let cumulative_covered_type, list_type_definitions = acc in
     let final_type, _, acc_output =
-      simulate_type_with_proc list_function_definitions list_type_definitions
-        proc psig_ctxt ext_ctxt channel_name cumulative_covered_type
+      simulate_type_with_proc ~context_free_mode list_function_definitions
+        list_type_definitions proc psig_ctxt ext_ctxt channel_name
+        cumulative_covered_type
     in
     let list_new_type_definitions =
       List.map acc_output ~f:(fun (_, _, possible_definition) ->
@@ -508,10 +599,11 @@ let coverage_check_prog prog =
   let initial_uncovered_type =
     prog |> collect_initial_uncovered_type |> eval_sty
   in
+  let context_free_mode = true in
   let final_type, acc =
-    successively_simulate_type_with_guide_composition list_function_definitions
-      list_type_definitions list_guide_defs_right_channels psig_ctxt ext_ctxt
-      initial_uncovered_type
+    successively_simulate_type_with_guide_composition ~context_free_mode
+      list_function_definitions list_type_definitions
+      list_guide_defs_right_channels psig_ctxt ext_ctxt initial_uncovered_type
   in
   (* Print out the result of coverage checking *)
   let () =

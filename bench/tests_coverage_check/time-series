@@ -12,6 +12,8 @@ external gp_new: (real -> real) -> (real -> real -> real) -> real -> real dist
 
 type Old_trace
 type Latent
+type Init_type = Old_traceG_uncovered[$]
+type Old_traceG_uncovered = bool /\ +{ nat[3] /\ +{ preal /\ Old_traceG_uncovered[Old_traceG_uncovered[$]] | Old_traceG_uncovered[Old_traceG_uncovered[$]] } | nat[5] /\ +{ preal /\ preal /\ $ | preal /\ $ } }
 
 proc Guide(times: (real; [100]) tensor) -> ast | old : Old_trace | lat : Latent = {
   gen_ast <- GenKernel();
@@ -141,3 +143,6 @@ proc GenKernel_no_old() -> ast | . | lat : LatentG_no_old = {
     c <- sample{lat}(GAMMA(1; 1));
     return cst(c)
 }
+
+Initial_type: Init_type
+Guide_composition: Guide
