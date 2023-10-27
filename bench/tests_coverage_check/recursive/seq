@@ -1,0 +1,14 @@
+type Old_trace
+type Latent
+type Init_type = real_u /\ real_u /\ $
+
+proc Seq() -> unit | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(0; 1));
+  _ <- observe{old}(NORMAL(0; 1));
+  x <- sample{lat}(NORMAL(0; 1));
+  y <- sample{lat}(NORMAL(0; 1));
+  return ()
+}
+
+Initial_type: Init_type
+Guide_composition: Seq
