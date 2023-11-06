@@ -1,6 +1,6 @@
 type Latent
 type Previous_trace_type 
-type Init_type = preal_u /\ +{ $ | ureal_u /\ $ }
+type Init_type = preal_u /\ &{ $ | ureal_u /\ $ }
 
 proc Guide[a: preal; b: preal; c: preal; d: preal]() -> unit | old: Previous_trace_type | lat : Latent = {
   _ <- observe{old}(GAMMA(2; 1));

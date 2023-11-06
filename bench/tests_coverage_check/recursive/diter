@@ -1,7 +1,7 @@
 type Old_trace
 type NonLinear
 type NonLinear_no_old
-type Init_type = +{ $ | real_u /\ Init_type[Init_type[$]] }
+type Init_type = &{ $ | real_u /\ Init_type[Init_type[$]] }
 
 proc DIter() -> unit | old : Old_trace | lat : NonLinear = {
   if{lat} . then

@@ -3,7 +3,7 @@
 type Old_trace
 type Latent
 type Latent_no_old
-type Init_type = ureal_u /\ +{ $ | Init_type[$] }
+type Init_type = ureal_u /\ &{ $ | Init_type[$] }
 
 proc Guide(l: ureal; k: real; p: ureal) -> real | old : Old_trace | lat : Latent = {
   _ <- observe{old}(UNIF);

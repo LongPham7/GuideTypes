@@ -321,12 +321,12 @@ let simulate_type_with_command ?(context_free_mode = false)
           let list_input_types_branch_swapped =
             List.map list_input_types ~f:(fun definition ->
                 match definition with
-                | Styv_ichoice (s1, s2) -> Styv_ichoice (s2, s1)
+                | Styv_echoice (s1, s2) -> Styv_echoice (s2, s1)
                 | _ ->
                     failwith
                       (Format.asprintf
                          "Because the given type %a is not of the form \
-                          Styv_ichoice, we cannot swap the two branches"
+                          Styv_echoice, we cannot swap the two branches"
                          Ast_ops.print_sess_tyv definition))
           in
           let type1, result1, acc1 = simulate ctxt cmd1 list_input_types acc in
@@ -336,13 +336,13 @@ let simulate_type_with_command ?(context_free_mode = false)
           let list_continuations =
             List.dedup_and_sort (result1 @ result2) ~compare:compare_sess_tyv
           in
-          (Styv_ichoice (type1, type2), list_continuations, acc2)
+          (Styv_echoice (type1, type2), list_continuations, acc2)
         else
           let list_first_branch_continuations =
             List.map list_input_types ~f:(fun definition ->
                 match definition with
-                | Styv_ichoice (s1, _) -> s1
-                | _ -> failwith "The given type is not of the form Styv_ichoice")
+                | Styv_echoice (s1, _) -> s1
+                | _ -> failwith "The given type is not of the form Styv_echoice")
           in
           (* We only enter the first branch because the second branch
              corresponds to the case where the previous subguide diverges from

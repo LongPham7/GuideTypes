@@ -1,7 +1,7 @@
 type Old_trace
 type Linear
 type Linear_no_old
-type Init_type = +{ $ | real_u /\ Init_type[$] }
+type Init_type = &{ $ | real_u /\ Init_type[$] }
 
 proc Iter() -> unit | old : Old_trace | lat : Linear = {
   if{lat} . then

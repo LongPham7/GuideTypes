@@ -1,7 +1,7 @@
 type Old_trace
 type General
 type General_no_old
-type Init_type = +{ $ | real_u /\ Init_type[real_u /\ Init_type[real_u /\ Init_type[$]]] }
+type Init_type = &{ $ | real_u /\ Init_type[real_u /\ Init_type[real_u /\ Init_type[$]]] }
 
 proc Recur() -> unit | old : Old_trace | lat : General = {
   if{lat} . then

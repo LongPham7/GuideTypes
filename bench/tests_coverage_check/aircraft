@@ -12,8 +12,8 @@ type LatentR
 type LatentL
 
 type Init_type = nat_u /\ LatentR_old_uncovered[$]
-type LatentR_old_uncovered = +{ real_u /\ nat_u[3] /\ LatentL_old_uncovered[LatentR_old_uncovered[$]] | $ }
-type LatentL_old_uncovered = +{ real_u /\ LatentL_old_uncovered[$] | $ }
+type LatentR_old_uncovered = &{ real_u /\ nat_u[3] /\ LatentL_old_uncovered[LatentR_old_uncovered[$]] | $ }
+type LatentL_old_uncovered = &{ real_u /\ LatentL_old_uncovered[$] | $ }
 
 proc Guide() -> unit | old : LatentM_old | lat : LatentM = {
   num_aircraft <- 
