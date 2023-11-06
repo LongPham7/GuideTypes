@@ -93,19 +93,8 @@ let distribution_base_type exp ctxt =
       let () =
         Or_error.iter_error error ~f:(fun e -> Error.pp Format.std_formatter e)
       in
-      failwith "The given expression is not a distribution in line 94"
-
-let get_covered_and_uncovered_distribution_base_types bty =
-  match bty with
-  | Btyv_prim x -> (true, Btyv_prim x, Btyv_prim_uncovered x)
-  | Btyv_prim_uncovered x -> (false, Btyv_prim x, Btyv_prim_uncovered x)
-  | Btyv_tensor (pty, dims) ->
-      (true, Btyv_tensor (pty, dims), Btyv_tensor_uncovered (pty, dims))
-  | Btyv_tensor_uncovered (pty, dims) ->
-      (false, Btyv_tensor (pty, dims), Btyv_tensor_uncovered (pty, dims))
-  | Btyv_simplex n -> (true, Btyv_simplex n, Btyv_simplex_uncovered n)
-  | Btyv_simplex_uncovered n -> (false, Btyv_simplex n, Btyv_simplex_uncovered n)
-  | _ -> failwith "The base type of the distribution is not supported"
+      failwith
+        "The given expression is not a distribution in distribution_base_type"
 
 (* Check the coverage of Styv_conj. This is used as a helper function inside
    simulate_type_with_command. *)
@@ -131,13 +120,14 @@ let split_type_names_in_list_input_types list_input_types =
   let list_types_with_head_names, list_types_non_names =
     List.partition_tf list_input_types ~f:is_type_definition_name
   in
-  let () =
-    print_endline "Status in line 135";
-    List.iter list_types_with_head_names ~f:(fun name ->
-        Format.printf "Name = %a\n" Ast_ops.print_sess_tyv name);
-    List.iter list_types_non_names ~f:(fun x ->
-        Format.printf "Non-type-names = %a\n" Ast_ops.print_sess_tyv x)
-  in
+  (* For debugging *)
+  (* let () =
+       print_endline "Status in split_type_names_in_list_input_types";
+       List.iter list_types_with_head_names ~f:(fun name ->
+           Format.printf "Name = %a\n" Ast_ops.print_sess_tyv name);
+       List.iter list_types_non_names ~f:(fun x ->
+           Format.printf "Non-type-names = %a\n" Ast_ops.print_sess_tyv x)
+     in *)
   let split_type_name definition =
     match definition with
     | Styv_var (name, continuation) -> (name, continuation)
@@ -190,10 +180,15 @@ let simulate_type_with_command ?(context_free_mode = false)
     | M_ret _ -> (Styv_one, list_input_types, acc)
     | M_bnd (cmd1, var_name, cmd2) ->
         let tyv1 = Or_error.ok_exn (forward_wrapper psig_ctxt ctxt cmd1) in
+        let _, tyv1_covered, _ =
+          get_covered_and_uncovered_distribution_base_types tyv1
+        in
         let ctxt' =
           match var_name with
           | None -> ctxt
-          | Some var_name -> Map.set ctxt ~key:var_name.txt ~data:tyv1
+          | Some var_name ->
+              (* We bind the covered base type to the variable name. *)
+              Map.set ctxt ~key:var_name.txt ~data:tyv1_covered
         in
         let type1, list_continuations1, acc1 =
           simulate ctxt cmd1 list_input_types acc
@@ -460,39 +455,49 @@ let rec extract_all_type_names_mentioned definition =
   match definition with
   | Styv_one -> (true, [])
   | Styv_conj (b, s) ->
-      if not (is_base_type_covered b) then (false, [])
-      else extract_all_type_names_mentioned s
+      let s_covered, list_names = extract_all_type_names_mentioned s in
+      (is_base_type_covered b && s_covered, list_names)
   | Styv_imply (b, s) ->
-      if not (is_base_type_covered b) then (false, [])
-      else extract_all_type_names_mentioned s
+      let s_covered, list_names = extract_all_type_names_mentioned s in
+      (is_base_type_covered b && s_covered, list_names)
   | Styv_ichoice (s1, s2) ->
       let is_covered1, list_type_names1 = extract_all_type_names_mentioned s1 in
       let is_covered2, list_type_names2 = extract_all_type_names_mentioned s2 in
-      if is_covered1 && is_covered2 then
-        ( true,
-          List.dedup_and_sort
-            (list_type_names1 @ list_type_names2)
-            ~compare:String.compare )
-      else (false, [])
+      let list_type_names =
+        List.dedup_and_sort
+          (list_type_names1 @ list_type_names2)
+          ~compare:String.compare
+      in
+      (is_covered1 && is_covered2, list_type_names)
   | Styv_echoice (s1, s2) ->
       let is_covered1, list_type_names1 = extract_all_type_names_mentioned s1 in
       let is_covered2, list_type_names2 = extract_all_type_names_mentioned s2 in
-      if is_covered1 && is_covered2 then
-        ( true,
-          List.dedup_and_sort
-            (list_type_names1 @ list_type_names2)
-            ~compare:String.compare )
-      else (false, [])
+      let list_type_names =
+        List.dedup_and_sort
+          (list_type_names1 @ list_type_names2)
+          ~compare:String.compare
+      in
+      (is_covered1 && is_covered2, list_type_names)
   | Styv_var (type_name, continuation) ->
       let is_continuation_covered, list_type_names =
         extract_all_type_names_mentioned continuation
       in
-      if is_continuation_covered then
-        ( true,
-          List.dedup_and_sort
-            (type_name :: list_type_names)
-            ~compare:String.compare )
-      else (false, [])
+      let list_type_names_augmented =
+        List.dedup_and_sort
+          (type_name :: list_type_names)
+          ~compare:String.compare
+      in
+      (is_continuation_covered, list_type_names_augmented)
+
+(* Print a coverage map, which is useful for debugging *)
+
+let print_coverage_map coverage_map =
+  let print_list_names list = List.iter list ~f:(fun x -> printf "%s " x) in
+  List.iter coverage_map ~f:(fun (type_name, (list_names, is_covered)) ->
+      Format.printf "type name = %s, " type_name;
+      printf "list of mentioned names = ";
+      print_list_names list_names;
+      printf ", is_covered = %b\n" is_covered)
 
 (* Create an initial mapping from type names to their full-coverage statuses *)
 let create_initial_full_coverage_map list_definitions =
@@ -535,17 +540,19 @@ let is_type_name_covered_in_coverage_map coverage_map type_name =
    full-coverage statuses) by one step *)
 let refine_full_coverage_map coverage_map =
   let refine_single_entry (type_name, (all_types_names_mentioned, is_covered)) =
-    let still_full_covered =
-      List.for_all all_types_names_mentioned ~f:(fun x ->
-          is_type_name_covered_in_coverage_map coverage_map x)
+    let still_fully_covered =
+      is_covered
+      && List.for_all all_types_names_mentioned ~f:(fun x ->
+             is_type_name_covered_in_coverage_map coverage_map x)
     in
-    let any_change = Bool.( <> ) is_covered still_full_covered in
-    (any_change, (type_name, (all_types_names_mentioned, still_full_covered)))
+    let any_change = Bool.( <> ) is_covered still_fully_covered in
+    (any_change, (type_name, (all_types_names_mentioned, still_fully_covered)))
   in
   let list_change, result_refinement =
     coverage_map |> List.map ~f:refine_single_entry |> List.unzip
   in
   let any_change = List.exists list_change ~f:(fun x -> x) in
+  (* printf "any_change in line 554 = %b\n" any_change; *)
   (any_change, result_refinement)
 
 (* Recursively refine the coverage map until it is saturated *)
@@ -553,6 +560,11 @@ let is_type_name_fully_covered list_definitions =
   let initial_coverage_map =
     create_initial_full_coverage_map list_definitions
   in
+  (* For debugging *)
+  (* let () =
+       print_endline "Initial coverage map:";
+       print_coverage_map initial_coverage_map
+     in *)
   let rec recursively_refine_map_full_coverage_checking coverage_map =
     let any_change, result_refinement = refine_full_coverage_map coverage_map in
     if any_change then
@@ -566,6 +578,11 @@ let check_full_coverage list_definitions definition =
     extract_all_type_names_mentioned definition
   in
   let coverage_map = is_type_name_fully_covered list_definitions in
+  (* For debugging *)
+  (* let () =
+       print_endline "Final coverage map:";
+       print_coverage_map coverage_map
+     in *)
   let all_type_names_covered =
     List.for_all all_type_names_mentioned ~f:(fun x ->
         is_type_name_covered_in_coverage_map coverage_map x)
