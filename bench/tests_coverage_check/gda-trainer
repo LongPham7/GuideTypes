@@ -12,12 +12,24 @@ type Latent
 
 type Init_type = (real; [3]) tensor_u /\ (real; [3]) tensor_u /\ simplex_u[2] /\ $
 
-proc Guide() -> unit | old : Old_trace | lat : Latent = {
+proc Guide1() -> unit | old : Old_trace | lat : Latent = {
   mu_prior <- { return mvn3(stack(tensor(1); tensor(1); tensor(1)))(identity_matrix3) };
   _ <- observe{old}(mu_prior);
   mu1 <- sample{lat}(mu_prior);
   _ <- observe{old}(mu_prior);
   mu2 <- sample{lat}(mu_prior);
+  _ <- observe{old}(dirichlet2(stack(tensor(1); tensor(1))));
+  pi <- sample{lat}(SAME(simplex[2]));
+  gda_dist <- { return let sigma = identity_matrix3 in gda2(pi)(mvn3(mu1)(sigma))(mvn3(mu2)(sigma)) end };
+  return ()
+}
+
+proc Guide2() -> unit | old : Old_trace | lat : Latent = {
+  mu_prior <- { return mvn3(stack(tensor(1); tensor(1); tensor(1)))(identity_matrix3) };
+  _ <- observe{old}(mu_prior);
+  mu1 <- sample{lat}(SAME((real; [3]) tensor));
+  _ <- observe{old}(mu_prior);
+  mu2 <- sample{lat}(SAME((real; [3]) tensor));
   _ <- observe{old}(dirichlet2(stack(tensor(1); tensor(1))));
   pi <- sample{lat}(dirichlet2(stack(tensor(1); tensor(1))));
   gda_dist <- { return let sigma = identity_matrix3 in gda2(pi)(mvn3(mu1)(sigma))(mvn3(mu2)(sigma)) end };
@@ -25,4 +37,4 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
 }
 
 Initial_type: Init_type
-Guide_composition: Guide
+Guide_composition: Guide1; Guide2

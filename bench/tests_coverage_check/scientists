@@ -4,10 +4,32 @@ type Old_trace
 type Latent
 type Init_type = real_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ $
 
-proc Guide() -> real | old : Old_trace | lat : Latent = {
+proc Guide1() -> real | old : Old_trace | lat : Latent = {
   _ <- observe{old}(NORMAL(0; 50));
   mu <- sample{lat}(NORMAL(0; 50));
-  _ <- loop[7; ()] (fn (acc: unit) ->
+  _ <- loop[3; ()] (fn (acc: unit) ->
+    _ <- observe{old}(UNIF);
+    noise_level <- sample{lat}(UNIF);
+    return ());
+
+  _ <- loop[4; ()] (fn (acc: unit) ->
+    _ <- observe{old}(UNIF);
+    noise_level <- sample{lat}(SAME(ureal));
+    return ());
+
+  return mu
+}
+
+proc Guide2() -> real | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(0; 50));
+  mu <- sample{lat}(SAME(real));
+
+  _ <- loop[3; ()] (fn (acc: unit) ->
+    _ <- observe{old}(UNIF);
+    noise_level <- sample{lat}(SAME(ureal));
+    return ());
+
+  _ <- loop[4; ()] (fn (acc: unit) ->
     _ <- observe{old}(UNIF);
     noise_level <- sample{lat}(UNIF);
     return ());
@@ -15,4 +37,4 @@ proc Guide() -> real | old : Old_trace | lat : Latent = {
 }
 
 Initial_type: Init_type
-Guide_composition: Guide
+Guide_composition: Guide1; Guide2

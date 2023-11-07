@@ -181,7 +181,8 @@ let simulate_type_with_command ?(context_free_mode = false)
     | M_bnd (cmd1, var_name, cmd2) ->
         let tyv1 = Or_error.ok_exn (forward_wrapper psig_ctxt ctxt cmd1) in
         let _, tyv1_covered, _ =
-          get_covered_and_uncovered_distribution_base_types tyv1
+          get_covered_and_uncovered_distribution_base_types ~only_dist:false
+            tyv1
         in
         let ctxt' =
           match var_name with
@@ -537,7 +538,8 @@ let is_type_name_covered_in_coverage_map coverage_map type_name =
   is_covered
 
 (* Refine the coverage map (i.e., mapping from type names to their current
-   full-coverage statuses) by one step *)
+   full-coverage statuses) by one step. In a single update, those entries in the
+   coverage map with is_covered = false will propagate to other entries. *)
 let refine_full_coverage_map coverage_map =
   let refine_single_entry (type_name, (all_types_names_mentioned, is_covered)) =
     let still_fully_covered =
@@ -555,7 +557,9 @@ let refine_full_coverage_map coverage_map =
   (* printf "any_change in line 554 = %b\n" any_change; *)
   (any_change, result_refinement)
 
-(* Recursively refine the coverage map until it is saturated *)
+(* Recursively refine the coverage map until it is saturated. In each step of
+   refinement, the number of entires with is_covered = false will increase, until
+   the coverage map saturates. *)
 let is_type_name_fully_covered list_definitions =
   let initial_coverage_map =
     create_initial_full_coverage_map list_definitions

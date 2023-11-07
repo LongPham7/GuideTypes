@@ -4,7 +4,7 @@ type Old_trace
 type Latent
 type Init_type = nat_u /\ nat_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ $
 
-proc Guide() -> unit | old : Old_trace | lat : Latent = {
+proc Guide1() -> unit | old : Old_trace | lat : Latent = {
   fake_rate <- {
     _ <- observe{old}(POIS(5));
     tmp <- sample{lat}(POIS(5));
@@ -18,8 +18,42 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
   faking <- { return BER(0.05) };
 
   _ <- observe{old}(faking);
+  is_faking <- sample{lat}(SAME(bool));
+  _ <- loop[2; is_faking] (fn (is_faking: bool) ->
+    _ <- observe{old}(faking);
+    new_is_faking <- sample{lat}(faking);
+    return (is_faking or new_is_faking));
+
+  _ <- loop[3; is_faking] (fn (is_faking: bool) ->
+    _ <- observe{old}(faking);
+    new_is_faking <- sample{lat}(SAME(bool));
+    return (is_faking or new_is_faking));
+
+  return ()
+}
+
+proc Guide2() -> unit | old : Old_trace | lat : Latent = {
+  fake_rate <- {
+    _ <- observe{old}(POIS(5));
+    tmp <- sample{lat}(SAME(nat));
+    return (tmp + 1)
+  };
+  user_rate <- {
+    _ <- observe{old}(POIS(30));
+    tmp <- sample{lat}(SAME(nat));
+    return (tmp + 1)
+  };
+  faking <- { return BER(0.05) };
+
+  _ <- observe{old}(faking);
   is_faking <- sample{lat}(faking);
-  final_is_faking <- loop[5; is_faking] (fn (is_faking: bool) ->
+
+  _ <- loop[2; is_faking] (fn (is_faking: bool) ->
+    _ <- observe{old}(faking);
+    new_is_faking <- sample{lat}(SAME(bool));
+    return (is_faking or new_is_faking));
+
+  _ <- loop[3; is_faking] (fn (is_faking: bool) ->
     _ <- observe{old}(faking);
     new_is_faking <- sample{lat}(faking);
     return (is_faking or new_is_faking));
@@ -27,4 +61,4 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
 }
 
 Initial_type: Init_type
-Guide_composition: Guide
+Guide_composition: Guide1; Guide2

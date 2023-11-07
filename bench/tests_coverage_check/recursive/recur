@@ -3,7 +3,7 @@ type General
 type General_no_old
 type Init_type = &{ $ | real_u /\ Init_type[real_u /\ Init_type[real_u /\ Init_type[$]]] }
 
-proc Recur() -> unit | old : Old_trace | lat : General = {
+proc Recur1() -> unit | old : Old_trace | lat : General = {
   if{lat} . then
     if{old} . then
       return ()
@@ -13,13 +13,39 @@ proc Recur() -> unit | old : Old_trace | lat : General = {
     if{old}. then
       _ <- observe{old}(NORMAL(0; 1));
       _ <- sample{lat}(NORMAL(0; 1));
-      _ <- Recur();
+      _ <- Recur1();
       _ <- observe{old}(NORMAL(0; 1));
       _ <- sample{lat}(NORMAL(0; 1));
-      _ <- Recur();
+      _ <- Recur1();
+      _ <- observe{old}(NORMAL(0; 1));
+      _ <- sample{lat}(SAME(real));
+      Recur1()
+    else
+      _ <- sample{lat}(NORMAL(0; 1));
+      _ <- Recur_no_old();
+      _ <- sample{lat}(NORMAL(0; 1));
+      _ <- Recur_no_old();
+      _ <- sample{lat}(NORMAL(0; 1));
+      Recur_no_old()
+}
+
+proc Recur2() -> unit | old : Old_trace | lat : General = {
+  if{lat} . then
+    if{old} . then
+      return ()
+    else
+      return ()
+  else
+    if{old}. then
+      _ <- observe{old}(NORMAL(0; 1));
+      _ <- sample{lat}(SAME(real));
+      _ <- Recur2();
+      _ <- observe{old}(NORMAL(0; 1));
+      _ <- sample{lat}(SAME(real));
+      _ <- Recur2();
       _ <- observe{old}(NORMAL(0; 1));
       _ <- sample{lat}(NORMAL(0; 1));
-      Recur()
+      Recur2()
     else
       _ <- sample{lat}(NORMAL(0; 1));
       _ <- Recur();
@@ -42,4 +68,4 @@ proc Recur_no_old() -> unit | . | lat : General_no_old = {
 }
 
 Initial_type: Init_type
-Guide_composition: Recur
+Guide_composition: Recur1; Recur2

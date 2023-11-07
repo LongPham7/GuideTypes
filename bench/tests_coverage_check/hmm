@@ -4,7 +4,7 @@ type Old_trace
 type Latent
 type Init_type = nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ $
 
-proc Guide() -> unit | old : Old_trace | lat : Latent = {
+proc Guide1() -> unit | old : Old_trace | lat : Latent = {
   init_dist <- { return CAT(1; 1; 1) };
   trans_dists <- { return fn (i: nat[3]) ->
     if i = 0 then
@@ -25,7 +25,12 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
   
   _ <- observe{old}(init_dist);
   init_state <- sample{lat}(init_dist);
-  _ <- loop[16; init_state] (fn (state: nat[3]) ->
+  _ <- loop[8; init_state] (fn (state: nat[3]) ->
+    _ <- observe{old}(trans_dists(state));
+    next_state <- sample{lat}(SAME(nat[3]));
+    return next_state
+  );
+  _ <- loop[8; init_state] (fn (state: nat[3]) ->
     _ <- observe{old}(trans_dists(state));
     next_state <- sample{lat}(trans_dists(state));
     return next_state
@@ -33,5 +38,39 @@ proc Guide() -> unit | old : Old_trace | lat : Latent = {
   return ()
 }
 
+proc Guide2() -> unit | old : Old_trace | lat : Latent = {
+  init_dist <- { return CAT(1; 1; 1) };
+  trans_dists <- { return fn (i: nat[3]) ->
+    if i = 0 then
+      CAT(0.1; 0.5; 0.4)
+    else if i = 1 then
+      CAT(0.2; 0.2; 0.6)
+    else
+      CAT(0.15; 0.15; 0.7)
+  };
+  obs_dists <- { return fn (i: nat[3]) ->
+    if i = 0 then
+      NORMAL(-1; 1)
+    else if i = 1 then
+      NORMAL(1; 1)
+    else
+      NORMAL(0; 0)
+  };
+  
+  _ <- observe{old}(init_dist);
+  init_state <- sample{lat}(SAME(nat[3]));
+  _ <- loop[8; init_state] (fn (state: nat[3]) ->
+    _ <- observe{old}(trans_dists(state));
+    next_state <- sample{lat}(trans_dists(state));
+    return next_state
+  );
+  _ <- loop[8; init_state] (fn (state: nat[3]) ->
+    _ <- observe{old}(trans_dists(state));
+    next_state <- sample{lat}(SAME(nat[3]));
+    return next_state
+  );
+  return ()
+}
+
 Initial_type: Init_type
-Guide_composition: Guide
+Guide_composition: Guide1; Guide2

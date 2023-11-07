@@ -3,7 +3,7 @@ type NonLinear
 type NonLinear_no_old
 type Init_type = &{ $ | real_u /\ Init_type[Init_type[$]] }
 
-proc DIter() -> unit | old : Old_trace | lat : NonLinear = {
+proc DIter1() -> unit | old : Old_trace | lat : NonLinear = {
   if{lat} . then
     if{old} . then
       return ()
@@ -13,8 +13,26 @@ proc DIter() -> unit | old : Old_trace | lat : NonLinear = {
     if{old} . then
         _ <- observe{old}(NORMAL(0; 1));
         _ <- sample{lat}(NORMAL(0; 1));
-      _ <- DIter();
-      DIter()
+      _ <- DIter2();
+      DIter1()
+    else
+      _ <- sample{lat}(NORMAL(0; 1));
+      _ <- DIter_no_old();
+      DIter_no_old()
+}
+
+proc DIter2() -> unit | old : Old_trace | lat : NonLinear = {
+  if{lat} . then
+    if{old} . then
+      return ()
+    else
+      return ()
+  else
+    if{old} . then
+        _ <- observe{old}(NORMAL(0; 1));
+        _ <- sample{lat}(SAME(real));
+      _ <- DIter1();
+      DIter2()
     else
       _ <- sample{lat}(NORMAL(0; 1));
       _ <- DIter_no_old();
@@ -31,4 +49,4 @@ proc DIter_no_old() -> unit | . | lat : NonLinear_no_old = {
 }
 
 Initial_type: Init_type
-Guide_composition: DIter
+Guide_composition: DIter1; DIter2

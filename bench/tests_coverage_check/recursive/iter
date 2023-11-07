@@ -3,7 +3,7 @@ type Linear
 type Linear_no_old
 type Init_type = &{ $ | real_u /\ Init_type[$] }
 
-proc Iter() -> unit | old : Old_trace | lat : Linear = {
+proc Iter1() -> unit | old : Old_trace | lat : Linear = {
   if{lat} . then
     if{old} . then
       return ()
@@ -13,7 +13,23 @@ proc Iter() -> unit | old : Old_trace | lat : Linear = {
     if{old} . then
       _ <- observe{old}(NORMAL(0; 1));
       _ <- sample{lat}(NORMAL(0; 1));
-      Iter()
+      Iter2()
+    else
+      _ <- sample{lat}(NORMAL(0; 1));
+      Iter_no_old()
+}
+
+proc Iter2() -> unit | old : Old_trace | lat : Linear = {
+  if{lat} . then
+    if{old} . then
+      return ()
+    else
+      return ()
+  else
+    if{old} . then
+      _ <- observe{old}(NORMAL(0; 1));
+      _ <- sample{lat}(SAME(real));
+      Iter1()
     else
       _ <- sample{lat}(NORMAL(0; 1));
       Iter_no_old()
@@ -28,4 +44,4 @@ proc Iter_no_old() -> unit | . | lat : Linear_no_old = {
 }
 
 Initial_type: Init_type
-Guide_composition: Iter
+Guide_composition: Iter1; Iter2

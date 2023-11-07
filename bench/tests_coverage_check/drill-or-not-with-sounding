@@ -4,7 +4,31 @@ type Old_trace
 type Latent
 type Init_type = nat_u[3] /\ $
 
-proc Guide() -> real | old : Old_trace | lat : Latent = {
+proc Guide1() -> real | old : Old_trace | lat : Latent = {
+  well_state_prior <- { return CAT(0.5; 0.3; 0.2) };
+  _ <- observe{old}(well_state_prior);
+  well_state <- sample{lat}(SAME(nat[3]));
+  sounding_dist <- {
+    return (
+      if well_state = 0 then
+        CAT(0.6; 0.3; 0.1)
+      else if well_state = 1 then
+        CAT(0.3; 0.4; 0.3)
+      else
+        CAT(0.1; 0.4; 0.5)
+    )
+  };
+  return (
+    if well_state = 0 then
+      -70.0
+    else if well_state = 1 then
+      50.0
+    else
+      200.0
+  )
+}
+
+proc Guide2() -> real | old : Old_trace | lat : Latent = {
   well_state_prior <- { return CAT(0.5; 0.3; 0.2) };
   _ <- observe{old}(well_state_prior);
   well_state <- sample{lat}(well_state_prior);
@@ -29,4 +53,4 @@ proc Guide() -> real | old : Old_trace | lat : Latent = {
 }
 
 Initial_type: Init_type
-Guide_composition: Guide
+Guide_composition: Guide1; Guide2

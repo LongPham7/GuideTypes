@@ -72,8 +72,8 @@ let rec substitute_into_type_definition target substituted_type =
       in
       Styv_var (name, substitution_result)
 
-let get_covered_and_uncovered_distribution_base_types bty =
-  match bty with
+let get_covered_and_uncovered_distribution_base_types ?(only_dist = true) btyv =
+  match btyv with
   | Btyv_prim x -> (true, Btyv_prim x, Btyv_prim_uncovered x)
   | Btyv_prim_uncovered x -> (false, Btyv_prim x, Btyv_prim_uncovered x)
   | Btyv_tensor (pty, dims) ->
@@ -82,7 +82,12 @@ let get_covered_and_uncovered_distribution_base_types bty =
       (false, Btyv_tensor (pty, dims), Btyv_tensor_uncovered (pty, dims))
   | Btyv_simplex n -> (true, Btyv_simplex n, Btyv_simplex_uncovered n)
   | Btyv_simplex_uncovered n -> (false, Btyv_simplex n, Btyv_simplex_uncovered n)
-  | _ -> failwith "The base type of the distribution is not supported"
+  | _ ->
+      if only_dist then
+        failwith
+          (Format.asprintf "The base type %a of a distribution is not supported"
+             Ast_ops.print_base_tyv btyv)
+      else (true, btyv, btyv)
 
 (* Utility functions for processes *)
 
