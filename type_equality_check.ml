@@ -679,9 +679,8 @@ let create_initial_full_base list_definitions list_names_norms =
 let print_base base =
   let print_candidate_decomposition pair =
     let name, decomposition = pair in
-    Format.fprintf Format.std_formatter
-      "(Type name, decomposition) = (%s, %a)\n" name Ast_ops.print_sess_tyv
-      decomposition
+    Format.printf "(Type name, decomposition) = (%s, %a)\n" name
+      Ast_ops.print_sess_tyv decomposition
   in
   List.iter base ~f:print_candidate_decomposition
 
