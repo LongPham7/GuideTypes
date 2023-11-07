@@ -48,11 +48,11 @@ proc Recur2() -> unit | old : Old_trace | lat : General = {
       Recur2()
     else
       _ <- sample{lat}(NORMAL(0; 1));
-      _ <- Recur();
+      _ <- Recur_no_old();
       _ <- sample{lat}(NORMAL(0; 1));
-      _ <- Recur();
+      _ <- Recur_no_old();
       _ <- sample{lat}(NORMAL(0; 1));
-      Recur()
+      Recur_no_old()
 }
 
 proc Recur_no_old() -> unit | . | lat : General_no_old = {

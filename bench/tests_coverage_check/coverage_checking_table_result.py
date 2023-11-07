@@ -4,7 +4,7 @@ from tabulate import tabulate
 import subprocess
 
 TOOL = ["dune", "exec", "gtypes"]
-LOG = "table-type-checking.log"
+LOG = "table-coverage-checking.log"
 
 BENCHS = [
     ("aircraft", "aircraft"),
@@ -50,7 +50,7 @@ def execute(out, task):
     loc = "N/A"
     with open(path, "r") as f:
         loc = str(len(f.readlines()))
-    cmd = TOOL + ["type-check", path]
+    cmd = TOOL + ["coverage-check", path]
     ret = subprocess.run(cmd, stdout=subprocess.PIPE)
     msg = str(ret.stdout, "utf-8")
 
