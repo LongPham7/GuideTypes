@@ -2,7 +2,7 @@
 
 type Old_trace
 type Latent
-type Init_type = bool /\ bool /\ $
+type Init_type = bool_u /\ bool_u /\ $
 
 proc Guide1() -> bool | old : Old_trace | lat : Latent = {
   _ <- observe{old}(BER(0.5));

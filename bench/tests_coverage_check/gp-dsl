@@ -17,7 +17,7 @@ type Old_traceG
 type LatentG
 type LatentG_no_old
 
-type Old_traceG_uncovered = bool /\ &{ nat[3] /\ &{ preal /\ Old_traceG_uncovered[Old_traceG_uncovered[$]] | Old_traceG_uncovered[Old_traceG_uncovered[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } }
+type Old_traceG_uncovered = bool_u /\ &{ nat_u[3] /\ &{ preal_u /\ Old_traceG_uncovered[Old_traceG_uncovered[$]] | Old_traceG_uncovered[Old_traceG_uncovered[$]] } | nat_u[5] /\ &{ preal_u /\ preal_u /\ $ | preal_u /\ $ } }
 
 proc Guide1(times: (real; [100]) tensor) -> ast | old : Old_trace | lat : Latent = {
   gen_ast <- GenKernel1();
