@@ -1,0 +1,261 @@
+external ast_const: preal -> ast
+external ast_wn: preal -> ast
+external ast_lin: preal -> ast
+external ast_se: preal -> ast
+external ast_per: preal -> preal -> ast
+external ast_add: ast -> ast -> ast
+external ast_mul: ast -> ast -> ast
+external ast_cp: preal -> ast -> ast -> ast
+external eval_ast: ast -> real -> real -> real
+
+external first_pair: (ast * ast) -> ast
+external second_pair: (ast * ast) -> ast
+
+external gp_new: (real -> real) -> (real -> real -> real) -> real -> real dist
+
+type Old_trace1
+type Old_trace2
+
+type Latent1
+type Latent2
+
+type Old_traceG1
+type Old_traceG2
+
+type LatentG1
+type LatentG2
+
+type Old_traceG2Double
+type LatentG2Double
+
+type LatentG_no_old
+
+type Old_traceG_uncovered = bool_u /\ &{ nat_u[3] /\ &{ preal_u /\ Old_traceG_uncovered[Old_traceG_uncovered[$]] | Old_traceG_uncovered[Old_traceG_uncovered[$]] } | nat_u[5] /\ &{ preal_u /\ preal_u /\ $ | preal_u /\ $ } }
+
+proc Guide1(times: (real; [100]) tensor) -> ast | old : Old_trace1 | lat : Latent1 = {
+  gen_ast <- GenKernel1();
+  ast <- { return ast_add(gen_ast)(ast_wn(0.01)) };
+  return ast
+}
+
+proc Guide2(times: (real; [100]) tensor) -> ast | old : Old_trace2 | lat : Latent2 = {
+  gen_ast <- GenKernel2();
+  ast <- { return ast_add(gen_ast)(ast_wn(0.01)) };
+  return ast
+}
+
+proc GenKernel1() -> ast | old : Old_traceG1 | lat : LatentG1 = {
+  _ <- observe{old}(BER(0.3));
+  b <- sample{lat}(BER(0.3));
+  if{lat} . then
+    if{old} . then
+      _ <- observe{old}(CAT(0.45; 0.45; 0.1));
+      op <- sample{lat}(SAME(nat[3]));
+      cst <- {
+        if{lat} . then
+          if{old} . then
+            _ <- observe{old}(GAMMA(1; 1));
+            c <- sample{lat}(GAMMA(1; 1));
+            return ast_cp(c)
+          else
+            c <- sample{lat}(GAMMA(1; 1));
+            return ast_cp(c)
+        else
+          if{old} . then
+            return (if op = 0 then ast_add else ast_mul)
+          else
+            return (if op = 0 then ast_add else ast_mul)
+      };
+      lhs <- GenKernel1();
+      rhs <- GenKernel1();
+      return cst(lhs)(rhs)
+    else
+      op <- sample{lat}(CAT(0.45; 0.45; 0.1));
+      cst <- {
+        if{lat} . then
+          c <- sample{lat}(GAMMA(1; 1));
+          return ast_cp(c)
+        else
+          return (if op = 0 then ast_add else ast_mul)
+      };
+      lhs <- GenKernel_no_old();
+      rhs <- GenKernel_no_old();
+      return cst(lhs)(rhs)
+  else
+    if{old} . then
+      _ <- observe{old}(CAT(1; 1; 1; 1; 1));
+      op <- sample{lat}(CAT(1; 1; 1; 1; 1));
+      cst <- {
+        if{lat} . then
+          if{old} . then
+            _ <- observe{old}(GAMMA(1; 1));
+            c <- sample{lat}(SAME(preal));
+            return ast_per(c)
+          else
+            c <- sample{lat}(GAMMA(1; 1));
+            return ast_per(c)
+        else
+          if{old} . then
+            return (
+              if op = 0 then ast_const
+              else if op = 1 then ast_wn
+              else if op = 2 then ast_lin
+              else ast_se
+            )
+          else
+            return (
+              if op = 0 then ast_const
+              else if op = 1 then ast_wn
+              else if op = 2 then ast_lin
+              else ast_se
+            )
+      };
+      _ <- observe{old}(GAMMA(1; 1));
+      c <- sample{lat}(SAME(preal));
+      return cst(c)
+    else
+      op <- sample{lat}(CAT(1; 1; 1; 1; 1));
+      cst <- {
+        if{lat} . then
+          c <- sample{lat}(GAMMA(1; 1));
+          return ast_per(c)
+        else
+          return (
+            if op = 0 then ast_const
+            else if op = 1 then ast_wn
+            else if op = 2 then ast_lin
+            else ast_se
+          )
+      };
+      c <- sample{lat}(GAMMA(1; 1));
+      return cst(c)
+}
+
+proc GenKernel2() -> ast | old : Old_traceG2 | lat : LatentG2 = {
+  _ <- observe{old}(BER(0.3));
+  b <- sample{lat}(SAME(bool));
+  if{lat} . then
+    if{old} . then
+      _ <- observe{old}(CAT(0.45; 0.45; 0.1));
+      op <- sample{lat}(CAT(0.45; 0.45; 0.1));
+      cst <- {
+        if{lat} . then
+          if{old} . then
+            _ <- observe{old}(GAMMA(1; 1));
+            c <- sample{lat}(SAME(preal));
+            return ast_cp(c)
+          else
+            c <- sample{lat}(GAMMA(1; 1));
+            return ast_cp(c)
+        else
+          if{old} . then
+            return (if op = 0 then ast_add else ast_mul)
+          else
+            return (if op = 0 then ast_add else ast_mul)
+      };
+      ast_pair <- GenKernel2Double();
+      lhs <- return (first_pair(ast_pair));
+      rhs <- return (second_pair(ast_pair));
+      return cst(lhs)(rhs)
+    else
+      op <- sample{lat}(CAT(0.45; 0.45; 0.1));
+      cst <- {
+        if{lat} . then
+          c <- sample{lat}(GAMMA(1; 1));
+          return ast_cp(c)
+        else
+          return (if op = 0 then ast_add else ast_mul)
+      };
+      lhs <- GenKernel_no_old();
+      rhs <- GenKernel_no_old();
+      return cst(lhs)(rhs)
+  else
+    if{old} . then
+      _ <- observe{old}(CAT(1; 1; 1; 1; 1));
+      op <- sample{lat}(CAT(1; 1; 1; 1; 1));
+      cst <- {
+        if{lat} . then
+          if{old} . then
+            _ <- observe{old}(GAMMA(1; 1));
+            c <- sample{lat}(GAMMA(1; 1));
+            return ast_per(c)
+          else
+            c <- sample{lat}(GAMMA(1; 1));
+            return ast_per(c)
+        else
+          if{old} . then
+            return (
+              if op = 0 then ast_const
+              else if op = 1 then ast_wn
+              else if op = 2 then ast_lin
+              else ast_se
+            )
+          else
+            return (
+              if op = 0 then ast_const
+              else if op = 1 then ast_wn
+              else if op = 2 then ast_lin
+              else ast_se
+            )
+      };
+      _ <- observe{old}(GAMMA(1; 1));
+      c <- sample{lat}(GAMMA(1; 1));
+      return cst(c)
+    else
+      op <- sample{lat}(CAT(1; 1; 1; 1; 1));
+      cst <- {
+        if{lat} . then
+          c <- sample{lat}(GAMMA(1; 1));
+          return ast_per(c)
+        else
+          return (
+            if op = 0 then ast_const
+            else if op = 1 then ast_wn
+            else if op = 2 then ast_lin
+            else ast_se
+          )
+      };
+      c <- sample{lat}(GAMMA(1; 1));
+      return cst(c)
+}
+
+proc GenKernel2Double() -> (ast * ast) | old : Old_traceG2Double | lat : LatentG2Double = {
+  lhs <- GenKernel2();
+  rhs <- GenKernel2();
+  return (lhs; rhs)
+}
+
+proc GenKernel_no_old() -> ast | . | lat : LatentG_no_old = {
+  b <- sample{lat}(BER(0.3));
+  if{lat} . then
+    op <- sample{lat}(CAT(0.45; 0.45; 0.1));
+    cst <- {
+      if{lat} . then
+        c <- sample{lat}(GAMMA(1; 1));
+        return ast_cp(c)
+      else
+        return (if op = 0 then ast_add else ast_mul)
+    };
+    lhs <- GenKernel_no_old();
+    rhs <- GenKernel_no_old();
+    return cst(lhs)(rhs)
+  else
+    op <- sample{lat}(CAT(1; 1; 1; 1; 1));
+    cst <- {
+      if{lat} . then
+        c <- sample{lat}(GAMMA(1; 1));
+        return ast_per(c)
+      else
+        return (
+          if op = 0 then ast_const
+          else if op = 1 then ast_wn
+          else if op = 2 then ast_lin
+          else ast_se
+        )
+    };
+    c <- sample{lat}(GAMMA(1; 1));
+    return cst(c)
+}
+
+Initial_type: Old_traceG_uncovered[$]
+Guide_composition: Guide1; Guide2

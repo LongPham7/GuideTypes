@@ -1,0 +1,93 @@
+type Old_trace1
+type Old_traceG1
+
+type Old_trace2
+type Old_traceG2
+type Old_traceG2Double
+
+type Latent1
+type LatentG1
+
+type Latent2
+type LatentG2
+type LatentG2Double
+
+type LatentG_no_old
+
+type Init_type = ureal_u /\ Old_traceG_uncovered[$]
+type Old_traceG_uncovered = ureal_u /\ &{ preal_u /\ $ | Old_traceG_uncovered[Old_traceG_uncovered[$]] }
+
+proc GuidePcfg1() -> unit | old : Old_trace1 | lat : Latent1 = {
+  _ <- observe{old}(UNIF);
+  k <- sample{lat}(SAME(ureal));
+  GuidePcfgGen1(0)
+}
+
+proc GuidePcfg2() -> unit | old : Old_trace2 | lat : Latent2 = {
+  _ <- observe{old}(UNIF);
+  k <- sample{lat}(UNIF);
+  GuidePcfgGen2(0)
+}
+
+proc GuidePcfgGen1(dep: nat) -> unit | old : Old_traceG1 | lat : LatentG1 = {
+  _ <- observe{old}(UNIF);
+  u <- sample{lat}(SAME(ureal));
+  if{lat} . then
+    if{old} . then
+      _ <- observe{old}(GAMMA(dep; 1));
+      _ <- sample{lat}(GAMMA(dep; 1));
+      return ()
+    else
+      _ <- sample{lat}(GAMMA(dep; 1));
+      return ()
+  else
+    if{old} . then
+      _ <- GuidePcfgGen1(dep + 1);
+      _ <- GuidePcfgGen1(dep + 2);
+      return ()
+    else
+      _ <- GuidePcfgGen_no_old(dep + 1);
+      _ <- GuidePcfgGen_no_old(dep + 2);
+      return ()
+}
+
+proc GuidePcfgGen2(dep: nat) -> unit | old : Old_traceG2 | lat : LatentG2 = {
+  _ <- observe{old}(UNIF);
+  u <- sample{lat}(UNIF);
+  if{lat} . then
+    if{old} . then
+      _ <- observe{old}(GAMMA(dep; 1));
+      _ <- sample{lat}(SAME(preal));
+      return ()
+    else
+      _ <- sample{lat}(GAMMA(dep; 1));
+      return ()
+  else
+    if{old} . then
+      _ <- GuidePcfgGen2Double(dep);
+      return ()
+    else
+      _ <- GuidePcfgGen_no_old(dep + 1);
+      _ <- GuidePcfgGen_no_old(dep + 2);
+      return ()
+}
+
+proc GuidePcfgGen2Double(dep: nat) -> unit | old : Old_traceG2Double | lat : LatentG2Double = {
+  _ <- GuidePcfgGen2(dep + 1);
+  _ <- GuidePcfgGen2(dep + 2);
+  return ()
+}
+
+proc GuidePcfgGen_no_old(dep: nat) -> unit | . | lat : LatentG_no_old = {
+  u <- sample{lat}(UNIF);
+  if{lat} . then
+    _ <- sample{lat}(GAMMA(dep; 1));
+    return ()
+  else
+    _ <- GuidePcfgGen_no_old(dep + 1);
+    _ <- GuidePcfgGen_no_old(dep + 2);
+    return ()
+}
+
+Initial_type: Init_type
+Guide_composition: GuidePcfg1; GuidePcfg2

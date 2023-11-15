@@ -11,7 +11,8 @@ BENCHS = [
     ("branching", "branching"),
     ("drill", "drill"),
     ("ex-1", "ex-1"),
-    ("ex-2", "ex-2"),
+    ("ex-2-success", "ex-2-success"),
+    ("ex-2-failure", "ex-2-failure"),
     ("gaussian", "gaussian"),
     ("gda", "gda"),
     ("gmm", "gmm"),
@@ -26,14 +27,17 @@ BENCHS = [
     ("ptrace", "ptrace"),
     ("run-factory", "run-factory"),
     ("sprinkler", "sprinkler"),
-    ("gp-dsl", "gp-dsl"),
+    ("gp-dsl-success", "gp-dsl-success"),
+    ("gp-dsl-failure", "gp-dsl-failure"),
     ("user-behavior", "user-behavior"),
     ("vae", "vae"),
     ("weight", "weight"),
     ("seq", "recursive/seq"),
     ("iter", "recursive/iter"),
-    ("diter", "recursive/diter"),
-    ("recur", "recursive/recur")
+    ("diter-success", "recursive/diter-success"),
+    ("diter-failure", "recursive/diter-failure"),
+    ("recur-success", "recursive/recur-success"),
+    ("recur-failure", "recursive/recur-failure")
 ]
 
 
