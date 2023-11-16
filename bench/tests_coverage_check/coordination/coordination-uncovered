@@ -1,0 +1,24 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=coordination-game
+
+type Old_trace
+type Latent
+type Init_type = bool_u /\ bool_u /\ $
+
+proc Guide1() -> bool | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(BER(0.6));
+  amy_location <- sample{lat}(BER(0.6));
+  _ <- observe{old}(BER(0.6));
+  bob_location <- sample{lat}(SAME(bool));
+  return (amy_location = bob_location)
+}
+
+proc Guide2() -> bool | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(BER(0.6));
+  amy_location <- sample{lat}(SAME(bool));
+  _ <- observe{old}(BER(0.6));
+  bob_location <- sample{lat}(SAME(bool));
+  return (amy_location = bob_location)
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

@@ -1,0 +1,36 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=linear_regression
+
+type Old_trace
+type Latent
+type Init_type = real_u /\ real_u /\ real_u /\ preal_u /\ $
+
+proc Guide1(xs: (real; [6; 3]) tensor) -> (real; [3]) tensor | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(0; 1));
+  _ <- observe{old}(NORMAL(0; 1));
+  _ <- observe{old}(NORMAL(0; 1));
+  weight0 <- sample{lat}(NORMAL(0; 1));
+  weight1 <- sample{lat}(NORMAL(0; 1));
+  weight2 <- sample{lat}(NORMAL(0; 1));
+
+  _ <- observe{old}(GAMMA(1; 1));
+  sigma <- sample{lat}(SAME(preal));
+
+  return stack(tensor(weight0); tensor(weight1); tensor(weight2))
+}
+
+proc Guide2(xs: (real; [6; 3]) tensor) -> (real; [3]) tensor | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(0; 1));
+  _ <- observe{old}(NORMAL(0; 1));
+  _ <- observe{old}(NORMAL(0; 1));
+  weight0 <- sample{lat}(SAME(real));
+  weight1 <- sample{lat}(SAME(real));
+  weight2 <- sample{lat}(SAME(real));
+
+  _ <- observe{old}(GAMMA(1; 1));
+  sigma <- sample{lat}(SAME(preal));
+
+  return stack(tensor(weight0); tensor(weight1); tensor(weight2))
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

@@ -1,0 +1,18 @@
+type Old_trace
+type Latent
+type Init_type = real_u /\ $
+
+proc Guide1[a: real; b: preal]() -> unit | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(a; b));
+  weight <- sample{lat}(SAME(real));
+  return ()
+}
+
+proc Guide2[a: real; b: preal]() -> unit | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(a; b));
+  weight <- sample{lat}(SAME(real));
+  return ()
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

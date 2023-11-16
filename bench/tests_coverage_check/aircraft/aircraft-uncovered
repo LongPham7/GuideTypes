@@ -1,0 +1,117 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=aircraft
+
+type LatentM_old
+type LatentR_old
+type LatentL_old
+
+type LatentR_no_old
+type LatentL_no_old
+
+type LatentM
+type LatentR
+type LatentL
+
+type Init_type = nat_u /\ LatentR_old_uncovered[$]
+type LatentR_old_uncovered = &{ real_u /\ nat_u[3] /\ LatentL_old_uncovered[LatentR_old_uncovered[$]] | $ }
+type LatentL_old_uncovered = &{ real_u /\ LatentL_old_uncovered[$] | $ }
+
+proc Guide1() -> unit | old : LatentM_old | lat : LatentM = {
+  num_aircraft <- 
+  {
+    _ <- observe{old}(POIS(5));
+    tmp <- sample{lat}(SAME(nat));
+    return tmp + 1
+  };
+  _ <- Recur1(0; num_aircraft);
+  return ()
+}
+
+proc Guide2() -> unit | old : LatentM_old | lat : LatentM = {
+  num_aircraft <- 
+  {
+    _ <- observe{old}(SAME(nat));
+    tmp <- sample{lat}(POIS(5));
+    return tmp + 1
+  };
+  _ <- Recur2(0; num_aircraft);
+  return ()
+}
+
+proc Recur1(i: nat; n: nat) -> unit | old : LatentR_old | lat : LatentR = {
+  if{lat} . then
+    if{old} . then
+      _ <- observe{old}(NORMAL(2; 5));
+      _ <- observe{old}(CAT(0.1; 0.4; 0.5));
+      position <- sample{lat}(NORMAL(2; 5));
+      num_blips <- sample{lat}(SAME(nat[3]));
+      _ <- Loop(0; num_blips; position);
+      Recur1(i + 1; n)
+    else
+      position <- sample{lat}(NORMAL(2; 5));
+      num_blips <- sample{lat}(CAT(0.1; 0.4; 0.5));
+      _ <- Loop_no_old(0; num_blips; position);
+      Recur_no_old(i + 1; n)
+  else
+    if{old} . then
+      return ()
+    else
+      return ()
+}
+
+proc Recur2(i: nat; n: nat) -> unit | old : LatentR_old | lat : LatentR = {
+  if{lat} . then
+    if{old} . then
+      _ <- observe{old}(NORMAL(2; 5));
+      _ <- observe{old}(CAT(0.1; 0.4; 0.5));
+      position <- sample{lat}(SAME(real));
+      num_blips <- sample{lat}(SAME(nat[3]));
+      _ <- Loop(0; num_blips; position);
+      Recur2(i + 1; n)
+    else
+      position <- sample{lat}(NORMAL(2; 5));
+      num_blips <- sample{lat}(CAT(0.1; 0.4; 0.5));
+      _ <- Loop_no_old(0; num_blips; position);
+      Recur_no_old(i + 1; n)
+  else
+    if{old} . then
+      return ()
+    else
+      return ()
+}
+
+proc Recur_no_old(i: nat; n: nat) -> unit | . | lat : LatentR_no_old = {
+  if{lat} . then
+    position <- sample{lat}(NORMAL(2; 5));
+    num_blips <- sample{lat}(CAT(0.1; 0.4; 0.5));
+    _ <- Loop_no_old(0; num_blips; position);
+    Recur_no_old(i + 1; n)
+  else
+    return ()
+}
+
+proc Loop(j: nat; m: nat; position: real) -> unit | old : LatentL_old | lat : LatentL = {
+  if{lat} . then
+    if{old} . then
+      _ <- observe{old}(NORMAL(position; 1));
+      _ <- sample{lat}(NORMAL(position; 1));
+      Loop(j + 1; m; position)
+    else
+      _ <- sample{lat}(NORMAL(position; 1));
+      Loop_no_old(j + 1; m; position)
+  else
+    if{old} . then
+      return ()
+    else
+      return ()
+}
+
+proc Loop_no_old(j: nat; m: nat; position: real) -> unit | . | lat : LatentL_no_old = {
+  if{lat} . then
+    _ <- sample{lat}(NORMAL(position; 1));
+    Loop_no_old(j + 1; m; position)
+  else
+    return ()
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

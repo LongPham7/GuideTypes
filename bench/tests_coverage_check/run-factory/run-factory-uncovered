@@ -1,0 +1,20 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=pencil-factory
+
+type Old_trace
+type Latent
+type Init_type = ureal_u /\ $
+
+proc Guide1(a: preal; b: preal) -> ureal | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(BETA(a; b));
+  p <- sample{lat}(SAME(ureal));
+  return p
+}
+
+proc Guide2(a: preal; b: preal) -> ureal | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(BETA(a; b));
+  p <- sample{lat}(SAME(ureal));
+  return p
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

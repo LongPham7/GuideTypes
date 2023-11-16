@@ -1,0 +1,20 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=aistats/gaussian-aistats
+
+type Old_trace
+type Latent
+type Init_type = real_u /\ $
+
+proc Guide1(mu0: real; sigma0: preal; sigma: preal) -> real | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(mu0; sigma0));
+  mu <- sample{lat}(SAME(real));
+  return mu
+}
+
+proc Guide2(mu0: real; sigma0: preal; sigma: preal) -> real | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(NORMAL(mu0; sigma0));
+  mu <- sample{lat}(SAME(real));
+  return mu
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

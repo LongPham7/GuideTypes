@@ -1,0 +1,42 @@
+type Old_trace
+type Latent
+type Init_type = preal_u /\ &{ $ | ureal_u /\ $ }
+
+proc Guide1[a: preal; b: preal; c: preal; d: preal]() -> unit | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(GAMMA(a; b));
+  v <- sample{lat}(SAME(preal));
+  if{lat} . then
+    if{old} . then
+      return ()
+    else
+      return ()
+  else
+    if{old} . then
+      _ <- observe{old}(BETA(c; d));
+      _ <- sample{lat}(BETA(c; d));
+      return ()
+    else
+      _ <- sample{lat}(BETA(c; d));
+      return ()
+}
+
+proc Guide2[a: preal; b: preal; c: preal; d: preal]() -> unit | old : Old_trace | lat : Latent = {
+  _ <- observe{old}(GAMMA(a; b));
+  v <- sample{lat}(SAME(preal));
+  if{lat} . then
+    if{old} . then
+      return ()
+    else
+      return ()
+  else
+    if{old} . then
+      _ <- observe{old}(BETA(c; d));
+      _ <- sample{lat}(SAME(ureal));
+      return ()
+    else
+      _ <- sample{lat}(BETA(c; d));
+      return ()
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

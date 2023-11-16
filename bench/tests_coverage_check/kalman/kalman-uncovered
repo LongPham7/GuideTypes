@@ -1,0 +1,72 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=kalman
+
+external mvn2: (real; [2]) tensor -> (real; [2; 2]) tensor -> (real; [2]) tensor dist
+external mvn20: (real; [20]) tensor -> (real; [20; 20]) tensor -> (real; [20]) tensor dist
+
+external zero_vector2: (real; [2]) tensor
+external zero_vector20: (real; [20]) tensor
+
+external mulmv2: (real; [2; 2]) tensor -> (real; [2]) tensor -> (real; [2]) tensor
+external mulmv20: (real; [20; 2]) tensor -> (real; [2]) tensor -> (real; [20]) tensor
+
+type Old_trace
+type Latent
+
+type Init_type = (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ $
+
+proc Guide1(
+  obs_matrix: (real; [20; 2]) tensor;
+  obs_cov: (real; [20; 20]) tensor;
+  trans_matrix: (real; [2; 2]) tensor;
+  trans_cov: (real; [2; 2]) tensor;
+  init_mean: (real; [2]) tensor;
+  init_cov: (real; [2; 2]) tensor
+) -> unit | old : Old_trace | lat : Latent = {
+  start_dist <- { return mvn2(init_mean)(init_cov) };
+  trans_dist <- { return mvn2(zero_vector2)(trans_cov) };
+
+  _ <- observe{old}(start_dist);
+  start_state <- sample{lat}(start_dist);
+
+  _ <- loop[50; start_state] (fn (prev_state: (real; [2]) tensor) ->
+    _ <- observe{old}(trans_dist);
+    trans <- sample{lat}(trans_dist);
+    next_state <- { return mulmv2(trans_matrix)(prev_state) + trans };
+    return next_state);
+  _ <- loop[50; start_state] (fn (prev_state: (real; [2]) tensor) ->
+    _ <- observe{old}(trans_dist);
+    trans <- sample{lat}(SAME((real; [2]) tensor));
+    next_state <- { return mulmv2(trans_matrix)(prev_state) + trans };
+    return next_state);
+  return ()
+}
+
+proc Guide2(
+  obs_matrix: (real; [20; 2]) tensor;
+  obs_cov: (real; [20; 20]) tensor;
+  trans_matrix: (real; [2; 2]) tensor;
+  trans_cov: (real; [2; 2]) tensor;
+  init_mean: (real; [2]) tensor;
+  init_cov: (real; [2; 2]) tensor
+) -> unit | old : Old_trace | lat : Latent = {
+  start_dist <- { return mvn2(init_mean)(init_cov) };
+  trans_dist <- { return mvn2(zero_vector2)(trans_cov) };
+
+  _ <- observe{old}(start_dist);
+  start_state <- sample{lat}(SAME((real; [2]) tensor));
+
+  _ <- loop[50; start_state] (fn (prev_state: (real; [2]) tensor) ->
+    _ <- observe{old}(trans_dist);
+    trans <- sample{lat}(SAME((real; [2]) tensor));
+    next_state <- { return mulmv2(trans_matrix)(prev_state) + trans };
+    return next_state);
+  _ <- loop[50; start_state] (fn (prev_state: (real; [2]) tensor) ->
+    _ <- observe{old}(trans_dist);
+    trans <- sample{lat}(SAME((real; [2]) tensor));
+    next_state <- { return mulmv2(trans_matrix)(prev_state) + trans };
+    return next_state);
+  return ()
+}
+
+Initial_type: Init_type
+Guide_composition: Guide1; Guide2

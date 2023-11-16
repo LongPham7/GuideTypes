@@ -1,0 +1,77 @@
+# https://probprog.github.io/anglican/examples/viewer/?worksheet=gmm-iris
+
+type Old_trace
+type Latent
+
+type Init_type = simplex_u[3] /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ nat_u[3] /\ $
+
+external identity_matrix2: (real; [2; 2]) tensor
+
+external dirichlet3: (preal; [3]) tensor -> simplex[3] dist
+external wishart2: (real; [2; 2]) tensor -> real -> (real; [2; 2]) tensor dist
+external mvn2: (real; [2]) tensor -> (real; [2; 2]) tensor -> (real; [2]) tensor dist
+
+proc Proposal1() -> unit | old: Old_trace | lat : Latent = {
+  _ <- observe{old}(dirichlet3(stack(tensor(1.0); tensor(1.0); tensor(1.0))));
+  pi <- sample{lat}(dirichlet3(stack(tensor(1.0); tensor(1.0); tensor(1.0))));
+
+  _ <- observe{old}(wishart2(identity_matrix2)(3));
+  _ <- observe{old}(wishart2(identity_matrix2)(3));
+  _ <- observe{old}(wishart2(identity_matrix2)(3));
+
+  _ <- sample{lat}(wishart2(identity_matrix2)(3));
+  _ <- sample{lat}(SAME((real; [2; 2]) tensor));
+  _ <- sample{lat}(SAME((real; [2; 2]) tensor));
+
+  mu_0 <- { return stack(tensor(0.); tensor(0.)) };
+
+  _ <- observe{old}(mvn2(mu_0)(identity_matrix2));
+  _ <- observe{old}(mvn2(mu_0)(identity_matrix2));
+  _ <- observe{old}(mvn2(mu_0)(identity_matrix2));
+
+  _ <- sample{lat}(SAME((real; [2]) tensor));
+  _ <- sample{lat}(mvn2(mu_0)(identity_matrix2));
+  _ <- sample{lat}(mvn2(mu_0)(identity_matrix2));
+
+  _ <- loop[100; ()] (fn (acc: unit) ->
+    _ <- observe{old}(DISC(pi));
+    return ());
+  _ <- loop[100; ()] (fn (acc: unit) ->
+    _ <- sample{lat}(SAME(nat[3]));
+    return ());
+  return ()
+}
+
+proc Proposal2() -> unit | old: Old_trace | lat : Latent = {
+  _ <- observe{old}(dirichlet3(stack(tensor(1.0); tensor(1.0); tensor(1.0))));
+  pi <- sample{lat}(SAME(simplex[3]));
+
+  _ <- observe{old}(wishart2(identity_matrix2)(3));
+  _ <- observe{old}(wishart2(identity_matrix2)(3));
+  _ <- observe{old}(wishart2(identity_matrix2)(3));
+
+  _ <- sample{lat}(SAME((real; [2; 2]) tensor));
+  _ <- sample{lat}(wishart2(identity_matrix2)(3));
+  _ <- sample{lat}(wishart2(identity_matrix2)(3));
+
+  mu_0 <- { return stack(tensor(0.); tensor(0.)) };
+
+  _ <- observe{old}(mvn2(mu_0)(identity_matrix2));
+  _ <- observe{old}(mvn2(mu_0)(identity_matrix2));
+  _ <- observe{old}(mvn2(mu_0)(identity_matrix2));
+
+  _ <- sample{lat}(mvn2(mu_0)(identity_matrix2));
+  _ <- sample{lat}(SAME((real; [2]) tensor));
+  _ <- sample{lat}(SAME((real; [2]) tensor));
+
+  _ <- loop[100; ()] (fn (acc: unit) ->
+    _ <- observe{old}(DISC(pi));
+    return ());
+  _ <- loop[100; ()] (fn (acc: unit) ->
+    _ <- sample{lat}(SAME(nat[3]));
+    return ());
+  return ()
+}
+
+Initial_type: Init_type
+Guide_composition: Proposal1; Proposal2
