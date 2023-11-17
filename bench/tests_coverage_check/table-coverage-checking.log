@@ -1,6 +1,266 @@
+Benchmark branching
+--------------------------------------------------------------------------------
+parsing time: 120.172us
+New types introduced by coverage checking:
+Final type of coverage checking = nat /\ &{ $ | nat /\ $ }
+(Type name, definition) = (Init_type, nat_u /\ &{ $ | nat_u /\ $ })
+The final type is fully covered
+coverage checking time: 39.683us
+
+total time: 218.469us
+================================================================================
+
+
+Benchmark coordination
+--------------------------------------------------------------------------------
+parsing time: 176.062us
+New types introduced by coverage checking:
+Final type of coverage checking = bool /\ bool /\ $
+(Type name, definition) = (Init_type, bool_u /\ bool_u /\ $)
+The final type is fully covered
+coverage checking time: 28.879us
+
+total time: 258.978us
+================================================================================
+
+
+Benchmark drill
+--------------------------------------------------------------------------------
+parsing time: 173.55us
+New types introduced by coverage checking:
+Final type of coverage checking = nat[3] /\ $
+(Type name, definition) = (Init_type, nat[3]_u /\ $)
+The final type is fully covered
+coverage checking time: 29.099us
+
+total time: 240.692us
+================================================================================
+
+
+Benchmark ex-1
+--------------------------------------------------------------------------------
+parsing time: 98.21us
+New types introduced by coverage checking:
+Final type of coverage checking = preal /\ &{ $ | ureal /\ $ }
+(Type name, definition) = (Init_type, preal_u /\ &{ $ | ureal_u /\ $ })
+The final type is fully covered
+coverage checking time: 19.014us
+
+total time: 146.93us
+================================================================================
+
+
+Benchmark gaussian
+--------------------------------------------------------------------------------
+parsing time: 106.616us
+New types introduced by coverage checking:
+Final type of coverage checking = real /\ $
+(Type name, definition) = (Init_type, real_u /\ $)
+The final type is fully covered
+coverage checking time: 24.277us
+
+total time: 171.176us
+================================================================================
+
+
+Benchmark gbm
+--------------------------------------------------------------------------------
+parsing time: 168.029us
+New types introduced by coverage checking:
+Final type of coverage checking = real /\ $
+(Type name, definition) = (Init_type, real_u /\ $)
+The final type is fully covered
+coverage checking time: 47.745us
+
+total time: 252.996us
+================================================================================
+
+
+Benchmark gda
+--------------------------------------------------------------------------------
+parsing time: 138.83us
+Final type of coverage checking = (real; [3]) tensor /\ (real; [3]) tensor /\ simplex[2] /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, (real; [3]) tensor_u /\ (real; [3]) tensor_u /\ simplex_u[2] /\ $)
+The final type is fully covered
+coverage checking time: 1.055947ms
+
+total time: 1.22349ms
+================================================================================
+
+
+Benchmark gmm
+--------------------------------------------------------------------------------
+parsing time: 3.231114ms
+Final type of coverage checking = simplex[3] /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, simplex_u[3] /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ $)
+The final type is fully covered
+coverage checking time: 2.857797ms
+
+total time: 6.264759ms
+================================================================================
+
+
+Benchmark grw
+--------------------------------------------------------------------------------
+parsing time: 140.962us
+New types introduced by coverage checking:
+Final type of coverage checking = real /\ preal /\ $
+(Type name, definition) = (Init_type, real_u /\ preal_u /\ $)
+The final type is fully covered
+coverage checking time: 31.017us
+
+total time: 239.946us
+================================================================================
+
+
+Benchmark hmm
+--------------------------------------------------------------------------------
+parsing time: 1.919591ms
+Final type of coverage checking = nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ $)
+The final type is fully covered
+coverage checking time: 112.112us
+
+total time: 2.073154ms
+================================================================================
+
+
+Benchmark kalman
+--------------------------------------------------------------------------------
+parsing time: 1.636918ms
+Final type of coverage checking = (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ $)
+The final type is fully covered
+coverage checking time: 1.310767ms
+
+total time: 2.98481ms
+================================================================================
+
+
+Benchmark kalman-chaos
+--------------------------------------------------------------------------------
+parsing time: 2.887644ms
+Final type of coverage checking = ureal /\ ureal /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, ureal_u /\ ureal_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ $)
+The final type is fully covered
+coverage checking time: 3.105331ms
+
+total time: 6.098232ms
+================================================================================
+
+
+Benchmark lr
+--------------------------------------------------------------------------------
+parsing time: 112.718us
+New types introduced by coverage checking:
+Final type of coverage checking = real /\ real /\ real /\ preal /\ $
+(Type name, definition) = (Init_type, real_u /\ real_u /\ real_u /\ preal_u /\ $)
+The final type is fully covered
+coverage checking time: 55.844us
+
+total time: 201.019us
+================================================================================
+
+
+Benchmark run-factory
+--------------------------------------------------------------------------------
+parsing time: 137.895us
+New types introduced by coverage checking:
+Final type of coverage checking = ureal /\ $
+(Type name, definition) = (Init_type, ureal_u /\ $)
+The final type is fully covered
+coverage checking time: 20.544us
+
+total time: 197.22us
+================================================================================
+
+
+Benchmark scientists
+--------------------------------------------------------------------------------
+parsing time: 232.558us
+Final type of coverage checking = real /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, real_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ ureal_u /\ $)
+The final type is fully covered
+coverage checking time: 63.218us
+
+total time: 364.307us
+================================================================================
+
+
+Benchmark seq
+--------------------------------------------------------------------------------
+parsing time: 90.168us
+New types introduced by coverage checking:
+Final type of coverage checking = real /\ real /\ $
+(Type name, definition) = (Init_type, real_u /\ real_u /\ $)
+The final type is fully covered
+coverage checking time: 15.281us
+
+total time: 134.6us
+================================================================================
+
+
+Benchmark sprinkler
+--------------------------------------------------------------------------------
+parsing time: 134.408us
+New types introduced by coverage checking:
+Final type of coverage checking = bool /\ bool /\ $
+(Type name, definition) = (Init_type, bool_u /\ bool_u /\ $)
+The final type is fully covered
+coverage checking time: 31.224us
+
+total time: 218.294us
+================================================================================
+
+
+Benchmark user-behavior
+--------------------------------------------------------------------------------
+parsing time: 135.152us
+Final type of coverage checking = nat /\ nat /\ bool /\ bool /\ bool /\ bool /\ bool /\ bool /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, nat_u /\ nat_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ $)
+The final type is fully covered
+coverage checking time: 1.040975ms
+
+total time: 1.20611ms
+================================================================================
+
+
+Benchmark vae
+--------------------------------------------------------------------------------
+parsing time: 2.300451ms
+Final type of coverage checking = (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ $
+New types introduced by coverage checking:
+(Type name, definition) = (Init_type, (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ $)
+The final type is fully covered
+coverage checking time: 1.75148ms
+
+total time: 4.085673ms
+================================================================================
+
+
+Benchmark weight
+--------------------------------------------------------------------------------
+parsing time: 99.686us
+New types introduced by coverage checking:
+Final type of coverage checking = real /\ $
+(Type name, definition) = (Init_type, real_u /\ $)
+The final type is fully covered
+coverage checking time: 35.832us
+
+total time: 186.408us
+================================================================================
+
+
 Benchmark aircraft
 --------------------------------------------------------------------------------
-parsing time: 1.326718ms
+parsing time: 1.755361ms
 New types introduced by coverage checking:
 Final type of coverage checking = nat /\ T_temp_4[$]
 (Type name, definition) = (T_temp_7, &{ real /\ T_temp_6[$] | $ })
@@ -15,353 +275,15 @@ Final type of coverage checking = nat /\ T_temp_4[$]
 (Type name, definition) = (LatentR_old_uncovered, &{ real_u /\ nat[3]_u /\ LatentL_old_uncovered[LatentR_old_uncovered[$]] | $ })
 (Type name, definition) = (LatentL_old_uncovered, &{ real_u /\ LatentL_old_uncovered[$] | $ })
 The final type is fully covered
-coverage checking time: 120.921us
+coverage checking time: 107.207us
 
-total time: 1.477348ms
-================================================================================
-
-
-Benchmark branching
---------------------------------------------------------------------------------
-parsing time: 110.559us
-New types introduced by coverage checking:
-Final type of coverage checking = nat /\ &{ $ | nat /\ $ }
-(Type name, definition) = (Init_type, nat_u /\ &{ $ | nat_u /\ $ })
-The final type is fully covered
-coverage checking time: 62.29us
-
-total time: 210.727us
-================================================================================
-
-
-Benchmark drill
---------------------------------------------------------------------------------
-parsing time: 109.113us
-New types introduced by coverage checking:
-Final type of coverage checking = nat[3] /\ $
-(Type name, definition) = (Init_type, nat[3]_u /\ $)
-The final type is fully covered
-coverage checking time: 19.807us
-
-total time: 158.439us
-================================================================================
-
-
-Benchmark ex-1
---------------------------------------------------------------------------------
-parsing time: 98.568us
-New types introduced by coverage checking:
-Final type of coverage checking = preal /\ &{ $ | ureal /\ $ }
-(Type name, definition) = (Init_type, preal_u /\ &{ $ | ureal_u /\ $ })
-The final type is fully covered
-coverage checking time: 23.887us
-
-total time: 153.621us
-================================================================================
-
-
-Benchmark ex-2-success
---------------------------------------------------------------------------------
-parsing time: 140.692us
-New types introduced by coverage checking:
-Final type of coverage checking = ureal /\ T_temp_3[$]
-(Type name, definition) = (T_temp_5, T_temp_4[$])
-(Type name, definition) = (T_temp_4, ureal /\ &{ preal /\ $ | T_temp_5[T_temp_5[$]] })
-(Type name, definition) = (T_temp_3, T_temp_4[$])
-(Type name, definition) = (T_temp_2, T_temp_1[$])
-(Type name, definition) = (T_temp_1, ureal_u /\ &{ preal /\ $ | T_temp_2[T_temp_2[$]] })
-(Type name, definition) = (T_temp_0, T_temp_1[$])
-(Type name, definition) = (Init_type, ureal_u /\ Old_traceG_uncovered[$])
-(Type name, definition) = (Old_traceG_uncovered, ureal_u /\ &{ preal_u /\ $ | Old_traceG_uncovered[Old_traceG_uncovered[$]] })
-The final type is fully covered
-coverage checking time: 1.122094ms
-
-total time: 1.294828ms
-================================================================================
-
-
-Benchmark ex-2-failure
---------------------------------------------------------------------------------
-parsing time: 2.937155ms
-coverage checking time: 78.272us
-
-total time: 3.097118ms
-================================================================================
-
-
-Benchmark gaussian
---------------------------------------------------------------------------------
-parsing time: 75.82us
-New types introduced by coverage checking:
-Final type of coverage checking = real /\ $
-(Type name, definition) = (Init_type, real_u /\ $)
-The final type is fully covered
-coverage checking time: 24.182us
-
-total time: 134.348us
-================================================================================
-
-
-Benchmark gda
---------------------------------------------------------------------------------
-parsing time: 144.033us
-Final type of coverage checking = (real; [3]) tensor /\ (real; [3]) tensor /\ simplex[2] /\ $
-New types introduced by coverage checking:
-(Type name, definition) = (Init_type, (real; [3]) tensor_u /\ (real; [3]) tensor_u /\ simplex_u[2] /\ $)
-The final type is fully covered
-coverage checking time: 1.47427ms
-
-total time: 1.657157ms
-================================================================================
-
-
-Benchmark gmm
---------------------------------------------------------------------------------
-parsing time: 1.357621ms
-Final type of coverage checking = simplex[3] /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
-New types introduced by coverage checking:
-(Type name, definition) = (Init_type, simplex_u[3] /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2; 2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ $)
-The final type is fully covered
-coverage checking time: 981.238us
-
-total time: 2.369217ms
-================================================================================
-
-
-Benchmark hmm
---------------------------------------------------------------------------------
-parsing time: 1.877262ms
-Final type of coverage checking = nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
-New types introduced by coverage checking:
-(Type name, definition) = (Init_type, nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ nat[3]_u /\ $)
-The final type is fully covered
-coverage checking time: 102.938us
-
-total time: 2.022084ms
-================================================================================
-
-
-Benchmark grw
---------------------------------------------------------------------------------
-parsing time: 113.42us
-New types introduced by coverage checking:
-Final type of coverage checking = real /\ preal /\ $
-(Type name, definition) = (Init_type, real_u /\ preal_u /\ $)
-The final type is fully covered
-coverage checking time: 42.26us
-
-total time: 201.789us
-================================================================================
-
-
-Benchmark kalman
---------------------------------------------------------------------------------
-parsing time: 1.314732ms
-Final type of coverage checking = (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ $
-New types introduced by coverage checking:
-(Type name, definition) = (Init_type, (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ (real; [2]) tensor_u /\ $)
-The final type is fully covered
-coverage checking time: 1.039864ms
-
-total time: 2.383844ms
-================================================================================
-
-
-Benchmark kalman-chaos
---------------------------------------------------------------------------------
-parsing time: 1.377882ms
-Final type of coverage checking = ureal /\ ureal /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ $
-New types introduced by coverage checking:
-(Type name, definition) = (Init_type, ureal_u /\ ureal_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ real_u /\ $)
-The final type is fully covered
-coverage checking time: 1.057473ms
-
-total time: 2.466104ms
-================================================================================
-
-
-Benchmark gbm
---------------------------------------------------------------------------------
-parsing time: 124.421us
-New types introduced by coverage checking:
-Final type of coverage checking = real /\ $
-(Type name, definition) = (Init_type, real_u /\ $)
-The final type is fully covered
-coverage checking time: 25.47us
-
-total time: 180.35us
-================================================================================
-
-
-Benchmark lr
---------------------------------------------------------------------------------
-parsing time: 107.944us
-New types introduced by coverage checking:
-Final type of coverage checking = real /\ real /\ real /\ preal /\ $
-(Type name, definition) = (Init_type, real_u /\ real_u /\ real_u /\ preal_u /\ $)
-The final type is fully covered
-coverage checking time: 20.02us
-
-total time: 157.546us
-================================================================================
-
-
-Benchmark marsaglia
---------------------------------------------------------------------------------
-parsing time: 1.157711ms
-New types introduced by coverage checking:
-Final type of coverage checking = ureal /\ ureal /\ &{ $ | T_temp_2[$] }
-(Type name, definition) = (T_temp_3, ureal /\ ureal /\ &{ $ | T_temp_2[$] })
-(Type name, definition) = (T_temp_2, T_temp_3[$])
-(Type name, definition) = (T_temp_1, ureal /\ ureal_u /\ &{ $ | T_temp_0[$] })
-(Type name, definition) = (T_temp_0, T_temp_1[$])
-(Type name, definition) = (Init_type, ureal_u /\ ureal_u /\ &{ $ | Init_type[$] })
-The final type is fully covered
-coverage checking time: 43.76us
-
-total time: 1.231508ms
-================================================================================
-
-
-Benchmark coordination
---------------------------------------------------------------------------------
-parsing time: 127.119us
-New types introduced by coverage checking:
-Final type of coverage checking = bool /\ bool /\ $
-(Type name, definition) = (Init_type, bool_u /\ bool_u /\ $)
-The final type is fully covered
-coverage checking time: 21.273us
-
-total time: 186.223us
-================================================================================
-
-
-Benchmark ptrace
---------------------------------------------------------------------------------
-parsing time: 279.367us
-New types introduced by coverage checking:
-Final type of coverage checking = ureal /\ &{ $ | T_temp_2[$] }
-(Type name, definition) = (T_temp_3, ureal /\ &{ $ | T_temp_2[$] })
-(Type name, definition) = (T_temp_2, T_temp_3[$])
-(Type name, definition) = (T_temp_1, ureal /\ &{ $ | T_temp_0[$] })
-(Type name, definition) = (T_temp_0, T_temp_1[$])
-(Type name, definition) = (Init_type, ureal_u /\ &{ $ | Init_type[$] })
-The final type is fully covered
-coverage checking time: 100.789us
-
-total time: 442.706us
-================================================================================
-
-
-Benchmark run-factory
---------------------------------------------------------------------------------
-parsing time: 101.64us
-New types introduced by coverage checking:
-Final type of coverage checking = ureal /\ $
-(Type name, definition) = (Init_type, ureal_u /\ $)
-The final type is fully covered
-coverage checking time: 29.624us
-
-total time: 179.392us
-================================================================================
-
-
-Benchmark sprinkler
---------------------------------------------------------------------------------
-parsing time: 211.802us
-New types introduced by coverage checking:
-Final type of coverage checking = bool /\ bool /\ $
-(Type name, definition) = (Init_type, bool_u /\ bool_u /\ $)
-The final type is fully covered
-coverage checking time: 68.475us
-
-total time: 341.335us
-================================================================================
-
-
-Benchmark gp-dsl-success
---------------------------------------------------------------------------------
-parsing time: 1.563765ms
-New types introduced by coverage checking:
-Final type of coverage checking = T_temp_3[$]
-(Type name, definition) = (T_temp_5, T_temp_4[$])
-(Type name, definition) = (T_temp_4, bool /\ &{ nat[3] /\ &{ preal /\ T_temp_5[T_temp_5[$]] | T_temp_5[T_temp_5[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } })
-(Type name, definition) = (T_temp_3, T_temp_4[$])
-(Type name, definition) = (T_temp_2, T_temp_1[$])
-(Type name, definition) = (T_temp_1, bool /\ &{ nat[3]_u /\ &{ preal /\ T_temp_2[T_temp_2[$]] | T_temp_2[T_temp_2[$]] } | nat[5] /\ &{ preal_u /\ preal_u /\ $ | preal_u /\ $ } })
-(Type name, definition) = (T_temp_0, T_temp_1[$])
-(Type name, definition) = (Old_traceG_uncovered, bool_u /\ &{ nat[3]_u /\ &{ preal_u /\ Old_traceG_uncovered[Old_traceG_uncovered[$]] | Old_traceG_uncovered[Old_traceG_uncovered[$]] } | nat[5]_u /\ &{ preal_u /\ preal_u /\ $ | preal_u /\ $ } })
-The final type is fully covered
-coverage checking time: 184.466us
-
-total time: 1.782977ms
-================================================================================
-
-
-Benchmark gp-dsl-failure
---------------------------------------------------------------------------------
-parsing time: 1.506531ms
-coverage checking time: 134.325us
-
-total time: 1.677914ms
-================================================================================
-
-
-Benchmark user-behavior
---------------------------------------------------------------------------------
-parsing time: 148.108us
-Final type of coverage checking = nat /\ nat /\ bool /\ bool /\ bool /\ bool /\ bool /\ bool /\ $
-New types introduced by coverage checking:
-(Type name, definition) = (Init_type, nat_u /\ nat_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ bool_u /\ $)
-The final type is fully covered
-coverage checking time: 1.074627ms
-
-total time: 1.25231ms
-================================================================================
-
-
-Benchmark vae
---------------------------------------------------------------------------------
-parsing time: 2.613895ms
-Final type of coverage checking = (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ $
-New types introduced by coverage checking:
-(Type name, definition) = (Init_type, (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ (real; [50]) tensor_u /\ $)
-The final type is fully covered
-coverage checking time: 1.765595ms
-
-total time: 4.421313ms
-================================================================================
-
-
-Benchmark weight
---------------------------------------------------------------------------------
-parsing time: 65.432us
-New types introduced by coverage checking:
-Final type of coverage checking = real /\ $
-(Type name, definition) = (Init_type, real_u /\ $)
-The final type is fully covered
-coverage checking time: 14.308us
-
-total time: 110.026us
-================================================================================
-
-
-Benchmark seq
---------------------------------------------------------------------------------
-parsing time: 74.259us
-New types introduced by coverage checking:
-Final type of coverage checking = real /\ real /\ $
-(Type name, definition) = (Init_type, real_u /\ real_u /\ $)
-The final type is fully covered
-coverage checking time: 26.586us
-
-total time: 133.447us
+total time: 1.914474ms
 ================================================================================
 
 
 Benchmark iter
 --------------------------------------------------------------------------------
-parsing time: 93.135us
+parsing time: 192.401us
 New types introduced by coverage checking:
 Final type of coverage checking = &{ $ | real /\ T_temp_4[$] }
 (Type name, definition) = (T_temp_7, &{ $ | real /\ T_temp_4[$] })
@@ -374,15 +296,78 @@ Final type of coverage checking = &{ $ | real /\ T_temp_4[$] }
 (Type name, definition) = (T_temp_0, T_temp_1[$])
 (Type name, definition) = (Init_type, &{ $ | real_u /\ Init_type[$] })
 The final type is fully covered
-coverage checking time: 36.559us
+coverage checking time: 93.666us
 
-total time: 158.91us
+total time: 352.211us
 ================================================================================
 
 
-Benchmark diter-success
+Benchmark marsaglia
 --------------------------------------------------------------------------------
-parsing time: 112.985us
+parsing time: 1.553414ms
+New types introduced by coverage checking:
+Final type of coverage checking = ureal /\ ureal /\ &{ $ | T_temp_2[$] }
+(Type name, definition) = (T_temp_3, ureal /\ ureal /\ &{ $ | T_temp_2[$] })
+(Type name, definition) = (T_temp_2, T_temp_3[$])
+(Type name, definition) = (T_temp_1, ureal /\ ureal_u /\ &{ $ | T_temp_0[$] })
+(Type name, definition) = (T_temp_0, T_temp_1[$])
+(Type name, definition) = (Init_type, ureal_u /\ ureal_u /\ &{ $ | Init_type[$] })
+The final type is fully covered
+coverage checking time: 82.973us
+
+total time: 1.687441ms
+================================================================================
+
+
+Benchmark ptrace
+--------------------------------------------------------------------------------
+parsing time: 193.184us
+New types introduced by coverage checking:
+Final type of coverage checking = ureal /\ &{ $ | T_temp_2[$] }
+(Type name, definition) = (T_temp_3, ureal /\ &{ $ | T_temp_2[$] })
+(Type name, definition) = (T_temp_2, T_temp_3[$])
+(Type name, definition) = (T_temp_1, ureal /\ &{ $ | T_temp_0[$] })
+(Type name, definition) = (T_temp_0, T_temp_1[$])
+(Type name, definition) = (Init_type, ureal_u /\ &{ $ | Init_type[$] })
+The final type is fully covered
+coverage checking time: 67.901us
+
+total time: 327.748us
+================================================================================
+
+
+Benchmark ex-2-covered-aligned
+--------------------------------------------------------------------------------
+parsing time: 226.672us
+New types introduced by coverage checking:
+Final type of coverage checking = ureal /\ T_temp_3[$]
+(Type name, definition) = (T_temp_5, T_temp_4[$])
+(Type name, definition) = (T_temp_4, ureal /\ &{ preal /\ $ | T_temp_5[T_temp_5[$]] })
+(Type name, definition) = (T_temp_3, T_temp_4[$])
+(Type name, definition) = (T_temp_2, T_temp_1[$])
+(Type name, definition) = (T_temp_1, ureal_u /\ &{ preal /\ $ | T_temp_2[T_temp_2[$]] })
+(Type name, definition) = (T_temp_0, T_temp_1[$])
+(Type name, definition) = (Init_type, ureal_u /\ Old_traceG_uncovered[$])
+(Type name, definition) = (Old_traceG_uncovered, ureal_u /\ &{ preal_u /\ $ | Old_traceG_uncovered[Old_traceG_uncovered[$]] })
+The final type is fully covered
+coverage checking time: 1.502531ms
+
+total time: 1.80004ms
+================================================================================
+
+
+Benchmark ex-2-covered-misaligned
+--------------------------------------------------------------------------------
+parsing time: 2.515818ms
+coverage checking time: 58.586us
+
+total time: 2.650611ms
+================================================================================
+
+
+Benchmark diter-covered-aligned
+--------------------------------------------------------------------------------
+parsing time: 144.346us
 New types introduced by coverage checking:
 Final type of coverage checking = &{ $ | real /\ T_temp_5[T_temp_7[$]] }
 (Type name, definition) = (T_temp_9, T_temp_6[$])
@@ -397,24 +382,52 @@ Final type of coverage checking = &{ $ | real /\ T_temp_5[T_temp_7[$]] }
 (Type name, definition) = (T_temp_0, T_temp_1[$])
 (Type name, definition) = (Init_type, &{ $ | real_u /\ Init_type[Init_type[$]] })
 The final type is fully covered
-coverage checking time: 73.413us
+coverage checking time: 84.553us
 
-total time: 222.706us
+total time: 288.766us
 ================================================================================
 
 
-Benchmark diter-failure
+Benchmark diter-covered-misaligned
 --------------------------------------------------------------------------------
-parsing time: 171.961us
-coverage checking time: 27.678us
+parsing time: 99.999us
+coverage checking time: 19.861us
 
-total time: 249.967us
+total time: 149.795us
 ================================================================================
 
 
-Benchmark recur-success
+Benchmark gp-dsl-covered-aligned
 --------------------------------------------------------------------------------
-parsing time: 175.98us
+parsing time: 2.594894ms
+New types introduced by coverage checking:
+Final type of coverage checking = T_temp_3[$]
+(Type name, definition) = (T_temp_5, T_temp_4[$])
+(Type name, definition) = (T_temp_4, bool /\ &{ nat[3] /\ &{ preal /\ T_temp_5[T_temp_5[$]] | T_temp_5[T_temp_5[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } })
+(Type name, definition) = (T_temp_3, T_temp_4[$])
+(Type name, definition) = (T_temp_2, T_temp_1[$])
+(Type name, definition) = (T_temp_1, bool /\ &{ nat[3]_u /\ &{ preal /\ T_temp_2[T_temp_2[$]] | T_temp_2[T_temp_2[$]] } | nat[5] /\ &{ preal_u /\ preal_u /\ $ | preal_u /\ $ } })
+(Type name, definition) = (T_temp_0, T_temp_1[$])
+(Type name, definition) = (Old_traceG_uncovered, bool_u /\ &{ nat[3]_u /\ &{ preal_u /\ Old_traceG_uncovered[Old_traceG_uncovered[$]] | Old_traceG_uncovered[Old_traceG_uncovered[$]] } | nat[5]_u /\ &{ preal_u /\ preal_u /\ $ | preal_u /\ $ } })
+The final type is fully covered
+coverage checking time: 348.459us
+
+total time: 2.99305ms
+================================================================================
+
+
+Benchmark gp-dsl-covered-misaligned
+--------------------------------------------------------------------------------
+parsing time: 2.338728ms
+coverage checking time: 210.011us
+
+total time: 2.602243ms
+================================================================================
+
+
+Benchmark recur-covered-aligned
+--------------------------------------------------------------------------------
+parsing time: 268.777us
 Final type of coverage checking = &{ $ | real /\ T_temp_5[real /\ T_temp_9[real /\ T_temp_9[$]]] }
 New types introduced by coverage checking:
 (Type name, definition) = (T_temp_9, T_temp_6[$])
@@ -429,18 +442,18 @@ New types introduced by coverage checking:
 (Type name, definition) = (T_temp_0, T_temp_1[$])
 (Type name, definition) = (Init_type, &{ $ | real_u /\ Init_type[real_u /\ Init_type[real_u /\ Init_type[$]]] })
 The final type is fully covered
-coverage checking time: 1.102949ms
+coverage checking time: 1.077006ms
 
-total time: 1.310745ms
+total time: 1.382495ms
 ================================================================================
 
 
-Benchmark recur-failure
+Benchmark recur-covered-misaligned
 --------------------------------------------------------------------------------
-parsing time: 1.20676ms
-coverage checking time: 31.13us
+parsing time: 1.208619ms
+coverage checking time: 30.606us
 
-total time: 1.270912ms
+total time: 1.269328ms
 ================================================================================
 
 

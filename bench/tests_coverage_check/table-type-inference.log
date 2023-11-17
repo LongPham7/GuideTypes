@@ -1,0 +1,756 @@
+Benchmark branching
+--------------------------------------------------------------------------------
+parsing time: 148.29us
+successfully inferred guide type operator Old_trace[$]
+	nat /\ +{ $ | nat /\ $ }
+
+successfully inferred guide type operator Latent[$]
+	nat /\ &{ $ | nat /\ $ }
+
+We check all type-equality constraints from type inference
+sty_def = nat /\ &{ $ | nat /\ $ }, sty = nat /\ &{ $ | nat /\ $ } line 833
+Types $ and $ are equal modulo coverage
+Types nat /\ $ and nat /\ $ are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types nat /\ $ and nat /\ $ are equal modulo coverage
+All equal modulo coverage
+typechecking time: 1.518875ms
+
+total time: 1.717242ms
+================================================================================
+
+
+Benchmark coordination
+--------------------------------------------------------------------------------
+parsing time: 81.423us
+successfully inferred guide type operator Old_trace[$]
+	bool /\ bool /\ $
+
+successfully inferred guide type operator Latent[$]
+	bool /\ bool /\ $
+
+sty_def = bool /\ bool /\ $, sty = bool /\ bool /\ $ line 833
+typechecking time: 23.356us
+
+total time: 134.721us
+================================================================================
+
+
+Benchmark drill
+--------------------------------------------------------------------------------
+parsing time: 188.232us
+successfully inferred guide type operator Old_trace[$]
+	nat[3] /\ $
+
+successfully inferred guide type operator Latent[$]
+	nat[3] /\ $
+
+sty_def = nat[3] /\ $, sty = nat[3] /\ $ line 833
+typechecking time: 100.122us
+
+total time: 351.465us
+================================================================================
+
+
+Benchmark ex-1
+--------------------------------------------------------------------------------
+parsing time: 100.965us
+successfully inferred guide type operator Old_trace[$]
+	preal /\ +{ $ | ureal /\ $ }
+
+successfully inferred guide type operator Latent[$]
+	preal /\ &{ $ | ureal /\ $ }
+
+sty_def = preal /\ &{ $ | ureal /\ $ }, sty = preal /\ &{ $ | ureal /\ $ } line 833
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types ureal /\ $ and ureal /\ $ are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types ureal /\ $ and ureal /\ $ are equal modulo coverage
+All equal modulo coverage
+typechecking time: 1.327536ms
+
+total time: 1.459988ms
+================================================================================
+
+
+Benchmark gaussian
+--------------------------------------------------------------------------------
+parsing time: 104.589us
+successfully inferred guide type operator Old_trace[$]
+	real /\ $
+
+successfully inferred guide type operator Latent[$]
+	real /\ $
+
+sty_def = real /\ $, sty = real /\ $ line 833
+typechecking time: 52.866us
+
+total time: 205.76us
+================================================================================
+
+
+Benchmark gbm
+--------------------------------------------------------------------------------
+parsing time: 311.136us
+successfully inferred guide type operator Old_trace[$]
+	real /\ $
+
+successfully inferred guide type operator Latent[$]
+	real /\ $
+
+sty_def = real /\ $, sty = real /\ $ line 833
+typechecking time: 123.034us
+
+total time: 489.385us
+================================================================================
+
+
+Benchmark gda
+--------------------------------------------------------------------------------
+parsing time: 204.701us
+successfully inferred guide type operator Old_trace[$]
+	(real; [3]) tensor /\ (real; [3]) tensor /\ simplex[2] /\ $
+
+successfully inferred guide type operator Latent[$]
+	(real; [3]) tensor /\ (real; [3]) tensor /\ simplex[2] /\ $
+
+sty_def = (real; [3]) tensor /\ (real; [3]) tensor /\ simplex[2] /\ $, sty = (real; [3]) tensor /\ (real; [3]) tensor /\ simplex[2] /\ $ line 833
+typechecking time: 1.494812ms
+
+total time: 1.755731ms
+================================================================================
+
+
+Benchmark gmm
+--------------------------------------------------------------------------------
+parsing time: 2.595906ms
+successfully inferred guide type operator Old_trace[$]
+	simplex[3] /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
+
+successfully inferred guide type operator Latent[$]
+	simplex[3] /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
+
+sty_def = simplex[3] /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $, sty = simplex[3] /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2; 2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $ line 833
+typechecking time: 1.838614ms
+
+total time: 4.5597ms
+================================================================================
+
+
+Benchmark grw
+--------------------------------------------------------------------------------
+parsing time: 171.89us
+successfully inferred guide type operator Old_trace[$]
+	real /\ preal /\ $
+
+successfully inferred guide type operator Latent[$]
+	real /\ preal /\ $
+
+sty_def = real /\ preal /\ $, sty = real /\ preal /\ $ line 833
+typechecking time: 60.837us
+
+total time: 305.57us
+================================================================================
+
+
+Benchmark hmm
+--------------------------------------------------------------------------------
+parsing time: 1.617608ms
+successfully inferred guide type operator Old_trace[$]
+	nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
+
+successfully inferred guide type operator Latent[$]
+	nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $
+
+sty_def = nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $, sty = nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ nat[3] /\ $ line 833
+typechecking time: 210.595us
+
+total time: 1.876367ms
+================================================================================
+
+
+Benchmark kalman
+--------------------------------------------------------------------------------
+parsing time: 2.258321ms
+successfully inferred guide type operator Old_trace[$]
+	(real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ $
+
+successfully inferred guide type operator Latent[$]
+	(real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ $
+
+sty_def = (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ $, sty = (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ (real; [2]) tensor /\ $ line 833
+typechecking time: 2.201946ms
+
+total time: 4.520077ms
+================================================================================
+
+
+Benchmark kalman-chaos
+--------------------------------------------------------------------------------
+parsing time: 1.562856ms
+successfully inferred guide type operator Old_trace[$]
+	ureal /\ ureal /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ $
+
+successfully inferred guide type operator Latent[$]
+	ureal /\ ureal /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ $
+
+sty_def = ureal /\ ureal /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ $, sty = ureal /\ ureal /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ real /\ $ line 833
+typechecking time: 1.42218ms
+
+total time: 3.024447ms
+================================================================================
+
+
+Benchmark lr
+--------------------------------------------------------------------------------
+parsing time: 338.505us
+successfully inferred guide type operator Old_trace[$]
+	real /\ real /\ real /\ preal /\ $
+
+successfully inferred guide type operator Latent[$]
+	real /\ real /\ real /\ preal /\ $
+
+sty_def = real /\ real /\ real /\ preal /\ $, sty = real /\ real /\ real /\ preal /\ $ line 833
+typechecking time: 84.956us
+
+total time: 508.082us
+================================================================================
+
+
+Benchmark run-factory
+--------------------------------------------------------------------------------
+parsing time: 106.759us
+successfully inferred guide type operator Old_trace[$]
+	ureal /\ $
+
+successfully inferred guide type operator Latent[$]
+	ureal /\ $
+
+sty_def = ureal /\ $, sty = ureal /\ $ line 833
+typechecking time: 51.212us
+
+total time: 204.907us
+================================================================================
+
+
+Benchmark scientists
+--------------------------------------------------------------------------------
+parsing time: 161.199us
+successfully inferred guide type operator Old_trace[$]
+	real /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ $
+
+successfully inferred guide type operator Latent[$]
+	real /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ $
+
+sty_def = real /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ $, sty = real /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ ureal /\ $ line 833
+typechecking time: 59.504us
+
+total time: 266.758us
+================================================================================
+
+
+Benchmark seq
+--------------------------------------------------------------------------------
+parsing time: 77.081us
+successfully inferred guide type operator Old_trace[$]
+	real /\ real /\ $
+
+successfully inferred guide type operator Latent[$]
+	real /\ real /\ $
+
+sty_def = real /\ real /\ $, sty = real /\ real /\ $ line 833
+typechecking time: 25.37us
+
+total time: 133.129us
+================================================================================
+
+
+Benchmark sprinkler
+--------------------------------------------------------------------------------
+parsing time: 168.426us
+successfully inferred guide type operator Old_trace[$]
+	bool /\ bool /\ $
+
+successfully inferred guide type operator Latent[$]
+	bool /\ bool /\ $
+
+sty_def = bool /\ bool /\ $, sty = bool /\ bool /\ $ line 833
+typechecking time: 52.001us
+
+total time: 269.924us
+================================================================================
+
+
+Benchmark user-behavior
+--------------------------------------------------------------------------------
+parsing time: 220.377us
+successfully inferred guide type operator Old_trace[$]
+	nat /\ nat /\ bool /\ bool /\ bool /\ bool /\ bool /\ bool /\ $
+
+successfully inferred guide type operator Latent[$]
+	nat /\ nat /\ bool /\ bool /\ bool /\ bool /\ bool /\ bool /\ $
+
+sty_def = nat /\ nat /\ bool /\ bool /\ bool /\ bool /\ bool /\ bool /\ $, sty = nat /\ nat /\ bool /\ bool /\ bool /\ bool /\ bool /\ bool /\ $ line 833
+typechecking time: 1.490486ms
+
+total time: 1.766919ms
+================================================================================
+
+
+Benchmark vae
+--------------------------------------------------------------------------------
+parsing time: 2.622602ms
+successfully inferred guide type operator Old_trace[$]
+	(real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ $
+
+successfully inferred guide type operator Latent[$]
+	(real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ $
+
+sty_def = (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ $, sty = (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ (real; [50]) tensor /\ $ line 833
+typechecking time: 2.235888ms
+
+total time: 4.894869ms
+================================================================================
+
+
+Benchmark weight
+--------------------------------------------------------------------------------
+parsing time: 67.035us
+successfully inferred guide type operator Old_trace[$]
+	real /\ $
+
+successfully inferred guide type operator Latent[$]
+	real /\ $
+
+sty_def = real /\ $, sty = real /\ $ line 833
+typechecking time: 22.503us
+
+total time: 119.29us
+================================================================================
+
+
+Benchmark aircraft
+--------------------------------------------------------------------------------
+parsing time: 1.76092ms
+successfully inferred guide type operator LatentM_old[$]
+	nat /\ LatentR_old[$]
+
+successfully inferred guide type operator LatentM[$]
+	nat /\ LatentR[$]
+
+sty_def = nat /\ LatentR[$], sty = nat /\ LatentR[$] line 833
+successfully inferred guide type operator LatentR_old[$]
+	+{ real /\ nat[3] /\ LatentL_old[LatentR_old[$]] | $ }
+
+successfully inferred guide type operator LatentR[$]
+	&{ real /\ nat[3] /\ LatentL[LatentR[$]] | $ }
+
+sty_def = &{ real /\ nat[3] /\ LatentL[LatentR[$]] | $ }, sty = &{ real /\ nat[3] /\ LatentL[LatentR[$]] | $ } line 833
+successfully inferred guide type operator LatentR_no_old[$]
+	&{ real /\ nat[3] /\ LatentL_no_old[LatentR_no_old[$]] | $ }
+
+successfully inferred guide type operator LatentL_old[$]
+	+{ real /\ LatentL_old[$] | $ }
+
+successfully inferred guide type operator LatentL[$]
+	&{ real /\ LatentL[$] | $ }
+
+successfully inferred guide type operator LatentL_no_old[$]
+	&{ real /\ LatentL_no_old[$] | $ }
+
+We check all type-equality constraints from type inference
+Types real /\ LatentL[$] and real /\ LatentL_no_old[$] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types real /\ nat[3] /\ LatentL[LatentR[$]] and real /\ nat[3] /\ LatentL_no_old[LatentR_no_old[$]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types real /\ nat[3] /\ LatentL[LatentR[$]] and real /\ nat[3] /\ LatentL_no_old[LatentR_no_old[$]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+All equal modulo coverage
+typechecking time: 5.708073ms
+
+total time: 7.548039ms
+================================================================================
+
+
+Benchmark iter
+--------------------------------------------------------------------------------
+parsing time: 306.545us
+successfully inferred guide type operator Old_trace[$]
+	+{ $ | real /\ Old_trace[$] }
+
+successfully inferred guide type operator Linear[$]
+	&{ $ | real /\ Linear[$] }
+
+sty_def = &{ $ | real /\ Linear[$] }, sty = &{ $ | real /\ Linear[$] } line 833
+successfully inferred guide type operator Linear_no_old[$]
+	&{ $ | real /\ Linear_no_old[$] }
+
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types real /\ Linear[$] and real /\ Linear_no_old[$] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types real /\ Linear[$] and real /\ Linear_no_old[$] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 3.156784ms
+
+total time: 3.545208ms
+================================================================================
+
+
+Benchmark marsaglia
+--------------------------------------------------------------------------------
+parsing time: 1.275645ms
+successfully inferred guide type operator Old_trace[$]
+	ureal /\ ureal /\ +{ $ | Old_trace[$] }
+
+successfully inferred guide type operator Latent[$]
+	ureal /\ ureal /\ &{ $ | Latent[$] }
+
+sty_def = ureal /\ ureal /\ &{ $ | Latent[$] }, sty = ureal /\ ureal /\ &{ $ | Latent[$] } line 833
+successfully inferred guide type operator Latent_no_old[$]
+	ureal /\ ureal /\ &{ $ | Latent_no_old[$] }
+
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types Latent[$] and Latent_no_old[$] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types Latent[$] and Latent_no_old[$] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 2.302491ms
+
+total time: 3.610113ms
+================================================================================
+
+
+Benchmark ptrace
+--------------------------------------------------------------------------------
+parsing time: 116.459us
+successfully inferred guide type operator Old_trace[$]
+	ureal /\ +{ $ | Old_trace[$] }
+
+successfully inferred guide type operator Latent[$]
+	ureal /\ &{ $ | Latent[$] }
+
+sty_def = ureal /\ &{ $ | Latent[$] }, sty = ureal /\ &{ $ | Latent[$] } line 833
+successfully inferred guide type operator Latent_no_old[$]
+	ureal /\ &{ $ | Latent_no_old[$] }
+
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types Latent[$] and Latent_no_old[$] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types Latent[$] and Latent_no_old[$] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 1.684618ms
+
+total time: 1.831551ms
+================================================================================
+
+
+Benchmark ex-2-covered-aligned
+--------------------------------------------------------------------------------
+parsing time: 151.091us
+successfully inferred guide type operator Old_trace[$]
+	ureal /\ Old_traceG[$]
+
+successfully inferred guide type operator Latent[$]
+	ureal /\ LatentG[$]
+
+sty_def = ureal /\ LatentG[$], sty = ureal /\ LatentG[$] line 833
+successfully inferred guide type operator Old_traceG[$]
+	ureal /\ +{ preal /\ $ | Old_traceG[Old_traceG[$]] }
+
+successfully inferred guide type operator LatentG[$]
+	ureal /\ &{ preal /\ $ | LatentG[LatentG[$]] }
+
+sty_def = ureal /\ &{ preal /\ $ | LatentG[LatentG[$]] }, sty = ureal /\ &{ preal /\ $ | LatentG[LatentG[$]] } line 833
+successfully inferred guide type operator LatentG_no_old[$]
+	ureal /\ &{ preal /\ $ | LatentG_no_old[LatentG_no_old[$]] }
+
+We check all type-equality constraints from type inference
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types LatentG[LatentG[$]] and LatentG_no_old[LatentG_no_old[$]] are equal modulo coverage
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types LatentG[LatentG[$]] and LatentG_no_old[LatentG_no_old[$]] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 6.221561ms
+
+total time: 6.40972ms
+================================================================================
+
+
+Benchmark ex-2-covered-misaligned
+--------------------------------------------------------------------------------
+parsing time: 4.283502ms
+successfully inferred guide type operator Old_trace1[$]
+	ureal /\ Old_traceG1[$]
+
+successfully inferred guide type operator Latent1[$]
+	ureal /\ LatentG1[$]
+
+successfully inferred guide type operator Old_trace2[$]
+	ureal /\ Old_traceG2[$]
+
+successfully inferred guide type operator Latent2[$]
+	ureal /\ LatentG2[$]
+
+successfully inferred guide type operator Old_traceG1[$]
+	ureal /\ +{ preal /\ $ | Old_traceG1[Old_traceG1[$]] }
+
+successfully inferred guide type operator LatentG1[$]
+	ureal /\ &{ preal /\ $ | LatentG1[LatentG1[$]] }
+
+successfully inferred guide type operator Old_traceG2[$]
+	ureal /\ +{ preal /\ $ | Old_traceG2Double[$] }
+
+successfully inferred guide type operator LatentG2[$]
+	ureal /\ &{ preal /\ $ | LatentG2Double[$] }
+
+successfully inferred guide type operator Old_traceG2Double[$]
+	Old_traceG2[Old_traceG2[$]]
+
+successfully inferred guide type operator LatentG2Double[$]
+	LatentG2[LatentG2[$]]
+
+successfully inferred guide type operator LatentG_no_old[$]
+	ureal /\ &{ preal /\ $ | LatentG_no_old[LatentG_no_old[$]] }
+
+We check all type-equality constraints from type inference
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types LatentG2Double[$] and LatentG_no_old[LatentG_no_old[$]] are equal modulo coverage
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types LatentG1[LatentG1[$]] and LatentG_no_old[LatentG_no_old[$]] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 36.411453ms
+
+total time: 40.803525ms
+================================================================================
+
+
+Benchmark diter-covered-aligned
+--------------------------------------------------------------------------------
+parsing time: 200.935us
+successfully inferred guide type operator Old_trace[$]
+	+{ $ | real /\ Old_trace[Old_trace[$]] }
+
+successfully inferred guide type operator NonLinear[$]
+	&{ $ | real /\ NonLinear[NonLinear[$]] }
+
+sty_def = &{ $ | real /\ NonLinear[NonLinear[$]] }, sty = &{ $ | real /\ NonLinear[NonLinear[$]] } line 833
+successfully inferred guide type operator NonLinear_no_old[$]
+	&{ $ | real /\ NonLinear_no_old[NonLinear_no_old[$]] }
+
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types real /\ NonLinear[NonLinear[$]] and real /\ NonLinear_no_old[NonLinear_no_old[$]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types real /\ NonLinear[NonLinear[$]] and real /\ NonLinear_no_old[NonLinear_no_old[$]] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 2.414518ms
+
+total time: 2.670479ms
+================================================================================
+
+
+Benchmark diter-covered-misaligned
+--------------------------------------------------------------------------------
+parsing time: 116.362us
+successfully inferred guide type operator Old_trace1[$]
+	+{ $ | real /\ Old_trace1[Old_trace1[$]] }
+
+successfully inferred guide type operator NonLinear1[$]
+	&{ $ | real /\ NonLinear1[NonLinear1[$]] }
+
+successfully inferred guide type operator Old_trace2[$]
+	+{ $ | real /\ Old_trace2Double[$] }
+
+successfully inferred guide type operator NonLinear2[$]
+	&{ $ | real /\ NonLinear2Double[$] }
+
+successfully inferred guide type operator Old_trace2Double[$]
+	Old_trace2[Old_trace2[$]]
+
+successfully inferred guide type operator NonLinear2Double[$]
+	NonLinear2[NonLinear2[$]]
+
+successfully inferred guide type operator NonLinear_no_old[$]
+	&{ $ | real /\ NonLinear_no_old[NonLinear_no_old[$]] }
+
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types real /\ NonLinear2Double[$] and real /\ NonLinear_no_old[NonLinear_no_old[$]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types real /\ NonLinear1[NonLinear1[$]] and real /\ NonLinear_no_old[NonLinear_no_old[$]] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 3.128935ms
+
+total time: 3.295301ms
+================================================================================
+
+
+Benchmark gp-dsl-covered-aligned
+--------------------------------------------------------------------------------
+parsing time: 2.036905ms
+successfully inferred guide type operator Old_trace[$]
+	Old_traceG[$]
+
+successfully inferred guide type operator Latent[$]
+	LatentG[$]
+
+sty_def = LatentG[$], sty = LatentG[$] line 833
+successfully inferred guide type operator Old_traceG[$]
+	bool /\ +{ nat[3] /\ +{ preal /\ Old_traceG[Old_traceG[$]] | Old_traceG[Old_traceG[$]] } | nat[5] /\ +{ preal /\ preal /\ $ | preal /\ $ } }
+
+successfully inferred guide type operator LatentG[$]
+	bool /\ &{ nat[3] /\ &{ preal /\ LatentG[LatentG[$]] | LatentG[LatentG[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } }
+
+sty_def = bool /\ &{ nat[3] /\ &{ preal /\ LatentG[LatentG[$]] | LatentG[LatentG[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } }, sty = bool /\ &{ nat[3] /\ &{ preal /\ LatentG[LatentG[$]] | LatentG[LatentG[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } } line 833
+successfully inferred guide type operator LatentG_no_old[$]
+	bool /\ &{ nat[3] /\ &{ preal /\ LatentG_no_old[LatentG_no_old[$]] | LatentG_no_old[LatentG_no_old[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } }
+
+We check all type-equality constraints from type inference
+Types nat[3] /\ &{ preal /\ LatentG[LatentG[$]] | LatentG[LatentG[$]] } and nat[3] /\ &{ preal /\ LatentG_no_old[LatentG_no_old[$]] | LatentG_no_old[LatentG_no_old[$]] } are equal modulo coverage
+Types preal /\ LatentG[LatentG[$]] and preal /\ LatentG[LatentG[$]] are equal modulo coverage
+Types LatentG[LatentG[$]] and LatentG[LatentG[$]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } and nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } are equal modulo coverage
+Types preal /\ preal /\ $ and preal /\ preal /\ $ are equal modulo coverage
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types nat[3] /\ &{ preal /\ LatentG[LatentG[$]] | LatentG[LatentG[$]] } and nat[3] /\ &{ preal /\ LatentG_no_old[LatentG_no_old[$]] | LatentG_no_old[LatentG_no_old[$]] } are equal modulo coverage
+Types preal /\ LatentG[LatentG[$]] and preal /\ LatentG[LatentG[$]] are equal modulo coverage
+Types LatentG[LatentG[$]] and LatentG[LatentG[$]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } and nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } are equal modulo coverage
+Types preal /\ preal /\ $ and preal /\ preal /\ $ are equal modulo coverage
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types $ and $ are equal modulo coverage
+All equal modulo coverage
+typechecking time: 966.229053ms
+
+total time: 968.326662ms
+================================================================================
+
+
+Benchmark gp-dsl-covered-misaligned
+--------------------------------------------------------------------------------
+parsing time: 2.330383ms
+successfully inferred guide type operator Old_trace1[$]
+	Old_traceG1[$]
+
+successfully inferred guide type operator Latent1[$]
+	LatentG1[$]
+
+successfully inferred guide type operator Old_trace2[$]
+	Old_traceG2[$]
+
+successfully inferred guide type operator Latent2[$]
+	LatentG2[$]
+
+successfully inferred guide type operator Old_traceG1[$]
+	bool /\ +{ nat[3] /\ +{ preal /\ Old_traceG1[Old_traceG1[$]] | Old_traceG1[Old_traceG1[$]] } | nat[5] /\ +{ preal /\ preal /\ $ | preal /\ $ } }
+
+successfully inferred guide type operator LatentG1[$]
+	bool /\ &{ nat[3] /\ &{ preal /\ LatentG1[LatentG1[$]] | LatentG1[LatentG1[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } }
+
+successfully inferred guide type operator Old_traceG2[$]
+	bool /\ +{ nat[3] /\ +{ preal /\ Old_traceG2Double[$] | Old_traceG2Double[$] } | nat[5] /\ +{ preal /\ preal /\ $ | preal /\ $ } }
+
+successfully inferred guide type operator LatentG2[$]
+	bool /\ &{ nat[3] /\ &{ preal /\ LatentG2Double[$] | LatentG2Double[$] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } }
+
+successfully inferred guide type operator Old_traceG2Double[$]
+	Old_traceG2[Old_traceG2[$]]
+
+successfully inferred guide type operator LatentG2Double[$]
+	LatentG2[LatentG2[$]]
+
+successfully inferred guide type operator LatentG_no_old[$]
+	bool /\ &{ nat[3] /\ &{ preal /\ LatentG_no_old[LatentG_no_old[$]] | LatentG_no_old[LatentG_no_old[$]] } | nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } }
+
+We check all type-equality constraints from type inference
+Types nat[3] /\ &{ preal /\ LatentG2Double[$] | LatentG2Double[$] } and nat[3] /\ &{ preal /\ LatentG_no_old[LatentG_no_old[$]] | LatentG_no_old[LatentG_no_old[$]] } are equal modulo coverage
+Types preal /\ LatentG2Double[$] and preal /\ LatentG2Double[$] are equal modulo coverage
+Types LatentG2Double[$] and LatentG2Double[$] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } and nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } are equal modulo coverage
+Types preal /\ preal /\ $ and preal /\ preal /\ $ are equal modulo coverage
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types nat[3] /\ &{ preal /\ LatentG1[LatentG1[$]] | LatentG1[LatentG1[$]] } and nat[3] /\ &{ preal /\ LatentG_no_old[LatentG_no_old[$]] | LatentG_no_old[LatentG_no_old[$]] } are equal modulo coverage
+Types preal /\ LatentG1[LatentG1[$]] and preal /\ LatentG1[LatentG1[$]] are equal modulo coverage
+Types LatentG1[LatentG1[$]] and LatentG1[LatentG1[$]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } and nat[5] /\ &{ preal /\ preal /\ $ | preal /\ $ } are equal modulo coverage
+Types preal /\ preal /\ $ and preal /\ preal /\ $ are equal modulo coverage
+Types preal /\ $ and preal /\ $ are equal modulo coverage
+Types $ and $ are equal modulo coverage
+All equal modulo coverage
+typechecking time: 2.769113426s
+
+total time: 2.771497253s
+================================================================================
+
+
+Benchmark recur-covered-aligned
+--------------------------------------------------------------------------------
+parsing time: 139.702us
+successfully inferred guide type operator Old_trace[$]
+	+{ $ | real /\ Old_trace[real /\ Old_trace[real /\ Old_trace[$]]] }
+
+successfully inferred guide type operator General[$]
+	&{ $ | real /\ General[real /\ General[real /\ General[$]]] }
+
+sty_def = &{ $ | real /\ General[real /\ General[real /\ General[$]]] }, sty = &{ $ | real /\ General[real /\ General[real /\ General[$]]] } line 833
+successfully inferred guide type operator General_no_old[$]
+	&{ $ | real /\ General_no_old[real /\ General_no_old[real /\ General_no_old[$]]] }
+
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types real /\ General[real /\ General[real /\ General[$]]] and real /\ General_no_old[real /\ General_no_old[real /\ General_no_old[$]]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types real /\ General[real /\ General[real /\ General[$]]] and real /\ General_no_old[real /\ General_no_old[real /\ General_no_old[$]]] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 7.566423ms
+
+total time: 7.739169ms
+================================================================================
+
+
+Benchmark recur-covered-misaligned
+--------------------------------------------------------------------------------
+parsing time: 1.214775ms
+successfully inferred guide type operator Old_trace1[$]
+	+{ $ | real /\ Old_trace1[real /\ Old_trace1[real /\ Old_trace1[$]]] }
+
+successfully inferred guide type operator General1[$]
+	&{ $ | real /\ General1[real /\ General1[real /\ General1[$]]] }
+
+successfully inferred guide type operator Old_trace2[$]
+	+{ $ | real /\ Old_trace2extra[$] }
+
+successfully inferred guide type operator General2[$]
+	&{ $ | real /\ General2extra[$] }
+
+successfully inferred guide type operator Old_trace2extra[$]
+	Old_trace2[real /\ Old_trace2[real /\ Old_trace2[$]]]
+
+successfully inferred guide type operator General2extra[$]
+	General2[real /\ General2[real /\ General2[$]]]
+
+successfully inferred guide type operator General_no_old[$]
+	&{ $ | real /\ General_no_old[real /\ General_no_old[real /\ General_no_old[$]]] }
+
+We check all type-equality constraints from type inference
+Types $ and $ are equal modulo coverage
+Types real /\ General2extra[$] and real /\ General_no_old[real /\ General_no_old[real /\ General_no_old[$]]] are equal modulo coverage
+Types $ and $ are equal modulo coverage
+Types real /\ General1[real /\ General1[real /\ General1[$]]] and real /\ General_no_old[real /\ General_no_old[real /\ General_no_old[$]]] are equal modulo coverage
+All equal modulo coverage
+typechecking time: 16.875583ms
+
+total time: 18.14713ms
+================================================================================
+
+
