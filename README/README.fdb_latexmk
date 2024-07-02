@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex README"] 1719886535.30948 "README.aux" "README.bbl" "README" 1719886537.07732 0
+["bibtex README"] 1719935963.4293 "README.aux" "README.bbl" "README" 1719936368.69617 0
   "./bib/formal_languages.bib" 1700065986 25749 7fffedce55e84c005ab90aeb82f5a64e ""
   "/home/longpham/.miktex/texmfs/install/bibtex/bst/natbib/abbrvnat.bst" 1700345205.38073 26532 66bed5cc59495faaa3f9ae9af9fa5e42 ""
-  "README.aux" 1719886536.43051 994 7c8488218f344b069b4d5c39e3ae5470 "pdflatex"
+  "README.aux" 1719936368.08502 1118 435a4656c6dce8de1a0f6823887b606b "pdflatex"
   (generated)
   "README.bbl"
   "README.blg"
   (rewritten before read)
-["pdflatex"] 1719886535.51838 "/home/longpham/Desktop/GuideTypes/README/README.tex" "README.pdf" "README" 1719886537.07765 0
+["pdflatex"] 1719936367.03964 "/home/longpham/Desktop/GuideTypes/README/README.tex" "README.pdf" "README" 1719936368.69654 0
   "/home/longpham/.miktex/texmfs/data/fonts/map/pdftex/pdftex.map" 1717606608.48662 385818 7d2bc6d2363d965a719ba68c1cff0141 ""
   "/home/longpham/.miktex/texmfs/data/fonts/tfm/public/stmaryrd/stmary10.tfm" 1700345298.33413 848 f478e0761563bbc369eca609a1741348 ""
   "/home/longpham/.miktex/texmfs/data/fonts/tfm/public/stmaryrd/stmary6.tfm" 1700345297.07812 848 068dd119e13b75777e62821af7d4f2a6 ""
@@ -36,6 +36,7 @@
   "/home/longpham/.miktex/texmfs/install/fonts/tfm/public/cm/cmssbx10.tfm" 1689632515.65537 1272 e2d13f0df30bf3ad990bb9d028e37f34 ""
   "/home/longpham/.miktex/texmfs/install/fonts/tfm/public/cm/cmti10.tfm" 1689632515.65537 1480 aa8e34af0eb6a2941b776984cf1dfdc4 ""
   "/home/longpham/.miktex/texmfs/install/fonts/tfm/public/cm/cmtt10.tfm" 1689632515.65537 768 1321e9409b4137d6fb428ac9dc956269 ""
+  "/home/longpham/.miktex/texmfs/install/fonts/tfm/public/cm/cmtt8.tfm" 1689632515.65537 768 d7b9a2629a0c353102ad947dc9221d49 ""
   "/home/longpham/.miktex/texmfs/install/fonts/tfm/public/latex-fonts/lasy10.tfm" 1689632555.27198 520 82a3d37183f34b6eb363a161dfc002c2 ""
   "/home/longpham/.miktex/texmfs/install/fonts/tfm/public/latex-fonts/lasy6.tfm" 1689632555.27198 520 4889cce2180234b97cad636b6039c722 ""
   "/home/longpham/.miktex/texmfs/install/fonts/tfm/public/latex-fonts/lasy7.tfm" 1689632555.27198 520 a74c6ed8cb48679fdc3ea874d9d34a7e ""
@@ -81,7 +82,6 @@
   "/home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/NewTXMI.pfb" 1709875678.60376 32409 1452fa0ce4fabfb48acd5d077e296f6d ""
   "/home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaSTbb.pfb" 1709875678.52776 15249 5fb9688df795874609441a62bc595e85 ""
   "/home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaX.pfb" 1709875678.47976 56686 b959be5e2e4a0232f5aa4c1c4be4574a ""
-  "/home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txsym.pfb" 1709875678.54376 44726 c0c4f2d62278d1adbb6a666ba2cb0447 ""
   "/home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txsys.pfb" 1709875678.68377 45943 7899c7ea4fdd83f3625178689816dcee ""
   "/home/longpham/.miktex/texmfs/install/fonts/vf/public/newtx/ntxmi.vf" 1709875678.37576 2612 4fd3785b7e98639f68f908a08c642071 ""
   "/home/longpham/.miktex/texmfs/install/fonts/vf/public/newtx/ntxmia.vf" 1709875678.37576 2056 17a96727a1080b515c483edfb4650902 ""
@@ -237,14 +237,14 @@
   "/home/longpham/.miktex/texmfs/install/tex/latex/xcolor/xcolor.sty" 1708556321.17019 55487 80a65caedd3722f4c20a14a69e785d8f ""
   "/home/longpham/.miktex/texmfs/install/tex/latex/xkeyval/xkeyval.sty" 1689632820.44615 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
   "/home/longpham/Desktop/GuideTypes/README/README.tex" 1719886532.74636 2983 7f86e8730168df37e55c8c2544a37714 ""
-  "README.aux" 1719886536.43051 994 7c8488218f344b069b4d5c39e3ae5470 "pdflatex"
-  "README.bbl" 1719886535.45447 732 f47c078f1edb11947610fa91739470ee "bibtex README"
-  "README.brf" 1719886536.43051 42 92f5447b3407dcca3316fd9448eb3f27 "pdflatex"
-  "README.out" 1719886536.43051 762 d44a370593a9d53b89586a8a0e30b150 "pdflatex"
+  "README.aux" 1719936368.08502 1118 435a4656c6dce8de1a0f6823887b606b "pdflatex"
+  "README.bbl" 1719935963.55194 732 f47c078f1edb11947610fa91739470ee "bibtex README"
+  "README.brf" 1719936368.08502 42 92f5447b3407dcca3316fd9448eb3f27 "pdflatex"
+  "README.out" 1719936368.08502 907 817685632b17913e3726afa0606e784d "pdflatex"
   "README.tex" 1719886532.74636 2983 7f86e8730168df37e55c8c2544a37714 ""
-  "getting_started_guide.tex" 1719870270.38478 5612 e7930c2fc9516efaccf40adbfdd860f3 ""
+  "getting_started_guide.tex" 1719936366.645 9628 bc92d277153dc803c192ed0a8faae0f9 ""
   "lang.tex" 1719867235.79594 7185 d7502a54fbf8d9b5a70ff6465762da82 ""
-  "list_packages.sty" 1719870224.70804 4153 c4a1ac3dbdbff7f040fdf7ac34a8d4a9 ""
+  "list_packages.sty" 1719931015.86899 4169 806a02d127fdffa59299f880e2d421fa ""
   "lmacros.tex" 1719856540.59601 1621 3226947bae0608a38a8f6fd19c8b67e2 ""
   "shortcuts.sty" 1719867254.67222 6461 400d146255580b2ade680664be42da19 ""
   "what_is_included.tex" 1719856878.16434 252 d136dcd8caec1e771600c8667d242e6f ""

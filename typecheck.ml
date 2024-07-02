@@ -881,8 +881,9 @@ let tycheck_proc sty_ctxt psig_ctxt ext_ctxt proc =
                 Hashtbl.set sty_ctxt ~key:type_id ~data:(Some sty);
                 false
             | Some sty_def ->
-                Format.printf "sty_def = %a, sty = %a line 833\n"
-                  Ast_ops.print_sess_tyv sty_def Ast_ops.print_sess_tyv sty;
+                (* For debugging *)
+                (* Format.printf "sty_def = %a, sty = %a line 885\n"
+                   Ast_ops.print_sess_tyv sty_def Ast_ops.print_sess_tyv sty; *)
                 not (equal_sess_tyv sty sty_def)))
   then Or_error.of_exn (Type_error ("mismatched right session", proc.proc_loc))
   else Ok type_eq_constrs

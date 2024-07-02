@@ -6,9 +6,9 @@ Our artifact is a program analysis tool with the following capabilities:
 \begin{enumerate}
   \item Check structural type equality of (possibly context-free) guide types
   \item Infer guide types of model and guide programs (using the
-  structural-type-equality checking algorithm)
+        structural-type-equality checking algorithm)
   \item Check whether the support of sequentially composed guide programs
-  coincides with the support of a model program.
+        coincides with the support of a model program.
 \end{enumerate}
 
 In probabilistic programming with our new coroutine-based
@@ -100,18 +100,18 @@ type T3 = &{ $ | real /\ real /\ T3[T3] }
 %
 The first line defines a guide-type operator $T_1 [\cdot]$ as
 \begin{equation*}
-  T_1 [X] \coloneq X \echoice (\treal \land \mathbb{R} \land T_1 [T_1[X]]),
+  T_1 [X] \coloneq X \echoice (\treal \land \treal \land T_1 [T_1[X]]),
 \end{equation*}
 where $X$ is a type variable that stands for a continuation type (i.e., the type
 of the communication protocol that we run after $T_1$ is finished).
 %
 The type $T_1$ means the coroutine receives a branch selection (from another
 coroutine that it communicates with), and proceeds to either $X$ (i.e., the
-continuation guide type) or $\mathbb{R} \land T_1 [T_1[X]]$, depending on which
+continuation guide type) or $\treal \land T_1 [T_1[X]]$, depending on which
 branch is taken.
 %
-The guide type $\mathbb{R} \land T_1 [T_1[X]]$ means the coroutine first sends a
-message of type $\mathbb{R}$ (i.e., real numbers) and then proceeds to the guide type
+The guide type $\treal \land T_1 [T_1[X]]$ means the coroutine first sends a
+message of type $\treal$ (i.e., real numbers) and then proceeds to the guide type
 $T_1 [T_1 [X]]$.
 %
 Here, $T_1 [T_1 [X]]$ can be interpreted as a sequential composition of two
@@ -123,27 +123,144 @@ operators $T_1 [X]$ and $T_2 [X]$, run
 # dune exec gtypes type-equality type-equality-sample T1 T2
 \end{verbatim}
 %
-The command successfulyl determines that the two type operators are structurally
-equal, as indicated by the following line towards the end of the command's
-printout:
+The command first prints out information about intermediate results of the
+type-equality checking algorithm for debugging.
+%
+At the end of the printout, the commmand displays the result of
+structural-type-equality checking:
 \begin{verbatim}
 Types T1 and T2 are equal
 \end{verbatim}
 %
-This is as expected because the two type operators $T_1 [X]$ and $T_2 [X]$
-represent the same type---they only differ in the names of type operators.
+This result is as expected because the two type operators $T_1 [X]$ and $T_2
+  [X]$ represent the same type---they only differ in the names of type operators.
 
 Next, to check the structural type equality between $T_1 [X]$ and $T_3 [X]$, run
 \begin{verbatim}
 # dune exec gtypes type-equality type-equality-sample T1 T3
 \end{verbatim}
 %
-It displays towards the end of the printout that
+At the end of the printout, it displays:
 \begin{verbatim}
 Types T1 and T3 are unequal
 \end{verbatim}
-which is a correct result because the right branch of $T_1 [X]$ only sends one
-message before possibel termination, while the right branch of $T_3 [X]$ sends
-two messages before possible termination.
+%
+This is a correct result because the right branch of $T_1 [X]$ only sends one
+value (indicated by $\treal \land {}$) before possible termination, while the
+right branch of $T_3 [X]$ sends two values before possible termination.
 
 \subsection{Guide-Type Inference}
+
+Go to the directory
+\texttt{/home/GuideTypes/bench/coverage-check/recursive/recur} by running
+\begin{verbatim}
+# cd /home/GuideTypes/bench/coverage-check/recursive/recur
+\end{verbatim}
+%
+It contains a benchmark program \texttt{recur-covered-aligned}.
+%
+To display its content, run
+\begin{verbatim}
+# cat recur-covered-aligned
+\end{verbatim}
+
+The first three lines of the file are
+\begin{verbatim}
+type Old_trace
+type General
+type General_no_old
+\end{verbatim}
+%
+They declares three type operators that are later mentioned in the type
+signatures of coroutines.
+%
+While the user needs to manually declare these type operators and insert them to
+the guide programs' type signatures, the type operators' definitions will be
+automatically inferred by our artifact.
+
+The file defines three coroutines: \texttt{Recur1}, \texttt{Recur2},
+and \texttt{Recur\_no\_old}.
+%
+In each of them, the first line states the type signature of the coroutine.
+%
+For example, the type signature of the the coroutine \texttt{Recur1} is
+\begin{verbatim}
+proc Recur1() -> unit | old : Old_trace | lat : General
+\end{verbatim}
+%
+It states (i) the coroutine \texttt{Recur1} has the output type of
+\texttt{unit}, (ii) the coroutine uses a channel named \texttt{old} of the guide
+type \texttt{Old\_trace}, and (iii) the coroutine uses a channel named
+\texttt{lat} of the guide type \texttt{lat}.
+
+To infer the definitions of the guide types mentioned in this file, we run
+\begin{verbatim}
+# dune exec gtypes type-check recur-covered-aligned
+\end{verbatim}
+%
+It prints out the inferred definitions of the three type operators.
+%
+For instance, the inference result for the type operator \texttt{General} is
+stated as:
+\begin{verbatim}
+successfully inferred guide type operator General[$]
+	&{ $ | real /\ General[real /\ General[real /\ General[$]]] }
+\end{verbatim}
+%
+It translates to
+\begin{equation*}
+  \texttt{General} [X] \coloneq X \echoice (\treal \land \texttt{General} [\treal \land \texttt{General} [\treal \land \texttt{General} [X]]]).
+\end{equation*}
+
+In addition to the inference results of guide types, the command also prints out
+(i) a list of pairs of guide types whose structural type equality we need to
+check during type inference and (ii) whether each pair is indeed equal.
+%
+An example is
+\begin{verbatim}
+Types $ and $ are equal modulo coverage
+\end{verbatim}
+%
+At the end of the command's output, it displays \texttt{All equal modulo
+  coverage}.
+%
+It means all type-equality conditions discharged during type inference are
+verified, and hence the three inferred type definitions are also valid.
+
+\subsection{Coverage Checking}
+
+The last two liens in the benchmark program \texttt{recur-covered-aligned}
+define how the guide coroutines are sequentially composed:
+\begin{verbatim}
+Initial_type: Init_type
+Guide_composition: Recur1; Recur2
+\end{verbatim}
+%
+The first line states the initial guide type \texttt{Init\_type}, which is
+defined in the fourth line in the file:
+\begin{verbatim}
+type Init_type = &{ $ | real_u /\ Init_type[real_u /\
+                        Init_type[real_u /\ Init_type[$]]] }
+\end{verbatim}
+%
+This guide type describes the initial trace fed to the sequential composition of
+guide coroutines.
+%
+Because we assume the initial trace is uncovered (i.e., all random variables in
+the trace haven't been freshly sampled), the guide type \texttt{Init\_type}
+contains \texttt{real\_u}, where the subscript \texttt{u} means ``uncovered.''
+
+Finally, the last line in the file, \texttt{Guide\_composition: Recur1; Recur2},
+means we sequentially compose the guide coroutines \texttt{Recur1} and
+\texttt{Recur2} in this order.
+
+To verify the full coverage of the sequential composition of the two guide
+coroutines, we run
+\begin{verbatim}
+# dune exec gtypes coverage-check recur-covered-aligned
+\end{verbatim}
+%
+The result is displayed at the end of the printout:
+\begin{verbatim}
+The final type is fully covered
+\end{verbatim}

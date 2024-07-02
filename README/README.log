@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.3.18)  1 JUL 2024 22:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.3.18)  2 JUL 2024 12:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -991,11 +991,11 @@ LaTeX Warning: Reference `sec:Build the Docker Image' on page 1 undefined on inp
 LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 81.
 (/home/longpham/.miktex/texmfs/install/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-) [2]) (README.bbl (README.brf)
+) [2] [3] [4]) (README.bbl (README.brf)
 \tf@brf=\write6
 \openout6 = `README.brf'.
 
-) [3] (README.aux)
+) [5] (README.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -1005,22 +1005,22 @@ L3 programming layer <2024-02-20>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `README.out' has not changed.
-(rerunfilecheck)             Checksum: D44A370593A9D53B89586A8A0E30B150;762.
+(rerunfilecheck)             Checksum: 817685632B17913E3726AFA0606E784D;907.
 Package rerunfilecheck Info: File `README.brf' has not changed.
 (rerunfilecheck)             Checksum: 92F5447B3407DCCA3316FD9448EB3F27;42.
  ) 
 Here is how much of TeX's memory you used:
- 26204 strings out of 474458
- 410746 string characters out of 5746097
+ 26212 strings out of 474458
+ 410837 string characters out of 5746097
  1938187 words of memory out of 5000000
- 48018 multiletter control sequences out of 15000+600000
- 591122 words of font info for 137 fonts, out of 8000000 for 9000
+ 48022 multiletter control sequences out of 15000+600000
+ 591458 words of font info for 139 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 105i,11n,131p,3344b,468s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/NewTXMI.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmss12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sfrm1095.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sftt1095.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/hoekwater/stmary10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaSTbb.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaX.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txsym.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txsys.pfb>
-Output written on README.pdf (3 pages, 181122 bytes).
+ 105i,11n,131p,3344b,471s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/NewTXMI.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmss12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sfrm1095.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sftt1095.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/hoekwater/stmary10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaSTbb.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaX.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txsys.pfb>
+Output written on README.pdf (5 pages, 179124 bytes).
 PDF statistics:
- 132 PDF objects out of 1000 (max. 8388607)
- 13 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 139 PDF objects out of 1000 (max. 8388607)
+ 16 named destinations out of 1000 (max. 500000)
+ 49 words of extra memory for PDF output out of 10000 (max. 10000000)
 
