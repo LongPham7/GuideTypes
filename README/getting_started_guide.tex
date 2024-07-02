@@ -90,19 +90,60 @@ To display the content of the file, we run
 \begin{verbatim}
 # cat type-equality-sample
 \end{verbatim}
-and it displays
+%
+It prints out
 \begin{verbatim}
 type T1 = &{ $ | real /\ T1[T1] }
 type T2 = &{ $ | real /\ T2[T2] }
 type T3 = &{ $ | real /\ real /\ T3[T3] }
 \end{verbatim}
 %
-It defines three type definitions:
-\begin{align*}
-  T_1 & \coloneq \&\{ \$ \mid \text{real} \land T_1[T_1] \} \\
-\end{align*}
+The first line defines a guide-type operator $T_1 [\cdot]$ as
+\begin{equation*}
+  T_1 [X] \coloneq X \echoice (\treal \land \mathbb{R} \land T_1 [T_1[X]]),
+\end{equation*}
+where $X$ is a type variable that stands for a continuation type (i.e., the type
+of the communication protocol that we run after $T_1$ is finished).
+%
+The type $T_1$ means the coroutine receives a branch selection (from another
+coroutine that it communicates with), and proceeds to either $X$ (i.e., the
+continuation guide type) or $\mathbb{R} \land T_1 [T_1[X]]$, depending on which
+branch is taken.
+%
+The guide type $\mathbb{R} \land T_1 [T_1[X]]$ means the coroutine first sends a
+message of type $\mathbb{R}$ (i.e., real numbers) and then proceeds to the guide type
+$T_1 [T_1 [X]]$.
+%
+Here, $T_1 [T_1 [X]]$ can be interpreted as a sequential composition of two
+instances of $T_1$, followed by the original continuation $X$.
 
-To algorithmically decide the structural type equality between the types \texttt{T1} and \texttt{T2}, run
+To algorithmically decide the structural type equality between the guide-type
+operators $T_1 [X]$ and $T_2 [X]$, run
 \begin{verbatim}
 # dune exec gtypes type-equality type-equality-sample T1 T2
 \end{verbatim}
+%
+The command successfulyl determines that the two type operators are structurally
+equal, as indicated by the following line towards the end of the command's
+printout:
+\begin{verbatim}
+Types T1 and T2 are equal
+\end{verbatim}
+%
+This is as expected because the two type operators $T_1 [X]$ and $T_2 [X]$
+represent the same type---they only differ in the names of type operators.
+
+Next, to check the structural type equality between $T_1 [X]$ and $T_3 [X]$, run
+\begin{verbatim}
+# dune exec gtypes type-equality type-equality-sample T1 T3
+\end{verbatim}
+%
+It displays towards the end of the printout that
+\begin{verbatim}
+Types T1 and T3 are unequal
+\end{verbatim}
+which is a correct result because the right branch of $T_1 [X]$ only sends one
+message before possibel termination, while the right branch of $T_3 [X]$ sends
+two messages before possible termination.
+
+\subsection{Guide-Type Inference}

@@ -12,9 +12,8 @@ RUN eval $(opam env)
 # Install relevant OCaml libraries
 RUN opam install -y dune dune-build-info core menhir
 
-# Clone the guide-type repository from GitHub
-WORKDIR /home/
-RUN git clone -b subguide_types https://github.com/LongPham7/GuideTypes.git
+# Copy the guide-type repository to the image
+ADD . /home/GuideTypes
 
 # Build the program
 WORKDIR /home/GuideTypes

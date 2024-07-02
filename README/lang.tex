@@ -1,0 +1,155 @@
+\newcommand{\dotsim}{%
+  \mathbin{\textnormal{%
+    \mathsurround=0pt
+    \ooalign{%
+      \hidewidth\vphantom{$\div$}\raisebox{.95ex}{\scalebox{1.2}{.}}\hidewidth\cr
+      $\sim$\cr
+      \hidewidth\vphantom{$\div$}\raisebox{-.05ex}{\scalebox{1.2}{.}}\hidewidth\cr
+    }%
+  }}%
+}
+
+\newcommand{\bind}{\mathbin{\gg\!=}}
+\newcommand{\many}[1]{\overrightarrow{#1}}
+\newcommand{\Gm}{\Gamma}
+\newcommand{\Sg}{\Sigma}
+\newcommand{\dplus}{\mathbin{{+}\!\!{+}}}
+\newcommand{\dom}[1]{\mathrm{dom}(#1)}
+\newcommand{\supp}[1]{\mathrm{supp}(#1)}
+
+\newcommand{\kfun}{\kw{fun}\xspace}
+\newcommand{\klet}{\kw{let}\xspace}
+\newcommand{\kin}{\kw{in}\xspace}
+\newcommand{\kif}{\kw{if}\xspace}
+\newcommand{\kthen}{\kw{then}\xspace}
+\newcommand{\kelse}{\kw{else}\xspace}
+\newcommand{\kcase}{\kw{case}\xspace}
+\newcommand{\kof}{\kw{of}\xspace}
+\newcommand{\kletrec}{\kw{letrec}\xspace}
+\newcommand{\ksample}[1]{\ensuremath{\kw{sample}(#1)}}
+\newcommand{\ktype}{\kw{type}\xspace}
+\newcommand{\kgets}{\ensuremath{\gets}\xspace}
+\newcommand{\ksend}{\kw{send}\xspace}
+\newcommand{\krecv}{\kw{recv}\xspace}
+\newcommand{\karrow}{\ensuremath{\hookrightarrow}\xspace}
+\newcommand{\kobserve}[2]{\ensuremath{\kw{observe}(#2 \sim #1)}}
+\newcommand{\kclose}{\kw{close}\xspace}
+\newcommand{\kwait}{\kw{wait}\xspace}
+\newcommand{\kproc}{\kw{proc}\xspace}
+\newcommand{\kreturn}[1]{\ensuremath{\kw{return}(#1)}}
+\newcommand{\kcall}{\kw{call}\xspace}
+\newcommand{\ksamplei}[2]{\ensuremath{\kw{sample}_\m{rv}\{\id{#2}\}(#1)}}
+\newcommand{\ksampleo}[2]{\ensuremath{\kw{sample}_\m{sd}\{\id{#2}\}(#1)}}
+\newcommand{\kflipi}[2]{\ensuremath{\kw{flip}_\m{rv}\{\id{#2}\}(#1)}}
+\newcommand{\kflipo}[2]{\ensuremath{\kw{flip}_\m{sd}\{\id{#2}\}(#1)}}
+\newcommand{\kifi}[1]{\ensuremath{\kw{if}_\m{rv}\{\id{#1}\}}\xspace}
+\newcommand{\kifo}[1]{\ensuremath{\kw{if}_\m{sd}\{\id{#1}\}}\xspace}
+\newcommand{\klif}[1]{\ensuremath{\kw{if}_{#1}}\xspace}
+\newcommand{\klsample}[2]{\ensuremath{\kw{sample}(@{#2},#1)}}
+\newcommand{\ksendd}{\kw{sendd}\xspace}
+\newcommand{\ksendp}{\kw{sendp}\xspace}
+\newcommand{\krecvd}{\kw{recvd}\xspace}
+\newcommand{\krecvp}{\kw{recvp}\xspace}
+\newcommand{\kforeach}{\kw{foreach}\xspace}
+
+\newcommand{\eabs}[3]{\ensuremath{\lambda(#1.#3)}}
+\newcommand{\eapp}[2]{\ensuremath{\m{app}(#1;#2)}}
+\newcommand{\etriv}{\ensuremath{\m{triv}}}
+\newcommand{\epair}[2]{\ensuremath{\m{pair}(#1;#2)}}
+\newcommand{\eprojl}[1]{\ensuremath{\m{pr}[\m{l}](#1)}}
+\newcommand{\eprojr}[1]{\ensuremath{\m{pr}[\m{r}](#1)}}
+\newcommand{\etrue}{\ensuremath{\m{true}}}
+\newcommand{\efalse}{\ensuremath{\m{false}}}
+\newcommand{\econd}[3]{\ensuremath{\m{if}(#1;#2;#3)}}
+\newcommand{\einl}[3]{\ensuremath{\m{inl}\{#1;#2\}(#3)}}
+\newcommand{\einr}[3]{\ensuremath{\m{inr}\{#1;#2\}(#3)}}
+\newcommand{\ecase}[5]{\ensuremath{\m{case}\{#2.#3;#4.#5\}(#1)}}
+\newcommand{\elet}[3]{\ensuremath{\m{let}(#1; #2.#3)}}
+\newcommand{\ebinop}[3]{\ensuremath{\m{op}_{#1}(#2;#3)}}
+\newcommand{\eber}[1]{\ensuremath{\cn{Ber}(#1)}}
+\newcommand{\eunif}{\ensuremath{\cn{Unif}}}
+\newcommand{\ebeta}[2]{\ensuremath{\cn{Beta}(#1;#2)}}
+\newcommand{\egamma}[2]{\ensuremath{\cn{Gamma}(#1;#2)}}
+\newcommand{\enormal}[2]{\ensuremath{\cn{Normal}(#1;#2)}}
+\newcommand{\ecat}[1]{\ensuremath{\cn{Cat}(#1)}}
+\newcommand{\egeo}[1]{\ensuremath{\cn{Geo}(#1)}}
+\newcommand{\epois}[1]{\ensuremath{\cn{Pois}(#1)}}
+\newcommand{\einvgamma}[2]{\ensuremath{\cn{InvGamma}(#1;#2)}}
+\newcommand{\edelta}[1]{\ensuremath{\cn{Delta}(#1)}}
+\newcommand{\ekeep}{\ensuremath{\cn{Keep}}}
+
+\newcommand{\mret}[1]{\ensuremath{\m{ret}(#1)}}
+\newcommand{\mbnd}[3]{\ensuremath{\m{bnd}(#1;#2.#3)}}
+\newcommand{\msample}[1]{\ensuremath{\m{sample}(#1)}}
+\newcommand{\msamplei}[2]{\ensuremath{\m{sample}_\m{rv}\{\id{#2}\}(#1)}}
+\newcommand{\msampleo}[2]{\ensuremath{\m{sample}_\m{sd}\{\id{#2}\}(#1)}}
+\newcommand{\mbranch}[3]{\ensuremath{\m{cond}(#1;#2;#3)}}
+\newcommand{\mbranchi}[3]{\ensuremath{\m{cond}_\m{rv}\{\id{#3}\}(#1;#2)}}
+\newcommand{\mbrancho}[4]{\ensuremath{\m{cond}_\m{sd}\{\id{#4}\}(#1;#2;#3)}}
+\newcommand{\mmatch}[5]{\ensuremath{\m{match}\{#2.#3;#4.#5\}(#1)}}
+\newcommand{\mmatchi}[5]{\ensuremath{\m{match}_\m{rv}\{\id{#5}\}(#1.#2;#3.#4)}}
+\newcommand{\mmatcho}[6]{\ensuremath{\m{match}_\m{sd}\{\id{#6}\}(#1;#2.#3;#4.#5)}}
+\newcommand{\mflip}[3]{\ensuremath{\m{flip}(#1;#2;#3)}}
+\newcommand{\mflipi}[4]{\ensuremath{\m{flip}_\m{rv}\{#4\}(#1;#2;#3)}}
+\newcommand{\mflipo}[4]{\ensuremath{\m{flip}_\m{sd}\{#4\}(#1;#2;#3)}}
+\newcommand{\mcall}[2]{\ensuremath{\m{call}(#1;#2)}}
+
+\newcommand{\mkeep}{\ensuremath{\m{keep}}}
+\newcommand{\moldsample}{\ensuremath{\m{oldsample}}}
+\newcommand{\moldbranch}[2]{\ensuremath{\m{oldcond}(#1; #2)}}
+
+% \newcommand{\fundec}[7]{\ensuremath{\m{fix}\{#6 ; #7 \}(#1.#4.#5)}}
+\newcommand{\fundec}[3]{\ensuremath{\m{fix}(#1.#2.#3)}}
+
+\newcommand{\tbool}{\ensuremath{\mathbbl{2}}}
+\newcommand{\tnat}{\ensuremath{\mathbbl{N}}}
+\newcommand{\treal}{\ensuremath{\mathbbl{R}}}
+\newcommand{\tureal}{\ensuremath{\mathbbl{R}_{(0,1)}}}
+\newcommand{\tpreal}{\ensuremath{\mathbbl{R}_+}}
+\newcommand{\tunit}{\ensuremath{\mathbbl{1}}}
+\newcommand{\tdist}[1]{\ensuremath{\m{dist}(#1)}}
+\newcommand{\tcmd}[2]{\ensuremath{\m{cmd}[#2](#1)}}
+\newcommand{\tvec}[2]{\ensuremath{\m{vec}[#2](#1)}}
+
+\newcommand{\one}{\ensuremath{\pmb{1}}}
+\newcommand{\ichoice}{\ensuremath{\mathbin{\varoplus}}}
+\newcommand{\echoice}{\ensuremath{\mathbin{\binampersand}}}
+
+\newcommand{\proc}[3]{\ensuremath{\mathfrak{proc}(#1;#2;#3)}}
+\newcommand{\msg}[2]{\ensuremath{\mathfrak{msg}(#1.#2)}}
+\newcommand{\cbnd}[3]{\ensuremath{\m{kbnd}(#1.#2;#3)}}
+\newcommand{\cstop}{\ensuremath{\m{kstop}}}
+
+\newcommand{\chtype}[2]{\ensuremath{(\id{#1}\!: #2)}}
+\newcommand{\evalp}[1]{\ensuremath{\mathrel{\Downarrow^{#1}}}}
+\newcommand{\evalto}{\ensuremath{\mathrel{\Downarrow}}}
+\newcommand{\concat}{\ensuremath{\mathbin{\dplus}}}
+\newcommand{\msgobj}[1]{\ensuremath{\textbf{\textit{val}}(#1)}}
+\newcommand{\msgobjl}[1]{\ensuremath{\textbf{\textit{val}}^{\m{P}}(#1)}}
+\newcommand{\msgobjr}[1]{\ensuremath{\textbf{\textit{val}}^{\m{C}}(#1)}}
+\newcommand{\dirobj}[1]{\ensuremath{\textbf{\textit{dir}}(#1)}}
+\newcommand{\dirobjl}[1]{\ensuremath{\textbf{\textit{dir}}^{\m{P}}(#1)}}
+\newcommand{\dirobjr}[1]{\ensuremath{\textbf{\textit{dir}}^{\m{C}}(#1)}}
+\newcommand{\foldobj}{\ensuremath{\textbf{\textit{fold}}}}
+\newcommand{\vclo}[2]{\ensuremath{\m{clo}(#1, #2)}}
+
+\newcommand{\reduce}{\mathrel{\vdash_\m{red}}}
+
+%% Shortcuts added by Long Pham. They may contain some shortcuts that are
+%% already defiend above.
+
+%% Guide types
+\newcommand\mdoubleplus{\ensuremath{\mathbin{+\mkern-10mu+}}}
+
+%% Translation from guide types to context-free processes
+\newcommand{\unfold}[1]{\m{unfold}_{\mathcal{T}}(#1)}
+\newcommand{\continuation}[1]{\text{continuation} (#1)}
+\newcommand{\dparen}[1]{\llparenthesis #1 \rrparenthesis}
+
+%% Basic process algebra
+\newcommand{\remainder}[2]{\text{remainder} (#1, #2)}
+\newcommand{\simc}[0]{\sim_{\text{cover}}}
+
+%% Tensor
+\newcommand{\ttensor}[2]{\ensuremath{\m{tensor} (#1; #2)}}
+\newcommand{\tsimplex}[1]{\ensuremath{\m{simplex} [#1]}}

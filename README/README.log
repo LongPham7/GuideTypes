@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.3.18)  1 JUL 2024 16:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.3.18)  1 JUL 2024 22:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -289,11 +289,130 @@ File: upzd.fd 2001/06/04 font definitions for U/pzd.
 LaTeX Font Info:    Trying to load font information for U+psy on input line 64.
  (/home/longpham/.miktex/texmfs/install/tex/latex/psnfss/upsy.fd
 File: upsy.fd 2001/06/04 font definitions for U/psy.
-)) (/home/longpham/.miktex/texmfs/install/tex/latex/mathpartir/mathpartir.sty
+)) (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/newtxmath.sty
+Package: newtxmath 2024/02/24 v1.739
+ `newtxmath' v1.739, 2024/02/24 Math macros based originally on txfonts (msharpe) (/home/longpham/.miktex/texmfs/install/tex/latex/base/ifthen.sty
+Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
+) (/home/longpham/.miktex/texmfs/install/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count282
+) (/home/longpham/.miktex/texmfs/install/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+ (/home/longpham/.miktex/texmfs/install/tex/generic/xkeyval/xkeyval.tex (/home/longpham/.miktex/texmfs/install/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks36
+\XKV@tempa@toks=\toks37
+)
+\XKV@depth=\count283
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+)) (/home/longpham/.miktex/texmfs/install/tex/latex/oberdiek/centernot.sty
+Package: centernot 2016/05/16 v1.4 Centers the not symbol horizontally (HO)
+)
+\tx@cntz=\count284
+ (/home/longpham/.miktex/texmfs/install/tex/generic/binhex/binhex.tex)
+\tx@Isdigit=\count285
+\tx@IsAlNum=\count286
+\tx@tA=\toks38
+\tx@tB=\toks39
+\tx@su=\read2
+
+amsthm NOT loaded
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 393.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/cmr/m/n on input line 393.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/cmr/m/n on input line 393.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/m/n --> OT1/cmr/b/n on input line 394.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/b/n on input line 408.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 410.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/cmr/m/it on input line 410.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/cmr/m/it on input line 410.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 411.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 411.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 411.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 413.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/cmr/b/n on input line 413.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/cmr/b/n on input line 413.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/m/it --> OT1/cmr/b/it on input line 414.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/b/n on input line 417.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 519.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/ntxmi/m/it on input line 519.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/ntxmi/m/it on input line 519.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/ntxmi/m/it --> OML/ntxmi/b/it on input line 520.
+\symlettersA=\mathgroup8
+LaTeX Font Info:    Overwriting symbol font `lettersA' in version `bold'
+(Font)                  U/ntxmia/m/it --> U/ntxmia/b/it on input line 565.
+LaTeX Font Info:    Redeclaring math alphabet \mathfrak on input line 567.
+Now handling font encoding LMS ...
+... no UTF-8 mapping file for font encoding LMS
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 587.
+LaTeX Font Info:    Encoding `OMS' has changed to `LMS' for symbol font
+(Font)              `symbols' in the math version `normal' on input line 587.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> LMS/ntxsy/m/n on input line 587.
+LaTeX Font Info:    Encoding `OMS' has changed to `LMS' for symbol font
+(Font)              `symbols' in the math version `bold' on input line 587.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> LMS/ntxsy/m/n on input line 587.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  LMS/ntxsy/m/n --> LMS/ntxsy/b/n on input line 588.
+\symAMSm=\mathgroup9
+LaTeX Font Info:    Overwriting symbol font `AMSm' in version `bold'
+(Font)                  U/ntxsym/m/n --> U/ntxsym/b/n on input line 613.
+\symsymbolsC=\mathgroup10
+LaTeX Font Info:    Overwriting symbol font `symbolsC' in version `bold'
+(Font)                  U/ntxsyc/m/n --> U/ntxsyc/b/n on input line 634.
+Now handling font encoding LMX ...
+... no UTF-8 mapping file for font encoding LMX
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 647.
+LaTeX Font Info:    Encoding `OMX' has changed to `LMX' for symbol font
+(Font)              `largesymbols' in the math version `normal' on input line 647.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 647.
+LaTeX Font Info:    Encoding `OMX' has changed to `LMX' for symbol font
+(Font)              `largesymbols' in the math version `bold' on input line 647.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 647.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  LMX/ntxexx/m/n --> LMX/ntxexx/b/n on input line 648.
+\symlargesymbolsTXA=\mathgroup11
+LaTeX Font Info:    Overwriting symbol font `largesymbolsTXA' in version `bold'
+(Font)                  U/ntxexa/m/n --> U/ntxexa/b/n on input line 662.
+\tx@sbptoks=\toks40
+LaTeX Font Info:    Redeclaring math delimiter \lfloor on input line 885.
+LaTeX Font Info:    Redeclaring math delimiter \rfloor on input line 886.
+LaTeX Font Info:    Redeclaring math delimiter \lceil on input line 887.
+LaTeX Font Info:    Redeclaring math delimiter \rceil on input line 888.
+LaTeX Font Info:    Redeclaring math delimiter \lbrace on input line 893.
+LaTeX Font Info:    Redeclaring math delimiter \rbrace on input line 894.
+LaTeX Font Info:    Redeclaring math delimiter \langle on input line 896.
+LaTeX Font Info:    Redeclaring math delimiter \rangle on input line 898.
+LaTeX Font Info:    Redeclaring math delimiter \arrowvert on input line 902.
+LaTeX Font Info:    Redeclaring math delimiter \vert on input line 903.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 974.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 975.
+LaTeX Font Info:    Redeclaring math accent \vec on input line 2048.
+LaTeX Info: Redefining \Bbbk on input line 2838.
+LaTeX Info: Redefining \not on input line 2986.
+LaTeX Info: Redefining \textsquare on input line 3016.
+LaTeX Info: Redefining \openbox on input line 3018.
+) (/home/longpham/.miktex/texmfs/install/tex/latex/mathpartir/mathpartir.sty
 Package: mathpartir 2016/02/24 version 1.3.2 Math Paragraph for Typesetting Inference Rules
 \mpr@andskip=\skip110
-\mpr@lista=\toks36
-\mpr@listb=\toks37
+\mpr@lista=\toks41
+\mpr@listb=\toks42
 \mpr@hlist=\box54
 \mpr@vlist=\box55
 \mpr@right=\box56
@@ -310,14 +429,14 @@ Loading kernel: messages; fonts; allocations: state,
 \D@c=\dimen171
 \L@c=\dimen172
 \R@c=\dimen173
-\Edge@c=\toks38
+\Edge@c=\toks43
 \X@p=\dimen174
 \Y@p=\dimen175
 \U@p=\dimen176
 \D@p=\dimen177
 \L@p=\dimen178
 \R@p=\dimen179
-\Edge@p=\toks39
+\Edge@p=\toks44
 \X@origin=\dimen180
 \Y@origin=\dimen181
 \X@xbase=\dimen182
@@ -334,27 +453,27 @@ Loading kernel: messages; fonts; allocations: state,
  direction,
 \d@X=\dimen191
 \d@Y=\dimen192
-\K@=\count282
-\KK@=\count283
-\Direction=\count284
+\K@=\count287
+\KK@=\count288
+\Direction=\count289
 \K@dXdY=\dimen193
 \K@dYdX=\dimen194
-\xyread@=\read2
+\xyread@=\read3
 \xywrite@=\write3
-\csp@=\count285
+\csp@=\count290
 \quotPTK@=\dimen195
  utility macros; pictures: \xy, positions,
-\swaptoks@@=\toks40
+\swaptoks@@=\toks45
 \connectobjectbox@@=\box59
  objects,
-\styletoks@=\toks41
+\styletoks@=\toks46
  decorations; kernel objects: directionals, circles, text; options; algorithms: directions, edges, connections;  Xy-pic loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/iftex/ifpdf.sty
 Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
 )
 Package: xy 2013/10/06 Xy-pic version 3.8.9
  (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xyall.tex  Xy-pic option: All features v.3.8 (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xycurve.tex  Xy-pic option: Curve and Spline extension v.3.12 curve,
-\crv@cnt@=\count286
-\crvpts@=\toks42
+\crv@cnt@=\count291
+\crvpts@=\toks47
 \splinebox@=\box60
 \splineval@=\dimen196
 \splinedepth@=\dimen197
@@ -365,19 +484,19 @@ Package: xy 2013/10/06 Xy-pic version 3.8.9
  loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xyframe.tex  Xy-pic option: Frame and Bracket extension v.3.14 loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xycmtip.tex  Xy-pic option: Computer Modern tip extension v.3.7 (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xytips.tex  Xy-pic option: More Tips extension v.3.11 loaded) loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xyline.tex  Xy-pic option: Line styles extension v.3.10
 \xylinethick@=\dimen257
  loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xyrotate.tex  Xy-pic option: Rotate and Scale extension v.3.8 loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xycolor.tex  Xy-pic option: Colour extension v.3.11 loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xymatrix.tex  Xy-pic option: Matrix feature v.3.14
-\Row=\count287
-\Col=\count288
-\queue@=\toks43
-\queue@@=\toks44
-\qcount@=\count289
-\qcount@@=\count290
-\matrixsize@=\count291
+\Row=\count292
+\Col=\count293
+\queue@=\toks48
+\queue@@=\toks49
+\qcount@=\count294
+\qcount@@=\count295
+\matrixsize@=\count296
  loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xyarrow.tex  Xy-pic option: Arrow and Path feature v.3.9 path, \ar, loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xygraph.tex  Xy-pic option: Graph feature v.3.11 loaded) loaded) (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xypdf.tex  Xy-pic option: PDF driver v.1.7 Xy-pic pdf driver: `color' extension support (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xypdf-co.tex loaded) Xy-pic pdf driver: `curve' extension support (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xypdf-cu.tex loaded) Xy-pic pdf driver: `frame' extension support (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xypdf-fr.tex loaded) Xy-pic pdf driver: `line' extension support (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xypdf-li.tex loaded) Xy-pic pdf driver: `rotate' extension support (/home/longpham/.miktex/texmfs/install/tex/generic/xypic/xypdf-ro.tex loaded) loaded)) (/home/longpham/.miktex/texmfs/install/tex/latex/tools/array.sty
 Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
 \col@sep=\dimen258
 \ar@mcellbox=\box61
 \extrarowheight=\dimen259
-\NC@list=\toks45
+\NC@list=\toks50
 \extratabsurround=\skip111
 \backup@length=\skip112
 \ar@cellbox=\box62
@@ -385,31 +504,29 @@ Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
  (/home/longpham/.miktex/texmfs/install/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count292
-\float@exts=\toks46
+\c@float@type=\count297
+\float@exts=\toks51
 \float@box=\box63
-\@float@everytoks=\toks47
+\@float@everytoks=\toks52
 \@floatcapt=\box64
-) (/home/longpham/.miktex/texmfs/install/tex/latex/base/ifthen.sty
-Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
 )
-\@float@every@algorithm=\toks48
-\c@algorithm=\count293
+\@float@every@algorithm=\toks53
+\c@algorithm=\count298
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
  (/home/longpham/.miktex/texmfs/install/tex/latex/algorithmicx/algorithmicx.sty
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count294
-\c@ALG@rem=\count295
-\c@ALG@nested=\count296
+\c@ALG@line=\count299
+\c@ALG@rem=\count300
+\c@ALG@nested=\count301
 \ALG@tlm=\skip113
 \ALG@thistlm=\skip114
-\c@ALG@Lnr=\count297
-\c@ALG@blocknr=\count298
-\c@ALG@storecount=\count299
-\c@ALG@tmpcounter=\count300
+\c@ALG@Lnr=\count302
+\c@ALG@blocknr=\count303
+\c@ALG@storecount=\count304
+\c@ALG@tmpcounter=\count305
 \ALG@tmplength=\skip115
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
@@ -442,49 +559,49 @@ Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@hangindent=\dimen269
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count301
-\c@continuedfloat=\count302
+\c@caption@flags=\count306
+\c@continuedfloat=\count307
 Package caption Info: float package is loaded.
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/caption/subcaption.sty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
 Package caption Info: New subtype `subfigure' on input line 238.
-\c@subfigure=\count303
+\c@subfigure=\count308
 Package caption Info: New subtype `subtable' on input line 238.
-\c@subtable=\count304
+\c@subtable=\count309
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/wrapfig/wrapfig.sty
 \wrapoverhang=\dimen270
 \WF@size=\dimen271
-\c@WF@wrappedlines=\count305
+\c@WF@wrappedlines=\count310
 \WF@box=\box65
-\WF@everypar=\toks49
+\WF@everypar=\toks54
 Package: wrapfig 2003/01/31  v 3.6
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/fancyvrb/fancyvrb.sty
 Package: fancyvrb 2024/01/20 4.5c verbatim text (tvz,hv)
-\FV@CodeLineNo=\count306
-\FV@InFile=\read3
+\FV@CodeLineNo=\count311
+\FV@InFile=\read4
 \FV@TabBox=\box66
-\c@FancyVerbLine=\count307
-\FV@StepNumber=\count308
+\c@FancyVerbLine=\count312
+\FV@StepNumber=\count313
 \FV@OutFile=\write4
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/listings/listings.sty
-\lst@mode=\count309
+\lst@mode=\count314
 \lst@gtempboxa=\box67
-\lst@token=\toks50
-\lst@length=\count310
+\lst@token=\toks55
+\lst@length=\count315
 \lst@currlwidth=\dimen272
-\lst@column=\count311
-\lst@pos=\count312
+\lst@column=\count316
+\lst@pos=\count317
 \lst@lostspace=\dimen273
 \lst@width=\dimen274
-\lst@newlines=\count313
-\lst@lineno=\count314
+\lst@newlines=\count318
+\lst@lineno=\count319
 \lst@maxwidth=\dimen275
  (/home/longpham/.miktex/texmfs/install/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2024/02/21 1.10 (Carsten Heinz)
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2024/02/21 1.10 (Carsten Heinz)
-\c@lstnumber=\count315
-\lst@skipnumbers=\count316
+\c@lstnumber=\count320
+\lst@skipnumbers=\count321
 \lst@framebox=\box68
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/listings/listings.cfg
 File: listings.cfg 2024/02/21 1.10 listings configuration
@@ -494,11 +611,11 @@ Package: listings 2024/02/21 1.10 (Carsten Heinz)
 Package: newfloat 2023/10/01 v1.2 Defining new floating environments (AR)
 Package newfloat Info: `wrapfig' package detected.
 )
-Package newfloat Info: New float `listing' with options `name=Listing' on input line 66.
-\c@listing=\count317
-Package newfloat Info: float type `listing'=8 on input line 66.
-Package caption Info: New subtype `sublisting' on input line 66.
-\c@sublisting=\count318
+Package newfloat Info: New float `listing' with options `name=Listing' on input line 67.
+\c@listing=\count322
+Package newfloat Info: float type `listing'=8 on input line 67.
+Package caption Info: New subtype `sublisting' on input line 67.
+\c@sublisting=\count323
  (/home/longpham/.miktex/texmfs/install/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen276
@@ -511,12 +628,12 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \cmidrulesep=\dimen283
 \cmidrulekern=\dimen284
 \defaultaddspace=\dimen285
-\@cmidla=\count319
-\@cmidlb=\count320
+\@cmidla=\count324
+\@cmidlb=\count325
 \@aboverulesep=\dimen286
 \@belowrulesep=\dimen287
-\@thisruleclass=\count321
-\@lastruleclass=\count322
+\@thisruleclass=\count326
+\@lastruleclass=\count327
 \@thisrulewidth=\dimen288
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/tools/tabularx.sty
 Package: tabularx 2023/07/08 v2.11c `tabularx' package (DPC)
@@ -525,25 +642,17 @@ Package: tabularx 2023/07/08 v2.11c `tabularx' package (DPC)
 \TX@old@col=\dimen291
 \TX@target=\dimen292
 \TX@delta=\dimen293
-\TX@cols=\count323
-\TX@ftn=\toks51
+\TX@cols=\count328
+\TX@ftn=\toks56
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/multirow/multirow.sty
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@colwidth=\skip116
-\multirow@cntb=\count324
+\multirow@cntb=\count329
 \multirow@dima=\skip117
 \bigstrutjot=\dimen294
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/adjustbox/adjustbox.sty
 Package: adjustbox 2022/10/17 v1.3a Adjusting TeX boxes (trim, clip, ...)
- (/home/longpham/.miktex/texmfs/install/tex/latex/xkeyval/xkeyval.sty
-Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
- (/home/longpham/.miktex/texmfs/install/tex/generic/xkeyval/xkeyval.tex (/home/longpham/.miktex/texmfs/install/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks52
-\XKV@tempa@toks=\toks53
-)
-\XKV@depth=\count325
-File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-)) (/home/longpham/.miktex/texmfs/install/tex/latex/adjustbox/adjcalc.sty
+ (/home/longpham/.miktex/texmfs/install/tex/latex/adjustbox/adjcalc.sty
 Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back-ends (calc, etex, pgfmath)
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/adjustbox/trimclip.sty
 Package: trimclip 2020/08/19 v1.2 Trim and clip general TeX material
@@ -569,21 +678,21 @@ File: tc-pdftex.def 2019/01/04 v2.2 Clipping driver for pdftex
 \adjbox@ptotalheight=\dimen306
  (/home/longpham/.miktex/texmfs/install/tex/latex/ifoddpage/ifoddpage.sty
 Package: ifoddpage 2022/10/18 v1.2 Conditionals for odd/even page detection
-\c@checkoddpage=\count326
+\c@checkoddpage=\count330
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/varwidth/varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
 \@vwid@box=\box70
-\sift@deathcycles=\count327
+\sift@deathcycles=\count331
 \@vwid@loff=\dimen307
 \@vwid@roff=\dimen308
 )) (/home/longpham/.miktex/texmfs/install/tex/latex/enumitem/enumitem.sty
 Package: enumitem 2019/06/20 v3.9 Customized lists
 \labelindent=\skip118
 \enit@outerparindent=\dimen309
-\enit@toks=\toks54
+\enit@toks=\toks57
 \enit@inbox=\box71
-\enit@count@id=\count328
-\enitdp@description=\count329
+\enit@count@id=\count332
+\enitdp@description=\count333
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
  (/home/longpham/.miktex/texmfs/install/tex/latex/graphics-cfg/color.cfg
@@ -629,14 +738,11 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
  (/home/longpham/.miktex/texmfs/install/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count330
-) (/home/longpham/.miktex/texmfs/install/tex/latex/etoolbox/etoolbox.sty
-Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count331
+\c@section@level=\count334
 )
 \@linkdim=\dimen310
-\Hy@linkcounter=\count332
-\Hy@pagecounter=\count333
+\Hy@linkcounter=\count335
+\Hy@pagecounter=\count336
  (/home/longpham/.miktex/texmfs/install/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2024-01-20 v7.01h Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
@@ -644,7 +750,7 @@ Now handling font encoding PD1 ...
 ) (/home/longpham/.miktex/texmfs/install/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count334
+\Hy@SavedSpaceFactor=\count337
  (/home/longpham/.miktex/texmfs/install/tex/latex/hyperref/puenc.def
 File: puenc.def 2024-01-20 v7.01h Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -672,7 +778,7 @@ Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 285.
 ))
-\c@Hy@tempcnt=\count335
+\c@Hy@tempcnt=\count338
  (/home/longpham/.miktex/texmfs/install/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
@@ -682,7 +788,7 @@ LaTeX Info: Redefining \url on input line 4784.
  (/home/longpham/.miktex/texmfs/install/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 )
-\Fld@menulength=\count336
+\Fld@menulength=\count339
 \Field@Width=\dimen312
 \Fld@charsize=\dimen313
 Package hyperref Info: Hyper figures OFF on input line 6063.
@@ -696,15 +802,15 @@ Package hyperref Info: PDF/A mode OFF on input line 6093.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count337
-\c@Item=\count338
-\c@Hfootnote=\count339
+\Hy@abspage=\count340
+\c@Item=\count341
+\c@Hfootnote=\count342
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
  (/home/longpham/.miktex/texmfs/install/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2024-01-20 v7.01h Hyperref driver for pdfTeX
-\Fld@listcount=\count340
-\c@bookmark@seq@number=\count341
+\Fld@listcount=\count343
+\c@bookmark@seq@number=\count344
 \Hy@SectionHShift=\skip119
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/cleveref/cleveref.sty
 Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
@@ -727,39 +833,59 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip120
 \bibsep=\skip121
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count342
+\c@NAT@ctr=\count345
 )
-\c@theorem=\count343
-\c@definition=\count344
-\c@lemma=\count345
-\c@proposition=\count346
-\c@corollary=\count347
-\c@conjecture=\count348
-) (shortcuts.sty) (lmacros.tex) (/home/longpham/.miktex/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def
+\c@theorem=\count346
+\c@definition=\count347
+\c@lemma=\count348
+\c@proposition=\count349
+\c@corollary=\count350
+\c@conjecture=\count351
+) (shortcuts.sty) (lmacros.tex) (lang.tex) (/home/longpham/.miktex/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count349
+\l__color_backend_stack_int=\count352
 \l__pdf_internal_box=\box72
 ) (README.aux)
 \openout1 = `README.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for OML/ntxmi/m/it on input line 71.
+LaTeX Font Info:    Trying to load font information for OML+ntxmi on input line 71.
+ (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/omlntxmi.fd
+File: omlntxmi.fd 2015/08/25 Fontinst v1.933 font definitions for OML/ntxmi.
+)
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 71.
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 71.
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 71.
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 71.
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 71.
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 71.
+LaTeX Font Info:    Trying to load font information for U+ntxexa on input line 71.
+ (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/untxexa.fd
+File: untxexa.fd 2012/04/16 Fontinst v1.933 font definitions for U/ntxexa.
+)
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 71.
+LaTeX Font Info:    Trying to load font information for LMS+ntxsy on input line 71.
+ (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/lmsntxsy.fd
+File: lmsntxsy.fd 2016/07/02 Fontinst v1.933 font definitions for LMS/ntxsy.
+)
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 71.
+LaTeX Font Info:    Trying to load font information for LMX+ntxexx on input line 71.
+ (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/lmxntxexx.fd
+File: lmxntxexx.fd 2016/07/03 Fontinst v1.933 font definitions for LMX/ntxexx.
+)
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 71.
+LaTeX Font Info:    ... okay on input line 71.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 71.
+LaTeX Font Info:    ... okay on input line 71.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -795,34 +921,48 @@ LaTeX Font Info:    ... okay on input line 70.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 70.
+LaTeX Info: Command `\dddot' is already robust on input line 71.
+LaTeX Info: Command `\ddddot' is already robust on input line 71.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 71.
 (/home/longpham/.miktex/texmfs/install/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 70.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
  (/home/longpham/.miktex/texmfs/install/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+stmry on input line 70.
+LaTeX Font Info:    Trying to load font information for U+stmry on input line 71.
  (/home/longpham/.miktex/texmfs/install/tex/latex/stmaryrd/Ustmry.fd)
-LaTeX Font Info:    Trying to load font information for U+lasy on input line 70.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 71.
  (/home/longpham/.miktex/texmfs/install/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-Package xypdf Info: Line width: 0.43799pt on input line 70.
+LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 71.
+ (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/untxmia.fd
+File: untxmia.fd 2018/04/14 Fontinst v1.933 font definitions for U/ntxmia.
+)
+LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 71.
+ (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/untxsym.fd
+File: untxsym.fd 2023/08/16 Fontinst v1.933 font definitions for U/ntxsym.
+)
+LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 71.
+ (/home/longpham/.miktex/texmfs/install/tex/latex/newtx/untxsyc.fd
+File: untxsyc.fd 2012/04/12 Fontinst v1.933 font definitions for U/ntxsyc.
+)
+Package xypdf Info: Line width: 0.61319pt on input line 71.
  (/home/longpham/.miktex/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count350
+\scratchcounter=\count353
 \scratchdimen=\dimen314
 \scratchbox=\box73
-\nofMPsegments=\count351
-\nofMParguments=\count352
-\everyMPshowfont=\toks55
-\MPscratchCnt=\count353
+\nofMPsegments=\count354
+\nofMParguments=\count355
+\everyMPshowfont=\toks58
+\MPscratchCnt=\count356
 \MPscratchDim=\dimen315
-\MPnumerator=\count354
-\makeMPintoPDFobject=\count355
-\everyMPtoPDFconversion=\toks56
+\MPnumerator=\count357
+\makeMPintoPDFobject=\count358
+\everyMPtoPDFconversion=\toks59
 ) (/home/longpham/.miktex/texmfs/install/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -834,10 +974,10 @@ Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count356
+\c@lstlisting=\count359
 Package newfloat Info: `float' package detected.
-Package backref Info: ** backref set up for natbib ** on input line 70.
-Package hyperref Info: Link coloring ON on input line 70.
+Package backref Info: ** backref set up for natbib ** on input line 71.
+Package hyperref Info: Link coloring ON on input line 71.
  (README.out) (README.out)
 \@outlinefile=\write5
 \openout5 = `README.out'.
@@ -845,42 +985,17 @@ Package hyperref Info: Link coloring ON on input line 70.
  (what_is_included.tex) (getting_started_guide.tex [1
 
 {/home/longpham/.miktex/texmfs/data/fonts/map/pdftex/pdftex.map}{/home/longpham/.miktex/texmfs/install/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+
+LaTeX Warning: Reference `sec:Build the Docker Image' on page 1 undefined on input line 78.
+
 LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 81.
- (/home/longpham/.miktex/texmfs/install/tex/latex/base/ts1cmtt.fd
+(/home/longpham/.miktex/texmfs/install/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-)) (step_by_step_instructions.tex
-Overfull \hbox (4.4454pt too wide) in paragraph at lines 7--18
-\OT1/cmr/m/n/10.95 In-side the ar-ti-fact, the bench-mark \OT1/cmtt/m/n/10.95 EvenOddTail \OT1/cmr/m/n/10.95 goes by its full name, \OT1/cmtt/m/n/10.95 EvenSplitOddTail\OT1/cmr/m/n/10.95 ,
- []
-
-[2] [3] [4]) (build_and_customize.tex
-Overfull \hbox (43.23462pt too wide) in paragraph at lines 10--17
-\OT1/cmtt/m/n/10.95 volesti[]raml[]interface\OT1/cmr/m/n/10.95 , and \OT1/cmtt/m/n/10.95 benchmark[]suite \OT1/cmr/m/n/10.95 in-side the project di-rec-tory \OT1/cmtt/m/n/10.95 /home/hybrid[]aara
- []
-
-[5]
-Overfull \hbox (3.77515pt too wide) in paragraph at lines 18--27
-[]\OT1/cmr/m/n/10.95 The project di-rec-tory con-tains two ad-di-tional di-rec-to-ries that come from other sources.
- []
-
-
-LaTeX Warning: Reference `sec:Example Program' on page 1 undefined on input line 72.
-
-[6]
-Overfull \hbox (45.75844pt too wide) in paragraph at lines 88--104
-\OT1/cmtt/m/n/10.95 /home/hybrid[]aara/benchmark[]suite/toolbox \OT1/cmr/m/n/10.95 con-tains a func-tion \OT1/cmtt/m/n/10.95 create[]exponential[]lists\OT1/cmr/m/n/10.95 ,
- []
-
-
-Overfull \hbox (69.37442pt too wide) in paragraph at lines 88--104
-\OT1/cmr/m/n/10.95 etc.). The con-tent of each in-te-ger list is cho-sen ran-domly. The func-tion \OT1/cmtt/m/n/10.95 convert[]list[]python[]to[]ocaml
- []
-
-) (README.bbl (README.brf)
+) [2]) (README.bbl (README.brf)
 \tf@brf=\write6
 \openout6 = `README.brf'.
 
- [7]) [8] (README.aux)
+) [3] (README.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -890,22 +1005,22 @@ L3 programming layer <2024-02-20>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `README.out' has not changed.
-(rerunfilecheck)             Checksum: C84A2FA55D5CFCAC5B5C534B62843356;2429.
+(rerunfilecheck)             Checksum: D44A370593A9D53B89586A8A0E30B150;762.
 Package rerunfilecheck Info: File `README.brf' has not changed.
 (rerunfilecheck)             Checksum: 92F5447B3407DCCA3316FD9448EB3F27;42.
  ) 
 Here is how much of TeX's memory you used:
- 24168 strings out of 474458
- 389655 string characters out of 5746097
+ 26204 strings out of 474458
+ 410746 string characters out of 5746097
  1938187 words of memory out of 5000000
- 45991 multiletter control sequences out of 15000+600000
- 575392 words of font info for 109 fonts, out of 8000000 for 9000
+ 48018 multiletter control sequences out of 15000+600000
+ 591122 words of font info for 137 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 105i,12n,107p,3344b,618s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr6.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmss10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmss12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt9.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sfrm1095.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on README.pdf (8 pages, 245381 bytes).
+ 105i,11n,131p,3344b,468s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/NewTXMI.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmss12.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sfrm1095.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/cm-super/sftt1095.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/hoekwater/stmary10.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaSTbb.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txmiaX.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txsym.pfb></home/longpham/.miktex/texmfs/install/fonts/type1/public/newtx/txsys.pfb>
+Output written on README.pdf (3 pages, 181122 bytes).
 PDF statistics:
- 215 PDF objects out of 1000 (max. 8388607)
- 36 named destinations out of 1000 (max. 500000)
- 105 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 132 PDF objects out of 1000 (max. 8388607)
+ 13 named destinations out of 1000 (max. 500000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

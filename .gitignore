@@ -33,3 +33,15 @@ _opam/
 
 # Python caches
 *.pyc
+
+# LaTex-related files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
+*.synctex.gz
