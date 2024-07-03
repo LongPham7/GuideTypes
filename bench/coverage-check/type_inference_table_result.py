@@ -21,7 +21,7 @@ BENCHS = [
     ("kalman-chaos", "kalman-chaos/kalman-chaos-covered"),
     ("lr", "lr/lr-covered"),
     ("run-factory", "run-factory/run-factory-covered"),
-    ("scientists","scientists/scientists-covered"),
+    ("scientists", "scientists/scientists-covered"),
     ("seq", "seq/seq-covered"),
     ("sprinkler", "sprinkler/sprinkler-covered"),
     ("user-behavior", "user-behavior/user-behavior-covered"),
@@ -46,7 +46,14 @@ def look_for_runtime(msg):
     lines = msg.splitlines()
     for line in lines:
         if line.find("total time") != -1:
-            return line.split(":")[-1].strip()
+            time_unit_string = line.split(":")[-1].strip()
+            time_string = time_unit_string[:-2]
+            unit_string = time_unit_string[-2:]
+            time_float = float(time_string)
+            precision = 3
+            time_rounded_string = "{:.{precision}f}".format(
+                time_float, precision=precision)
+            return time_rounded_string + unit_string
     return "N/A"
 
 

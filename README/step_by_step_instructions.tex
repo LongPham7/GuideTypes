@@ -4,63 +4,166 @@
 
 \subsection{Benchmark Suite}
 
-The artifact contains twenty-eight benchmark programs as listed in Table~1 of the paper.
+The artifact contains twenty-eight benchmark programs as listed in Table~1 of
+the paper.
 %
-To obtain these programs, we have modified the benchmark programs from the prior
-work~\citep{PLDI:WHR21B} by sequentially composing multiple guide coroutines,
-each of which updates a different subset/block of random variables.
+To construct these programs, we have modified the benchmark programs from the
+prior work~\citep{PLDI:WHR21B} by sequentially composing multiple guide
+coroutines, each of which updates a different subset/block of random variables.
 %
 Each benchmark has its own subdirectory inside the directory
 \texttt{GuideTypes/bench/coverage-check}.
 
 A benchmark's subdirectory contains two files: one for the covered version and
-another for the uncovered version of the benchmark.
+another for the uncovered version.
 %
 In the covered version, the random variables are freshly sampled in such a way
 that every random variable is sampled by at least one guide coroutine in all
 execution paths; that is, all random variables are ``covered.''
 %
-Meanwhile, in the uncovered version, not all random variables are freshly
-sampled in some execution path.
+Meanwhile, in the uncovered version, in some execution path, not all random
+variables are freshly sampled.
 %
 Both versions have the same code structure---they only differ in whether, for
 each individual random variable, we freshly sample it or reuse an old value from
 the previous trace.
 
+Additionally, for the four context-free benchmark programs listed at the bottom
+of Table~1 (i.e., \texttt{ex-2}, \texttt{diter}, \texttt{gp-dsl}, and
+\texttt{recur}), they have aligned and misaligned versions of the source code
+(for each of the covered and uncovered versions).
+%
+In the aligned version, all guide coroutines in a sequential composition have
+the same code structure with respect to procedure calls.
+%
+This assumption is necessary for the coverage-checking algorithm to handle guide
+coroutines with context-free guide types.
+%
+If the violation of this assumption is detected during coverage checking, the
+algorithm raises an exception, which we interpret as Uncovered/Negative.
+%
+This can result in \textcolor{red}{False Negatives}, which are color-highlighted
+in red in Table~1.
+
 \subsection{Guide-Type Inference}
 
-To produce the fifth column in Table~1 for the analysis time of guide-type
-inference, in the directory \texttt{GuideTypes/bench/coverage-check}, run
+To produce the analysis time of guide-type inference (i.e., the fifth column of
+Table~1), in the directory \texttt{GuideTypes/bench/coverage-check}, run
 \begin{verbatim}
-# python3 type_inference_table_result.py 
+# python3 type_inference_table_result.py
 \end{verbatim}
 %
 It runs the command \texttt{dune exec gtypes type-check} (\cref{sec:Guide-Type
-Inference}) for the covered version of each benchmark program.
+  Inference}) for the covered version of each benchmark program.
 %
 We do not need to infer guide types for the uncovered version of the programs,
 because it has the same code structure as the covered version.
-%
-The command prints out a table of the form
-\begin{verbatim}
-Name                       Path                                        LOC  Check Time
--------------------------  ----------------------------------------  -----  ------------
-branching                  branching/branching-covered                  46  1.502157ms
-...
-recur-covered-misaligned   recursive/recur/recur-covered-misaligned     83  16.431207ms
-\end{verbatim}
 
-Additionally, the command writes out the type-inference results of all
-benchmarks to a log file
-\texttt{GuideTypes/bench/coverage-check/table-type-inference.log}.
-%
-To transfer it from the Docker container to your local machine, run the
-following command on the local machine's terminal:
+The command prints out a table of analysis time:
 \begin{verbatim}
-$ docker cp guide_types:/home/GuideTypes/bench/coverage-check/table-type-inference.log\
-<path-to-local-directory>
+Name                       Path                                   LOC  Check Time
+-------------------------  -----------------------------------  -----  ------------
+branching                  branching/branching-covered             46  3.926ms
+...
+recur-covered-misaligned   recur/recur-covered-misaligned          83  29.103ms
 \end{verbatim}
+%
+In the table, the unit \texttt{us} means microsecond, and the unit \texttt{ms}
+means millisecond.
+%
+Although the analysis time reported in this table may be different from the one
+reported in Table~1 of the paper, the difference should not be significant.
+
+Additionally, the command writes out the type-inference results a log file
+\begin{verbatim}
+GuideTypes/bench/coverage-check/table-type-inference.log
+\end{verbatim}
+%
+To view its content, run
+\begin{verbatim}
+# cat table-type-inference.log
+\end{verbatim}
+% To transfer it from the Docker container to your local machine, run the
+% following command on the local machine's terminal:
+% \begin{verbatim}
+% $ docker cp guide_types:/home/GuideTypes/bench/coverage-check/table-type-inference.log\
+% <path-to-local-directory>
+% \end{verbatim}
 
 \subsection{Coverage Checking}
 
+To produce the results and analysis time of coverage checking (i.e., the last
+three columns of Table~1), in the directory
+\texttt{GuideTypes/bench/coverage-check}, run
+\begin{verbatim}
+# python3 coverage_checking_table_result.py
+\end{verbatim}
+%
+The command prints out a table of analysis time:
+\begin{verbatim}
+Name                       Path                                   LOC  Check Time
+-------------------------  -----------------------------------  -----  ------------
+branching                  branching/branching-covered             46  695.652us
+...
+recur-covered-misaligned   recur/recur-covered-misaligned          83  8.843ms
+\end{verbatim}
+%
+The analysis time reported in this table is the sum of the covered and
+uncovered versions.
 
+The command also writes out the coverage-checking results to a log file at
+\begin{verbatim}
+GuideTypes/bench/coverage-check/table-coverage-checking.log
+\end{verbatim}
+%
+To view the first twenty-four lines of the log file, where we have the results
+for benchmark \texttt{branching}, run
+\begin{verbatim}
+# head -24 table-coverage-checking.log
+\end{verbatim}
+%
+Under the header \texttt{Benchmark branching covered} (i.e., the covered version
+of the benchmark \texttt{branching}), the result of coverage checking is
+\begin{verbatim}
+The final type is fully covered
+\end{verbatim}
+as expected.
+%
+Hence, the result is \textcolor{blue}{True Positive}, as reported on the first
+line of the seventh column of Table~1.
+%
+On the other hand, under the header \texttt{Benchmark branching uncovered}
+(i.e., the uncovered version of the benchmark \texttt{branching}), the result of
+coverage checking is
+\begin{verbatim}
+The final type is not fully covered
+\end{verbatim}
+as expected.
+
+The coverage-checking algorithm raises exceptions for the misaligned versions of
+the context-free (i.e., last four) benchmarks.
+%
+The exceptions indicate that the coverage-checking algorithm has detected
+misalignment of guide coroutines with respect to procedure calls.
+%
+The exceptions are printed on the Docker container's terminal.
+
+As a result of the exceptions, the coverage-checking results in the log file are
+empty.
+%
+For example, take a look at the last eighteen lines of the log file by running
+\begin{verbatim}
+# tail -18 table-coverage-checking.log
+\end{verbatim}
+%
+Under both the headers \texttt{Benchmark recur-misaligned covered} (i.e., the
+misaligned and covered version of the benchmark \texttt{recur}) and
+\texttt{Benchmark recur-misaligned uncovered}, the coverage-checking results are
+empty.
+
+We interpret these exceptions as the result Uncovered/Negative, but this is only
+correct for those cases where the ground truth is also Uncovered.
+%
+Conversely, if the ground truth is Covered, the coverage-checking result is
+\textcolor{red}{False Negative} as highlighted in red in the seventh column of
+Table~1.

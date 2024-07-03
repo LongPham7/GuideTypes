@@ -36,21 +36,21 @@ BENCHS = [
     ("iter", "iter/iter-covered", "iter/iter-uncovered"),
     ("marsaglia", "marsaglia/marsaglia-covered", "marsaglia/marsaglia-uncovered"),
     ("ptrace", "ptrace/ptrace-covered", "ptrace/ptrace-uncovered"),
-    ("ex-2-covered-aligned", "ex-2/ex-2-covered-aligned",
+    ("ex-2-aligned", "ex-2/ex-2-covered-aligned",
      "ex-2/ex-2-uncovered-aligned"),
-    ("ex-2-covered-misaligned", "ex-2/ex-2-covered-misaligned",
+    ("ex-2-misaligned", "ex-2/ex-2-covered-misaligned",
      "ex-2/ex-2-uncovered-misaligned"),
-    ("diter-covered-aligned", "diter/diter-covered-aligned",
+    ("diter-aligned", "diter/diter-covered-aligned",
      "diter/diter-uncovered-aligned"),
-    ("diter-covered-misaligned", "diter/diter-covered-misaligned",
+    ("diter-misaligned", "diter/diter-covered-misaligned",
      "diter/diter-uncovered-misaligned"),
-    ("gp-dsl-covered-aligned", "gp-dsl/gp-dsl-covered-aligned",
+    ("gp-dsl-aligned", "gp-dsl/gp-dsl-covered-aligned",
      "gp-dsl/gp-dsl-uncovered-aligned"),
-    ("gp-dsl-covered-misaligned", "gp-dsl/gp-dsl-covered-misaligned",
+    ("gp-dsl-misaligned", "gp-dsl/gp-dsl-covered-misaligned",
      "gp-dsl/gp-dsl-uncovered-misaligned"),
-    ("recur-covered-aligned", "recur/recur-covered-aligned",
+    ("recur-aligned", "recur/recur-covered-aligned",
      "recur/recur-uncovered-aligned"),
-    ("recur-covered-misaligned", "recur/recur-covered-misaligned",
+    ("recur-misaligned", "recur/recur-covered-misaligned",
      "recur/recur-uncovered-misaligned")
 ]
 
@@ -68,19 +68,28 @@ def execute(out, task):
     loc = "N/A"
     with open(path_covered, "r") as f:
         loc = str(len(f.readlines()))
+
+    # Covered version
     cmd = TOOL + ["coverage-check", path_covered]
     ret = subprocess.run(cmd, stdout=subprocess.PIPE)
     msg_covered = str(ret.stdout, "utf-8")
 
-    out.write("Benchmark %s\n" % name)
+    out.write("Benchmark {} covered\n".format(name))
     out.write("-" * 80 + "\n")
     out.write(msg_covered)
     out.write("=" * 80 + "\n\n\n")
 
+    # Uncovered version
     cmd = TOOL + ["coverage-check", path_uncovered]
     ret = subprocess.run(cmd, stdout=subprocess.PIPE)
     msg_uncovered = str(ret.stdout, "utf-8")
 
+    out.write("Benchmark {} uncovered\n".format(name))
+    out.write("-" * 80 + "\n")
+    out.write(msg_uncovered)
+    out.write("=" * 80 + "\n\n\n")
+
+    # Extract the analysis time
     time_covered = look_for_runtime(msg_covered)
     unit_covered = time_covered[-2:]
     time_uncovered = look_for_runtime(msg_uncovered)
@@ -97,8 +106,11 @@ def execute(out, task):
                 unit_covered, unit_uncovered))
 
     total_time = float(time_covered[:-2]) + float(time_uncovered[:-2])
+    precision = 3
+    total_time_rounded_string = "{:.{precision}f}".format(
+        total_time, precision=precision)
 
-    return (name, path_covered, loc, str(total_time) + unit_covered)
+    return (name, path_covered, loc, total_time_rounded_string + unit_covered)
 
 
 if __name__ == "__main__":

@@ -20,6 +20,7 @@ $ docker load --input guide_types.tar.gz
 \end{verbatim}
 %
 It creates an image named \texttt{guide\_types} and stores it locally on your
+computer.
 %
 Docker may create an image with a slightly different name from
 \texttt{guide\_types}.
@@ -36,7 +37,7 @@ $ docker run --name guide_types -it --rm guide_types
 root@5b1c8c873064:/home/GuideTypes#
 \end{verbatim}
 %
-It creates a Docker container (i.e., a runnable instance of the Docker image)
+It creates a Docker container (i.e., a runnable instance of a Docker image)
 named \texttt{guide\_types} and starts a shell inside the container.
 %
 If the command does not run properly, you can instead build the image locally on
@@ -48,9 +49,8 @@ executed in your local machine's terminal.
 
 \subsection{Structural-Type-Equality Checking}
 
-The initial working directory \texttt{GuideTypes/bench/type-equality} of the
-Docker container has a file \texttt{type-equality-sample}, which stores three
-guide-type definitions.
+The initial working directory \texttt{GuideTypes/bench/type-equality} has a file
+\texttt{type-equality-sample} containing three guide-type definitions.
 %
 Running the command
 \begin{verbatim}
@@ -68,19 +68,19 @@ The first line defines a guide-type operator $T_1 [\cdot]$ as
   T_1 [X] \coloneq X \echoice (\treal \land \treal \land T_1 [T_1[X]]),
 \end{equation*}
 where $X$ is a type variable that stands for a continuation type (i.e., the type
-of the communication protocol that we run after $T_1$ is finished).
+of the communication protocol that runs after the protocol $T_1$ is finished).
 %
-The type $T_1$ means the coroutine receives a branch selection (from another
-coroutine that it communicates with), and proceeds to either $X$ (i.e., the
+The guide type $T_1 [X]$ means we receive a branch selection (from another
+coroutine that we communicate with), and proceed to either $X$ (i.e., the
 continuation guide type) or $\treal \land T_1 [T_1[X]]$, depending on which
 branch is taken.
 %
-The guide type $\treal \land T_1 [T_1[X]]$ means the coroutine first sends a
-message of type $\treal$ (i.e., real numbers) and then proceeds to the guide
-type $T_1 [T_1 [X]]$.
+The guide type $\treal \land T_1 [T_1[X]]$ means we first send a message of type
+$\treal$ (i.e., real numbers) and then proceed to the guide type $T_1 [T_1
+[X]]$.
 %
 Here, $T_1 [T_1 [X]]$ can be interpreted as a sequential composition of two
-instances of $T_1$, followed by the original continuation $X$.
+instances of $T_1$, followed by the continuation represented by $X$.
 
 To algorithmically decide the structural type equality between the guide-type
 operators $T_1 [X]$ and $T_2 [X]$, run
@@ -98,7 +98,7 @@ Types T1 and T2 are equal
 \end{verbatim}
 %
 This result is as expected because the two type operators $T_1 [X]$ and $T_2
-  [X]$ represent the same type---they only differ in the names of type operators.
+  [X]$ are $\alpha$-equivalent: they only differ in the type operators' names.
 
 Next, to check the structural type equality between $T_1 [X]$ and $T_3 [X]$, run
 \begin{verbatim}
@@ -111,16 +111,16 @@ Types T1 and T3 are unequal
 \end{verbatim}
 %
 This is a correct result because the right branch of $T_1 [X]$ only sends one
-value (indicated by $\treal \land {}$) before possible termination, while the
-right branch of $T_3 [X]$ sends two values before possible termination.
+value (indicated by $\treal \land {}$) before it can possibly terminates, while
+the right branch of $T_3 [X]$ must send two values before potential termination.
 
 \subsection{Guide-Type Inference}
 \label{sec:Guide-Type Inference}
 
 Go to the directory
-\texttt{/home/GuideTypes/bench/coverage-check/recursive/recur} by running
+\texttt{/home/GuideTypes/bench/coverage-check/recur} by running
 \begin{verbatim}
-# cd /home/GuideTypes/bench/coverage-check/recursive/recur
+# cd /home/GuideTypes/bench/coverage-check/recur
 \end{verbatim}
 %
 It contains a benchmark program \texttt{recur-covered-aligned}.
@@ -137,11 +137,11 @@ type General
 type General_no_old
 \end{verbatim}
 %
-They declares three type operators that are later mentioned in the type
+They declare three type operators that will later be mentioned in the type
 signatures of coroutines.
 %
 While the user needs to manually declare these type operators and insert them to
-the guide programs' type signatures, the type operators' definitions will be
+the coroutines' type signatures, the type operators' definitions will be
 automatically inferred by our artifact.
 
 The file defines three coroutines: \texttt{Recur1}, \texttt{Recur2},
@@ -155,8 +155,8 @@ proc Recur1() -> unit | old : Old_trace | lat : General
 \end{verbatim}
 %
 It states (i) the coroutine \texttt{Recur1} has the output type of
-\texttt{unit}, (ii) the coroutine uses a channel named \texttt{old} of the guide
-type \texttt{Old\_trace}, and (iii) the coroutine uses a channel named
+\texttt{unit}, (ii) the coroutine uses a channel \texttt{old} of the guide
+type \texttt{Old\_trace}, and (iii) the coroutine uses a channel
 \texttt{lat} of the guide type \texttt{lat}.
 
 To infer the definitions of the guide types mentioned in this file, we run
@@ -166,8 +166,7 @@ To infer the definitions of the guide types mentioned in this file, we run
 %
 It prints out the inferred definitions of the three type operators.
 %
-For instance, the inference result for the type operator \texttt{General} is
-stated as:
+For instance, the inferred definitoin of the type operator \texttt{General} is:
 \begin{verbatim}
 successfully inferred guide type operator General[$]
 	&{ $ | real /\ General[real /\ General[real /\ General[$]]] }
@@ -178,11 +177,12 @@ It translates to
   \texttt{General} [X] \coloneq X \echoice (\treal \land \texttt{General} [\treal \land \texttt{General} [\treal \land \texttt{General} [X]]]).
 \end{equation*}
 
-In addition to the inference results of guide types, the command also prints out
-(i) a list of pairs of guide types whose structural type equality we need to
-check during type inference and (ii) whether each pair is indeed equal.
+In addition to the inferred definitions of guide-type operators, the command
+also prints out (i) a list of pairs of guide types whose structural type
+equality we need to check during type inference and (ii) whether each pair is
+indeed equal.
 %
-An example is
+An example of such pairs is
 \begin{verbatim}
 Types $ and $ are equal modulo coverage
 \end{verbatim}
@@ -191,11 +191,13 @@ At the end of the command's output, it displays \texttt{All equal modulo
   coverage}.
 %
 It means all type-equality conditions discharged during type inference are
-verified, and hence the three inferred type definitions are also valid.
+verified.
+%
+Hence, the three inferred type definitions are valid.
 
 \subsection{Coverage Checking}
 
-The last two liens in the benchmark program \texttt{recur-covered-aligned}
+The last two lines in the benchmark program \texttt{recur-covered-aligned}
 define how the guide coroutines are sequentially composed:
 \begin{verbatim}
 Initial_type: Init_type
@@ -209,11 +211,11 @@ type Init_type = &{ $ | real_u /\ Init_type[real_u /\
                         Init_type[real_u /\ Init_type[$]]] }
 \end{verbatim}
 %
-This guide type describes the initial trace fed to the sequential composition of
-guide coroutines.
+The initial guide type describes the initial trace fed to the sequential
+composition of guide coroutines.
 %
 Because we assume the initial trace is uncovered (i.e., all random variables in
-the trace haven't been freshly sampled), the guide type \texttt{Init\_type}
+the trace are yet to be freshly sampled), the guide type \texttt{Init\_type}
 contains \texttt{real\_u}, where the subscript \texttt{u} means ``uncovered.''
 
 Finally, the last line in the file, \texttt{Guide\_composition: Recur1; Recur2},

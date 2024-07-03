@@ -9,19 +9,21 @@ to build the Docker image.
 \label{sec:Source Code}
 
 The OCaml source code of this artifact is stored in the project directory
-\texttt{GuideTypes} inside the Docker container.
+\texttt{/home/GuideTypes} inside the Docker container.
 %
-Our artifact builds on the codebase of the prior work of guide types by
+Our artifact builds on the codebase of the prior work by
 \citeauthor{PLDI:WHR21B}.
 %
-The structural-type-equality checking is implemented in the OCaml source file
+The structural-type-equality checking (\ref{functionality:type-equality
+checking}) is implemented in the OCaml source file
 \texttt{type\_equality\_check.ml}.
 %
-The coverage-checking algorithm is implemented in the source file
-\texttt{coverage\_checking.ml}.
+The coverage-checking algorithm (\ref{functionality: coverage checking}) is
+implemented in the source file \texttt{coverage\_checking.ml}.
 %
 The source file \texttt{typecheck.ml} for type inference from the prior work's
-artifact has been modified to incorporate the structural-type-equality checking.
+artifact (\ref{functionality:type inference}) has been modified to incorporate
+the structural-type-equality checking.
 
 \subsection{Build the Docker Image}
 \label{sec:Build the Docker Image}
@@ -35,8 +37,8 @@ directory)
 $ docker build -t guide_types .
 \end{verbatim}
 %
-We need a period at the end of the command to indciate that \texttt{Dockerfile}
-exists in the current working directory.
+We need a period at the end of the command to indciate that a
+\texttt{Dockerfile} exists in the current working directory.
 %
 The build will take 10--20 minutes.
 %
