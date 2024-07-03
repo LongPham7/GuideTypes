@@ -1,0 +1,58 @@
+% !TeX root = README.tex
+
+\section{Introduction}
+
+\paragraph{What is included}
+
+From Zenodo, you should obtain the following two items:
+\begin{itemize}
+  \item This \texttt{README.pdf} document
+  \item Archived and compressed Docker image \texttt{guide\_types.tar.gz}.
+\end{itemize}
+
+\paragraph{Artifact overview}
+
+Our artifact is a program analysis tool with three capabilities:
+\begin{enumerate}
+  \item Check structural type equality of (possibly context-free) guide types
+  \item Infer guide types of model and guide coroutines (using the
+        structural-type-equality checking algorithm)
+  \item Check whether the support of sequentially composed guide coroutines
+        coincides with the support of a model coroutine.
+\end{enumerate}
+
+In probabilistic programming with our new coroutine-based programmable inference
+framework, the user provides (i) a model coroutine and (ii) a sequential
+composition of guide coroutines.
+%
+The model coroutine specifies a probabilistic model for Bayesian inference.
+%
+The sequential composition of guide coroutines customizes the Block
+Metropolis-Hastings (BMH) algorithm, where we successively run the guide
+coroutines, each of which is followed by an MH acceptance routine.
+%
+Each guide coroutine only updates a subset (i.e., block) of random variables.
+%
+The model and guide coroutines communicate with other by message passing, and
+their communication protocols are described by guide types.
+%
+To algorithmically decide structural type equality of guide types, our artifact
+implements the bisimilarity-checking algorithm by \citeauthor{Hirshfeld1994} for
+context-free processes with finite norms.
+%
+This structural-type-equality checking algorithm is also incorporated into the
+guide-type-inference algorithm.
+%
+Finally, to verify the soundness of the BMH algorithm, our artifact checks
+whether the support of the sequentially composed guide coroutines covers all
+possible traces admitted by the model coroutine.
+
+\paragraph{Supported claims in the paper}
+
+The artifact is used to produce Table~1 in the paper:
+\begin{itemize}
+  \item Analysis time of guide-type inference (i.e., the fifth column in the
+        table)
+  \item Results and analysis time of coverage checking (i.e., the last three
+        columns in the table).
+\end{itemize}

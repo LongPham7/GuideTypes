@@ -22,23 +22,23 @@ BENCHS = [
     ("lr", "lr/lr-covered"),
     ("run-factory", "run-factory/run-factory-covered"),
     ("scientists","scientists/scientists-covered"),
-    ("seq", "recursive/seq/seq-covered"),
+    ("seq", "seq/seq-covered"),
     ("sprinkler", "sprinkler/sprinkler-covered"),
     ("user-behavior", "user-behavior/user-behavior-covered"),
     ("vae", "vae/vae-covered"),
     ("weight", "weight/weight-covered"),
     ("aircraft", "aircraft/aircraft-covered"),
-    ("iter", "recursive/iter/iter-covered"),
+    ("iter", "iter/iter-covered"),
     ("marsaglia", "marsaglia/marsaglia-covered"),
     ("ptrace", "ptrace/ptrace-covered"),
     ("ex-2-covered-aligned", "ex-2/ex-2-covered-aligned"),
     ("ex-2-covered-misaligned", "ex-2/ex-2-covered-misaligned"),
-    ("diter-covered-aligned", "recursive/diter/diter-covered-aligned"),
-    ("diter-covered-misaligned", "recursive/diter/diter-covered-misaligned"),
+    ("diter-covered-aligned", "diter/diter-covered-aligned"),
+    ("diter-covered-misaligned", "diter/diter-covered-misaligned"),
     ("gp-dsl-covered-aligned", "gp-dsl/gp-dsl-covered-aligned"),
     ("gp-dsl-covered-misaligned", "gp-dsl/gp-dsl-covered-misaligned"),
-    ("recur-covered-aligned", "recursive/recur/recur-covered-aligned"),
-    ("recur-covered-misaligned", "recursive/recur/recur-covered-misaligned")
+    ("recur-covered-aligned", "recur/recur-covered-aligned"),
+    ("recur-covered-misaligned", "recur/recur-covered-misaligned")
 ]
 
 

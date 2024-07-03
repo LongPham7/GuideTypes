@@ -1,0 +1,56 @@
+% !TeX root = README.tex
+
+\section{Reusability Guide}
+
+This section provides an overview of the artifact's code base and explains how
+to build the Docker image.
+
+\subsection{Source Code}
+\label{sec:Source Code}
+
+The OCaml source code of this artifact is stored in the project directory
+\texttt{GuideTypes} inside the Docker container.
+%
+Our artifact builds on the codebase of the prior work of guide types by
+\citeauthor{PLDI:WHR21B}.
+%
+The structural-type-equality checking is implemented in the OCaml source file
+\texttt{type\_equality\_check.ml}.
+%
+The coverage-checking algorithm is implemented in the source file
+\texttt{coverage\_checking.ml}.
+%
+The source file \texttt{typecheck.ml} for type inference from the prior work's
+artifact has been modified to incorporate the structural-type-equality checking.
+
+\subsection{Build the Docker Image}
+\label{sec:Build the Docker Image}
+
+The code for building a Docker image is available on GitHub:
+\url{https://github.com/LongPham7/GuideTypes/tree/subguide_types}.
+%
+To build a Docker image, clone the GitHub repository and then run (in the root
+directory)
+\begin{verbatim}
+$ docker build -t guide_types .
+\end{verbatim}
+%
+We need a period at the end of the command to indciate that \texttt{Dockerfile}
+exists in the current working directory.
+%
+The build will take 10--20 minutes.
+%
+The resulting image is named \texttt{guide\_types} and is stored locally on your
+machine.
+
+To run the image \texttt{guide\_types}, run
+\begin{verbatim}
+$ docker run --name guide_types -it --rm guide_types
+\end{verbatim}
+%
+It creates and runs a Docker container with the same name \texttt{guide\_types}.
+%
+If you want to save the image as a tar archive and compress it, run
+\begin{verbatim}
+$ docker save guide_types | gzip > guide_types.tar.gz
+\end{verbatim}

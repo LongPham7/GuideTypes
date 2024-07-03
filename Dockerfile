@@ -19,5 +19,8 @@ ADD . /home/GuideTypes
 WORKDIR /home/GuideTypes
 RUN eval $(opam env) && make
 
+# Install relevant Python packages
+RUN pip install tabulate --break-system-packages
+
 WORKDIR /home/GuideTypes/bench/type-equality/
 CMD ["/bin/bash", "--login"]

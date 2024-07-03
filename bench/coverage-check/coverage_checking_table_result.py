@@ -8,7 +8,8 @@ LOG = "table-coverage-checking.log"
 
 BENCHS = [
     ("branching", "branching/branching-covered", "branching/branching-uncovered"),
-    ("coordination", "coordination/coordination-covered", "coordination/coordination-uncovered"),
+    ("coordination", "coordination/coordination-covered",
+     "coordination/coordination-uncovered"),
     ("drill", "drill/drill-covered", "drill/drill-uncovered"),
     ("ex-1", "ex-1/ex-1-covered", "ex-1/ex-1-uncovered"),
     ("gaussian", "gaussian/gaussian-covered", "gaussian/gaussian-uncovered"),
@@ -18,27 +19,39 @@ BENCHS = [
     ("grw", "grw/grw-covered", "grw/grw-uncovered"),
     ("hmm", "hmm/hmm-covered", "hmm/hmm-uncovered"),
     ("kalman", "kalman/kalman-covered", "kalman/kalman-uncovered"),
-    ("kalman-chaos", "kalman-chaos/kalman-chaos-covered", "kalman-chaos/kalman-chaos-uncovered"),
+    ("kalman-chaos", "kalman-chaos/kalman-chaos-covered",
+     "kalman-chaos/kalman-chaos-uncovered"),
     ("lr", "lr/lr-covered", "lr/lr-uncovered"),
-    ("run-factory", "run-factory/run-factory-covered", "run-factory/run-factory-uncovered"),
-    ("scientists", "scientists/scientists-covered","scientists/scientists-uncovered"),
-    ("seq", "recursive/seq/seq-covered", "recursive/seq/seq-uncovered"),
+    ("run-factory", "run-factory/run-factory-covered",
+     "run-factory/run-factory-uncovered"),
+    ("scientists", "scientists/scientists-covered",
+     "scientists/scientists-uncovered"),
+    ("seq", "seq/seq-covered", "seq/seq-uncovered"),
     ("sprinkler", "sprinkler/sprinkler-covered", "sprinkler/sprinkler-uncovered"),
-    ("user-behavior", "user-behavior/user-behavior-covered", "user-behavior/user-behavior-uncovered"),
+    ("user-behavior", "user-behavior/user-behavior-covered",
+     "user-behavior/user-behavior-uncovered"),
     ("vae", "vae/vae-covered", "vae/vae-uncovered"),
     ("weight", "weight/weight-covered", "weight/weight-uncovered"),
     ("aircraft", "aircraft/aircraft-covered", "aircraft/aircraft-uncovered"),
-    ("iter", "recursive/iter/iter-covered", "recursive/iter/iter-uncovered"),
+    ("iter", "iter/iter-covered", "iter/iter-uncovered"),
     ("marsaglia", "marsaglia/marsaglia-covered", "marsaglia/marsaglia-uncovered"),
     ("ptrace", "ptrace/ptrace-covered", "ptrace/ptrace-uncovered"),
-    ("ex-2-covered-aligned", "ex-2/ex-2-covered-aligned", "ex-2/ex-2-uncovered-aligned"),
-    ("ex-2-covered-misaligned", "ex-2/ex-2-covered-misaligned", "ex-2/ex-2-uncovered-misaligned"),
-    ("diter-covered-aligned", "recursive/diter/diter-covered-aligned", "recursive/diter/diter-uncovered-aligned"),
-    ("diter-covered-misaligned", "recursive/diter/diter-covered-misaligned", "recursive/diter/diter-uncovered-misaligned"),
-    ("gp-dsl-covered-aligned", "gp-dsl/gp-dsl-covered-aligned", "gp-dsl/gp-dsl-uncovered-aligned"),
-    ("gp-dsl-covered-misaligned", "gp-dsl/gp-dsl-covered-misaligned", "gp-dsl/gp-dsl-uncovered-misaligned"),
-    ("recur-covered-aligned", "recursive/recur/recur-covered-aligned", "recursive/recur/recur-uncovered-aligned"),
-    ("recur-covered-misaligned", "recursive/recur/recur-covered-misaligned", "recursive/recur/recur-uncovered-misaligned")
+    ("ex-2-covered-aligned", "ex-2/ex-2-covered-aligned",
+     "ex-2/ex-2-uncovered-aligned"),
+    ("ex-2-covered-misaligned", "ex-2/ex-2-covered-misaligned",
+     "ex-2/ex-2-uncovered-misaligned"),
+    ("diter-covered-aligned", "diter/diter-covered-aligned",
+     "diter/diter-uncovered-aligned"),
+    ("diter-covered-misaligned", "diter/diter-covered-misaligned",
+     "diter/diter-uncovered-misaligned"),
+    ("gp-dsl-covered-aligned", "gp-dsl/gp-dsl-covered-aligned",
+     "gp-dsl/gp-dsl-uncovered-aligned"),
+    ("gp-dsl-covered-misaligned", "gp-dsl/gp-dsl-covered-misaligned",
+     "gp-dsl/gp-dsl-uncovered-misaligned"),
+    ("recur-covered-aligned", "recur/recur-covered-aligned",
+     "recur/recur-uncovered-aligned"),
+    ("recur-covered-misaligned", "recur/recur-covered-misaligned",
+     "recur/recur-uncovered-misaligned")
 ]
 
 
@@ -73,8 +86,16 @@ def execute(out, task):
     time_uncovered = look_for_runtime(msg_uncovered)
     unit_uncovered = time_uncovered[-2:]
     if unit_covered != unit_uncovered:
-        raise Exception("Incompatible units of analysis time")
-    
+        if unit_covered == "us" and unit_uncovered == "ms":
+            time_covered = str(float(time_covered[:-2]) / 1000)
+            unit_covered = "ms"
+        elif unit_covered == "ms" and unit_uncovered == "us":
+            time_uncovered = str(float(time_uncovered[:-2]) / 1000)
+            unit_uncovered = "ms"
+        else:
+            raise Exception("Analysis time for the covered and uncovered cases have different units: {} and {}".format(
+                unit_covered, unit_uncovered))
+
     total_time = float(time_covered[:-2]) + float(time_uncovered[:-2])
 
     return (name, path_covered, loc, str(total_time) + unit_covered)
