@@ -11,19 +11,22 @@ to build the Docker image.
 The OCaml source code of this artifact is stored in the project directory
 \texttt{/home/GuideTypes} inside the Docker container.
 %
-Our artifact builds on the codebase of the prior work by
+Our artifact builds on the codebase of the prior work\footnotemark by
 \citeauthor{PLDI:WHR21B}.
-%
-The structural-type-equality checking (\ref{functionality:type-equality
-checking}) is implemented in the OCaml source file
+
+The structural-type-equality checking (\labelcref{functionality:type-equality
+  checking}) is implemented in the OCaml source file
 \texttt{type\_equality\_check.ml}.
 %
-The coverage-checking algorithm (\ref{functionality: coverage checking}) is
-implemented in the source file \texttt{coverage\_checking.ml}.
+The coverage-checking algorithm (\labelcref{functionality: coverage checking})
+is implemented in the source file \texttt{coverage\_checking.ml}.
 %
 The source file \texttt{typecheck.ml} for type inference from the prior work's
-artifact (\ref{functionality:type inference}) has been modified to incorporate
-the structural-type-equality checking.
+artifact (\labelcref{functionality:type inference}) has been modified to
+incorporate the structural-type-equality checking.
+
+\footnotetext{Available on GitHub:
+  \url{https://github.com/stonebuddha/GuideTypes/tree/pldi21}.}
 
 \subsection{Build the Docker Image}
 \label{sec:Build the Docker Image}
@@ -56,3 +59,153 @@ If you want to save the image as a tar archive and compress it, run
 \begin{verbatim}
 $ docker save guide_types | gzip > guide_types.tar.gz
 \end{verbatim}
+
+\subsection{Language Syntax}
+
+This section describes the syntax of our probabilistic programming language
+(PPL) used to write input programs.
+%
+We adapt the syntax from the prior work's artifact~\citep{PLDI:WHR21B} by
+extending with several additional constructs.
+
+The language consists of two layers: a functional layer and a coroutine layer.
+%
+The functional layer is a standard functional programming language augmented
+with probability distributions.
+%
+The user uses this layer to write \emph{expressions}.
+%
+The coroutine layer defines \emph{commands}, which describe how to communicate
+with other coroutines by exchanging messages on channels.
+
+\subsubsection{Functional Layer}
+
+\paragraph{Functional types}
+
+The functional layer offers the following primitive types:
+\begin{itemize}
+  \item \texttt{unit} for the unit type
+  \item \texttt{bool} for Booleans
+  \item \texttt{nat[n]} for natural numbers smaller than $n \in \bbN$
+  \item \texttt{nat} for natural numbers
+  \item \texttt{ureal} for real numbers on the unit interval
+  \item \texttt{preal} for positive real numbers
+  \item \texttt{real} for real numbers.
+\end{itemize}
+%
+The functional layer also proivdes the following compound types:
+\begin{itemize}
+  \item \texttt{t1 -> t2} for an arrow type $\tau_1 \to \tau_2$
+  \item \texttt{t1 * t2} for a product type $\tau_1 \times \tau_2$
+  \item \texttt{t dist} for a distribution where $\tau$ is the type of the
+        support of the distribution
+  \item \texttt{(t, [m1; m2; ...]) tensor} for a tensor of an element type
+        $\tau$ and a shape $[m_1, m_2, \ldots]$.
+\end{itemize}
+
+\paragraph{Expressions}
+
+The supported probability distributions are
+\begin{itemize}
+  \item \texttt{BER(p)}: Bernoulli distribution with a parameter $p \in [0, 1]$
+  \item \texttt{UNIF}: the uniform distribution on the unit interval
+  \item \texttt{BETA(alpha; beta)}: beta distribution with shape parameters
+        $\alpha, \beta > 0$
+  \item \texttt{GAMMA(alpha; beta)}: gamma distribution with a shape parameter
+        $\alpha > 0$ and a rate $\beta > 0$
+  \item \texttt{Normal(mu; sigma)}: normal distribution with a location
+        parameter $\mu$ and a scale parameter $\sigma >0$
+  \item \texttt{CAT(p1; p2; ...; pn)}: categorical distributions with
+        probabilities $p_1, \ldots, p_n$
+  \item \texttt{BIN(n; p)}: binomial distribution with parameters $n \in \bbN$
+        and $p \in [0, 1]$
+  \item \texttt{GEO(p)}: geometric distribution with a parameter $p \in [0, 1]$
+  \item \texttt{POIS(r)}: Poisson distribution with a rate $r \in (0, \infty)$.
+\end{itemize}
+
+The functional layer supports the following expressions:
+\begin{itemize}
+  \item Binary operators, including arithmetic operators (e.g., \texttt{+} for
+        addition), comparison operators (e.g., $<=$ for $\leq$), and logical
+        operators (e.g., \texttt{and} for logical conjunction)
+  \item Function abstraction \texttt{fn (x: t) -> e}, where the input variable
+        $x$ has type $\tau$ and the function body is $e$
+  \item Function application \texttt{e1 (e2)}, where a function $e_1$ is applied
+        to an expression $e_2$
+  \item Conditional expression \texttt{if e then e1 else e2}.
+\end{itemize}
+
+\subsubsection{Coroutine Layer}
+
+In the coroutine layer, commands specify send or receive values between
+coroutines across channels.
+%
+Guide types describe communication protocols on channels.
+
+\paragraph{Guide types}
+
+The language provides the following guide types:
+\begin{itemize}
+  \item \texttt{T} for a unary type operator $T$
+  \item \texttt{\$} for a type variable.
+        %
+        We do not need to differentiate between different type variables (e.g.,
+        $X$ and $Y$), because we only support univariate type operators (i.e.,
+        each type operator comes only with one type variable).
+  \item \verb$t /\ A$ for a guide type $\tau \land A$.
+        %
+        It sends a value of a functional type $\tau$ and then proceeds to a
+        guide type $A$.
+  \item \texttt{t -o A} for a guide type $\tau \supset A$.
+        %
+        It receives a value of a functional type $\tau$ and then proceeds to a
+        guide type $A$
+  \item \verb$+{A1 | A2}$ for an internal choice $A_1 \oplus A_2$.
+        %
+        It chooses between $A_1$ and $A_2$ and proceeds with it.
+  \item \verb$&{A1 | A2}$ for an external choice $A_1 \mathrel{\&} A_2$.
+        %
+        It receives a branch selection and then proceeds to either $A_1$ or
+        $A_2$ depending on the branch selection.
+  \item \texttt{T[A]} for an instantiation of a type operator $T$ with a
+        continuation guide type $A$.
+\end{itemize}
+
+\paragraph{Commands}
+
+The coroutine layer supports the following commands:
+\begin{itemize}
+  \item \texttt{return e} evaluates an expression $e$ and return its value.
+  \item \texttt{x <- C1; C2} executes a command $C_1$, binds the value to
+        variable $x$, and continues to a command $C_2$.
+  \item \texttt{Pname(e1; e2; ...)} calls a procedure \texttt{Pname} with
+        arguments $e_1, e_2, \ldots$.
+  \item \verb$sample{ch}(e)$ evaluates an expression $e$ to get a distribution
+        $d$, draws a random sample $v$ from the distribution $d$, and sends $v$
+        to a channel \texttt{ch}.
+  \item \verb$observe{ch}(E)$ evaluates an expression $e$ to get a
+        distribution $d$, receives a value $v$ from a channel \texttt{ch}, and
+        proceeds as if $v$ is sampled from $d$.
+  \item \verb$if{ch} e then C1 else C2$ evaluates a expression $e$ to get a
+        Boolean $b$, picks a command $C_1$ or $C_2$ based on $b$, and sends $b$
+        to a channel \texttt{ch}.
+  \item \verb$if{ch} . then C1 else C2$ receives a Boolean $b$ from a channel
+        \texttt{ch}, and proceeds to a command $C_1$ or $C_2$ based on the value
+        of $b$.
+  \item \texttt{if e then C1 else C2}: a standard conditional command.
+  \item \texttt{loop[n; Einit]( fn (x : t) -> C )}: it loops for $n$ iterations
+        with an accumulator of basic type $\tau$ and initial value
+        \texttt{Einit}.
+        %
+        In each iteration, it binds the accumulator from last iteration to
+        variable $x$ and execute a command $C$, whose return value is the next
+        accumulator.
+  \item \texttt{iter[E; Einit]( fn t (x : t) -> C )} evaluates $e$ to get a
+        tensor, and then loops through the tensor along its first dimension with
+        an accumulator of basic type $\tau$ and initial value \texttt{Einit}.
+        %
+        In each iteration, it binds the sub-tensor to $t$ and the accumulator
+        from last iteration to $x$, then execute the command $C$.
+\end{itemize}
+
+\subsubsection{Sequential Composition of Guide Coroutines}

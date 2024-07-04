@@ -34,7 +34,7 @@ $ docker images
 To run the image \texttt{guide\_types}, run
 \begin{verbatim}
 $ docker run --name guide_types -it --rm guide_types
-root@5b1c8c873064:/home/GuideTypes#
+root@a4d5ea36ca11:/home/GuideTypes/bench/type-equality#
 \end{verbatim}
 %
 It creates a Docker container (i.e., a runnable instance of a Docker image)
@@ -49,8 +49,10 @@ executed in your local machine's terminal.
 
 \subsection{Structural-Type-Equality Checking}
 
-The initial working directory \texttt{GuideTypes/bench/type-equality} has a file
-\texttt{type-equality-sample} containing three guide-type definitions.
+The initial working directory is \texttt{/home/GuideTypes/bench/type-equality}.
+%
+It has a file \texttt{type-equality-sample} containing three guide-type
+definitions.
 %
 Running the command
 \begin{verbatim}
