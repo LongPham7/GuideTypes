@@ -99,8 +99,8 @@ The functional layer also proivdes the following compound types:
   \item \texttt{t1 * t2} for a product type $\tau_1 \times \tau_2$
   \item \texttt{t dist} for a distribution where $\tau$ is the type of the
         support of the distribution
-  \item \texttt{(t, [m1; m2; ...]) tensor} for a tensor of an element type
-        $\tau$ and a shape $[m_1, m_2, \ldots]$.
+  \item \texttt{(t, [m1; ...; mn]) tensor} for a tensor of an element type
+        $\tau$ and a shape $[m_1, \ldots, m_n]$.
 \end{itemize}
 
 \paragraph{Expressions}
@@ -115,8 +115,8 @@ The supported probability distributions are
         $\alpha > 0$ and a rate $\beta > 0$
   \item \texttt{Normal(mu; sigma)}: normal distribution with a location
         parameter $\mu$ and a scale parameter $\sigma >0$
-  \item \texttt{CAT(p1; p2; ...; pn)}: categorical distributions with
-        probabilities $p_1, \ldots, p_n$
+  \item \texttt{CAT(p1; ...; pn)}: categorical distribution with probabilities
+        $p_1, \ldots, p_n$
   \item \texttt{BIN(n; p)}: binomial distribution with parameters $n \in \bbN$
         and $p \in [0, 1]$
   \item \texttt{GEO(p)}: geometric distribution with a parameter $p \in [0, 1]$
@@ -137,8 +137,8 @@ The functional layer supports the following expressions:
 
 \subsubsection{Coroutine Layer}
 
-In the coroutine layer, commands specify send or receive values between
-coroutines across channels.
+In the coroutine layer, commands are used to send and receive random samples
+between coroutines across channels.
 %
 Guide types describe communication protocols on channels.
 
@@ -154,12 +154,12 @@ The language provides the following guide types:
         each type operator comes only with one type variable).
   \item \verb$t /\ A$ for a guide type $\tau \land A$.
         %
-        It sends a value of a functional type $\tau$ and then proceeds to a
-        guide type $A$.
+        It sends a value of a functional type $\tau$ and proceeds to a guide
+        type $A$.
   \item \texttt{t -o A} for a guide type $\tau \supset A$.
         %
-        It receives a value of a functional type $\tau$ and then proceeds to a
-        guide type $A$
+        It receives a value of a functional type $\tau$ and proceeds to a guide
+        type $A$
   \item \verb$+{A1 | A2}$ for an internal choice $A_1 \oplus A_2$.
         %
         It chooses between $A_1$ and $A_2$ and proceeds with it.
@@ -170,42 +170,89 @@ The language provides the following guide types:
   \item \texttt{T[A]} for an instantiation of a type operator $T$ with a
         continuation guide type $A$.
 \end{itemize}
+%
+In the guide types $t \land A$ and $t \supset A$, the type $\tau$ of the value
+being transferred is either covered (i.e., the value is freshly sampled from
+some probability distribution) or uncovered (i.e., an old value is reused for
+this random variable).
+%
+Covered types have same notation as the primitive types (e.g., \texttt{nat[n]}
+and \texttt{real}).
+%
+Uncovered types, on the other hand, are denoted by primitive types with a
+subscript \texttt{u} (e.g., \texttt{nat\_u[n]} and \texttt{real\_u}).
 
 \paragraph{Commands}
 
-The coroutine layer supports the following commands:
+The language supports the following commands:
 \begin{itemize}
-  \item \texttt{return e} evaluates an expression $e$ and return its value.
-  \item \texttt{x <- C1; C2} executes a command $C_1$, binds the value to
-        variable $x$, and continues to a command $C_2$.
-  \item \texttt{Pname(e1; e2; ...)} calls a procedure \texttt{Pname} with
-        arguments $e_1, e_2, \ldots$.
+  \item \texttt{return e} evaluates an expression $e$ and returns its value as
+        output.
+  \item \texttt{x <- C1; C2} executes a command $C_1$, binds its output value to
+        variable $x$, and proceeds to a command $C_2$.
+  \item \texttt{Pname(e1; ...; en)} calls a procedure \texttt{Pname} with
+        arguments $e_1, \ldots, e_n$.
   \item \verb$sample{ch}(e)$ evaluates an expression $e$ to get a distribution
         $d$, draws a random sample $v$ from the distribution $d$, and sends $v$
-        to a channel \texttt{ch}.
-  \item \verb$observe{ch}(E)$ evaluates an expression $e$ to get a
-        distribution $d$, receives a value $v$ from a channel \texttt{ch}, and
-        proceeds as if $v$ is sampled from $d$.
-  \item \verb$if{ch} e then C1 else C2$ evaluates a expression $e$ to get a
+        across a channel \texttt{ch}.
+  \item \verb$sample{ch}{SAME(t)}$ reuses an old value (of type $\tau$) from the
+        old trace for this random variable.
+        %
+        This command is only applicable to guide coroutines.
+        %
+        Model coroutines do not use it.
+  \item \verb$observe{ch}(e)$ evaluates an expression $e$ to get a distribution
+        $d$, receives a value $v$ across a channel \texttt{ch}, and proceeds as
+        if $v$ is sampled from $d$.
+  \item \verb$if{ch} e then C1 else C2$ evaluates an expression $e$ to get a
         Boolean $b$, picks a command $C_1$ or $C_2$ based on $b$, and sends $b$
-        to a channel \texttt{ch}.
+        across a channel \texttt{ch}.
   \item \verb$if{ch} . then C1 else C2$ receives a Boolean $b$ from a channel
         \texttt{ch}, and proceeds to a command $C_1$ or $C_2$ based on the value
         of $b$.
-  \item \texttt{if e then C1 else C2}: a standard conditional command.
-  \item \texttt{loop[n; Einit]( fn (x : t) -> C )}: it loops for $n$ iterations
-        with an accumulator of basic type $\tau$ and initial value
-        \texttt{Einit}.
+  \item \texttt{if e then C1 else C2} evaluates an expression $e$ to a Boolean
+        $b$, and proceeds to a command $C_1$ or $C_2$ depending on $b$.
+  \item \texttt{loop[n; einit](fn (x : t) -> C)} loops for $n$ iterations with
+        an accumulator of functional type $\tau$ and initial value
+        \texttt{einit}.
         %
-        In each iteration, it binds the accumulator from last iteration to
-        variable $x$ and execute a command $C$, whose return value is the next
-        accumulator.
-  \item \texttt{iter[E; Einit]( fn t (x : t) -> C )} evaluates $e$ to get a
-        tensor, and then loops through the tensor along its first dimension with
-        an accumulator of basic type $\tau$ and initial value \texttt{Einit}.
+        In each iteration, it binds the accumulator from the last iteration to a
+        variable $x$ and executes a command $C$, whose return value becomes the
+        next accumulator.
+  \item \texttt{iter[e; einit](fn t (x : t) -> C)} evaluates $e$ to a tensor,
+        and then loops through the tensor along its first dimension with an
+        accumulator of functional type $\tau$ and initial value \texttt{einit}.
         %
         In each iteration, it binds the sub-tensor to $t$ and the accumulator
-        from last iteration to $x$, then execute the command $C$.
+        from the last iteration to a variable $x$, then executes a command $C$.
 \end{itemize}
 
 \subsubsection{Sequential Composition of Guide Coroutines}
+
+An input file to the artifact has three components:
+\begin{itemize}
+  \item A list of type declarations (i.e., we simply declare the names of type
+        operations without defining them) and type definitions (i.e., we declare type
+        operations and also provide their definitions).
+        %
+        For a type declaration of a type operator \texttt{T}, we write \texttt{type T}
+        and for a type definition, we write \texttt{type T = <type-definition>}.
+  \item A list of procedure definitions, each of which contains a type signature
+        (i.e., output type, channel names, and their guide-type operators) and the
+        procedure body.
+  \item An initial (uncovered) guide type.
+        %
+        The syntax is
+        \begin{verbatim}
+Initial_type: <initial-guide-type>
+\end{verbatim}
+        %
+        It describes the initial trace fed to a sequential composition of guide
+        coroutines.
+  \item A sequential composition of procedures for guide coroutines.
+        %
+        The syntax is
+        \begin{verbatim}
+Guide_composition: Guide1; Guide2; ...; Guiden
+\end{verbatim}
+\end{itemize}
